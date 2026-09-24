@@ -200,8 +200,8 @@ body {
   font-family: 'Anek Latin', 'AnekLatin', sans-serif;
 }
 
-/* Studio Blue Gradient Background */
+/* Mild Studio Blue Gradient Background matching reference image */
 .bg-studio-blue {
-  background: radial-gradient(circle at 50% 42%, #384ef7 0%, #293cf4 45%, #1f30e6 75%, #1826d0 100%);
+  background: radial-gradient(130% 110% at 50% 28%, #4246fb 0%, #393df0 50%, #2e33ea 100%);
 }
 

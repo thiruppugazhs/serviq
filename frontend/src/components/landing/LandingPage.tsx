@@ -39,7 +39,7 @@ export const LandingPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#3831eb] text-white font-['Plus_Jakarta_Sans',sans-serif] selection:bg-white selection:text-[#3831eb] overflow-x-hidden relative">
+    <div className="min-h-screen bg-studio-blue text-white font-['Plus_Jakarta_Sans',sans-serif] selection:bg-white selection:text-[#3831eb] overflow-x-hidden relative">
 
       {/* Ambient background glow orbs */}
       <div className="fixed top-20 left-10 w-96 h-96 bg-white/5 rounded-full blur-[130px] pointer-events-none -z-10 animate-pulse-glow" />
@@ -215,11 +215,11 @@ export const LandingPage: React.FC = () => {
         ========================================================================= */}
 
         {/* =========================================================================
-            3D FLOATING ELEMENTS (Matching Reference Image)
+            3D ELEMENTS (Matching Reference Image: Spacing, Placement, Size & Soft Shadows)
         ========================================================================= */}
 
-        {/* 1. 3D Gear (Top-Left / Mid-Left) - Fixed in place */}
-        <div className="absolute -left-6 sm:-left-4 md:left-2 lg:left-6 top-[12%] sm:top-[14%] md:top-[16%] w-36 sm:w-52 md:w-64 lg:w-76 pointer-events-none filter drop-shadow-[0_20px_35px_rgba(0,0,0,0.35)] z-10 select-none">
+        {/* 1. 3D Gear (Top-Left / Mid-Left) - Pushed to the left edge, partially off-screen, reduced size, soft shadow */}
+        <div className="absolute -left-12 sm:-left-16 md:-left-20 lg:-left-24 top-[15%] sm:top-[18%] md:top-[20%] w-28 sm:w-36 md:w-44 lg:w-52 pointer-events-none filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.12)] z-10 select-none">
           <img
             src="/gear.png"
             alt="3D Fleet Gear"
@@ -228,8 +228,8 @@ export const LandingPage: React.FC = () => {
           />
         </div>
 
-        {/* 2. 3D Cube: Angled in the lower-left foreground - Fixed in place */}
-        <div className="absolute left-0 bottom-0 w-32 sm:w-44 md:w-56 lg:w-72 pointer-events-none filter drop-shadow-[0_25px_45px_rgba(0,0,0,0.4)] z-20 select-none">
+        {/* 2. 3D Cube (Lower-Left Foreground) - Reduced size, anchored at bottom-left corner with soft shadow */}
+        <div className="absolute left-0 bottom-0 w-24 sm:w-32 md:w-40 lg:w-48 pointer-events-none filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.14)] z-20 select-none">
           <img
             src="/cube.png"
             alt="3D Angled Cube"
@@ -238,8 +238,8 @@ export const LandingPage: React.FC = () => {
           />
         </div>
 
-        {/* 3. 3D Spanner / Wrench (Top-Right / Mid-Right) - Fixed in place */}
-        <div className="absolute -right-4 sm:right-0 md:right-4 lg:right-8 top-[10%] sm:top-[12%] md:top-[14%] w-40 sm:w-56 md:w-72 lg:w-84 pointer-events-none filter drop-shadow-[0_25px_40px_rgba(0,0,0,0.35)] z-10 select-none">
+        {/* 3. 3D Spanner / Wrench (Top-Right) - Pushed to right edge, reduced size, soft shadow */}
+        <div className="absolute -right-8 sm:-right-12 md:-right-16 lg:-right-20 top-[6%] sm:top-[8%] md:top-[10%] w-32 sm:w-44 md:w-52 lg:w-64 pointer-events-none filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.14)] z-10 select-none">
           <img
             src="/spanner.png"
             alt="3D Spanner Wrench"
@@ -248,11 +248,11 @@ export const LandingPage: React.FC = () => {
           />
         </div>
 
-        {/* 4. 3D Car with glowing headlights (Bottom-Right) */}
-        <div className="absolute -right-4 sm:right-0 md:right-4 lg:right-8 -bottom-2 sm:bottom-0 md:bottom-2 lg:bottom-4 w-64 sm:w-96 md:w-[480px] lg:w-[560px] pointer-events-none filter drop-shadow-[0_30px_50px_rgba(0,0,0,0.45)] z-20 select-none">
-          {/* Ambient Headlight Glow */}
-          <div className="absolute left-[8%] bottom-[32%] w-24 h-16 bg-white/20 rounded-full blur-xl pointer-events-none" />
-          <div className="absolute left-[30%] bottom-[32%] w-28 h-18 bg-white/20 rounded-full blur-xl pointer-events-none" />
+        {/* 4. 3D Car with headlights (Bottom-Right) - Compact size, spaced from center, soft shadow */}
+        <div className="absolute -right-2 sm:right-2 md:right-6 lg:right-10 bottom-0 sm:bottom-1 md:bottom-2 lg:bottom-4 w-52 sm:w-72 md:w-84 lg:w-[420px] pointer-events-none filter drop-shadow-[0_14px_28px_rgba(0,0,0,0.16)] z-20 select-none">
+          {/* Soft Headlight Glow */}
+          <div className="absolute left-[8%] bottom-[32%] w-16 h-12 bg-white/15 rounded-full blur-lg pointer-events-none" />
+          <div className="absolute left-[30%] bottom-[32%] w-20 h-14 bg-white/15 rounded-full blur-lg pointer-events-none" />
           <img
             src="/car.png"
             alt="3D Fleet Vehicle"
