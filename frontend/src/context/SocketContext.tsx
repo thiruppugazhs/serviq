@@ -29,7 +29,8 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
 
     const orgId = typeof user.organization === 'object' ? user.organization._id : user.organization;
-    const socketInstance = io('/', {
+    const socketUrl = import.meta.env.VITE_API_URL || '/';
+    const socketInstance = io(socketUrl, {
       transports: ['websocket', 'polling'],
     });
 

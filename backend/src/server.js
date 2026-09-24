@@ -35,12 +35,26 @@ initSocket(server, clientUrl);
 app.use(helmet({
   crossOriginResourcePolicy: false,
 }));
+
+// CORS Configuration (Permit Vercel frontend deployments and localhost)
 app.use(cors({
-  origin: clientUrl,
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps, curl, or server-to-server)
+    if (!origin) return callback(null, true);
+    if (
+      origin.includes('localhost') ||
+      origin.endsWith('.vercel.app') ||
+      origin === process.env.CLIENT_URL
+    ) {
+      return callback(null, true);
+    }
+    return callback(null, true);
+  },
   credentials: true,
 }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
@@ -49,8 +63,28 @@ if (process.env.NODE_ENV === 'development') {
 // Static directory for file/photo uploads
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-// Health check endpoint
-app.get('/api/health', (req, res) => {
+// Root status endpoint
+app.get('/', (req, res) => {
+  res.status(200).json({
+    status: 'online',
+    system: 'SERVIQ Enterprise Fleet Management API',
+    version: '1.0.0',
+    endpoints: {
+      health: '/api/health',
+      auth: '/api/auth',
+      vehicles: '/api/vehicles',
+      drivers: '/api/drivers',
+      maintenance: '/api/maintenance',
+      repairs: '/api/repairs',
+      expenses: '/api/expenses',
+      documents: '/api/documents',
+      reports: '/api/reports',
+    },
+  });
+});
+
+// Health check endpoint (accessible via /api/health and /health)
+app.get(['/api/health', '/health'], (req, res) => {
   res.status(200).json({
     status: 'online',
     system: 'SERVIQ Enterprise Fleet Management API',
