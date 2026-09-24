@@ -212,177 +212,51 @@ export const LandingPage: React.FC = () => {
             3D FLOATING ELEMENTS (Slots ready for your element images)
         ========================================================================= */}
 
+        {/* =========================================================================
+            3D FLOATING ELEMENTS (Matching Reference Image)
+        ========================================================================= */}
+
         {/* 1. 3D Gear (Top-Left / Mid-Left) */}
-        <div className="absolute left-2 sm:left-6 lg:left-12 top-[16%] sm:top-[18%] w-28 sm:w-44 lg:w-60 pointer-events-none filter drop-shadow-[0_20px_35px_rgba(0,0,0,0.35)] animate-float-slow z-10">
+        <div className="absolute -left-6 sm:-left-4 md:left-2 lg:left-6 top-[12%] sm:top-[14%] md:top-[16%] w-36 sm:w-52 md:w-64 lg:w-76 pointer-events-none filter drop-shadow-[0_20px_35px_rgba(0,0,0,0.35)] animate-float-slow z-10 select-none">
           <img
             src="/gear.png"
-            alt="3D Gear"
+            alt="3D Fleet Gear"
             className="w-full h-full object-contain"
-            onError={(e) => {
-              (e.target as HTMLElement).style.display = 'none';
-              const fallback = document.getElementById('placeholder-gear');
-              if (fallback) fallback.style.display = 'block';
-            }}
+            draggable={false}
           />
-          {/* High-fidelity 3D clay gear placeholder until gear.png is placed */}
-          <div id="placeholder-gear" className="w-full h-full">
-            <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-2xl">
-              <defs>
-                <linearGradient id="gearGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#4f68ff" />
-                  <stop offset="50%" stopColor="#2e46f6" />
-                  <stop offset="100%" stopColor="#1a2edb" />
-                </linearGradient>
-                <filter id="gearBevel" x="-20%" y="-20%" width="140%" height="140%">
-                  <feDropShadow dx="3" dy="6" stdDeviation="5" floodColor="#0d1880" floodOpacity="0.6" />
-                </filter>
-              </defs>
-              <g filter="url(#gearBevel)">
-                <path
-                  d="M100 20 L115 20 L120 40 L135 45 L150 32 L162 44 L152 61 L160 75 L180 78 L180 96 L160 102 L155 118 L168 132 L156 146 L138 138 L124 148 L120 168 L102 168 L98 148 L84 140 L68 152 L54 140 L64 122 L56 108 L36 104 L36 86 L56 80 L62 64 L48 50 L60 38 L78 46 L92 38 Z"
-                  fill="url(#gearGrad)"
-                />
-                <circle cx="100" cy="94" r="32" fill="#1f33e0" stroke="#4f68ff" strokeWidth="4" />
-                <circle cx="100" cy="94" r="16" fill="#1422a8" />
-              </g>
-            </svg>
-          </div>
         </div>
 
-        {/* 2. 3D Cube (Bottom-Left) */}
-        <div className="absolute left-4 sm:left-10 lg:left-16 bottom-4 sm:bottom-8 lg:bottom-12 w-20 sm:w-32 lg:w-44 pointer-events-none filter drop-shadow-[0_25px_40px_rgba(0,0,0,0.4)] animate-float-delayed z-10">
+        {/* 2. 3D Cube: Angled in the lower-left foreground */}
+        <div className="absolute left-0 sm:left-4 md:left-8 lg:left-12 -bottom-6 sm:-bottom-4 md:bottom-0 w-28 sm:w-36 md:w-48 lg:w-56 pointer-events-none filter drop-shadow-[0_25px_40px_rgba(0,0,0,0.4)] animate-float-delayed z-20 select-none">
           <img
             src="/cube.png"
-            alt="3D Cube"
+            alt="3D Angled Cube"
             className="w-full h-full object-contain"
-            onError={(e) => {
-              (e.target as HTMLElement).style.display = 'none';
-              const fallback = document.getElementById('placeholder-cube');
-              if (fallback) fallback.style.display = 'block';
-            }}
+            draggable={false}
           />
-          {/* Isometric 3D blue cube placeholder until cube.png is placed */}
-          <div id="placeholder-cube" className="w-full h-full">
-            <svg viewBox="0 0 160 160" className="w-full h-full">
-              <defs>
-                <linearGradient id="cubeTop" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#7a93ff" />
-                  <stop offset="100%" stopColor="#4f6bff" />
-                </linearGradient>
-                <linearGradient id="cubeLeft" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#2c42ea" />
-                  <stop offset="100%" stopColor="#1524a8" />
-                </linearGradient>
-                <linearGradient id="cubeRight" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#3d56f5" />
-                  <stop offset="100%" stopColor="#1e32c4" />
-                </linearGradient>
-              </defs>
-              <g transform="translate(10, 15)">
-                {/* Top Face */}
-                <polygon points="70,10 130,45 70,80 10,45" fill="url(#cubeTop)" />
-                {/* Left Face */}
-                <polygon points="10,45 70,80 70,145 10,110" fill="url(#cubeLeft)" />
-                {/* Right Face */}
-                <polygon points="70,80 130,45 130,110 70,145" fill="url(#cubeRight)" />
-              </g>
-            </svg>
-          </div>
         </div>
 
         {/* 3. 3D Spanner / Wrench (Top-Right / Mid-Right) */}
-        <div className="absolute right-2 sm:right-6 lg:right-12 top-[12%] sm:top-[14%] w-32 sm:w-52 lg:w-72 pointer-events-none filter drop-shadow-[0_25px_40px_rgba(0,0,0,0.35)] animate-float-reverse z-10">
+        <div className="absolute -right-4 sm:right-0 md:right-4 lg:right-8 top-[10%] sm:top-[12%] md:top-[14%] w-40 sm:w-56 md:w-72 lg:w-84 pointer-events-none filter drop-shadow-[0_25px_40px_rgba(0,0,0,0.35)] animate-float-reverse z-10 select-none">
           <img
             src="/spanner.png"
-            alt="3D Spanner"
-            className="w-full h-full object-contain -rotate-12"
-            onError={(e) => {
-              (e.target as HTMLElement).style.display = 'none';
-              const fallback = document.getElementById('placeholder-spanner');
-              if (fallback) fallback.style.display = 'block';
-            }}
+            alt="3D Spanner Wrench"
+            className="w-full h-full object-contain"
+            draggable={false}
           />
-          {/* High-fidelity 3D wrench placeholder until spanner.png is placed */}
-          <div id="placeholder-spanner" className="w-full h-full -rotate-12">
-            <svg viewBox="0 0 220 220" className="w-full h-full">
-              <defs>
-                <linearGradient id="wrenchGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#556fff" />
-                  <stop offset="50%" stopColor="#2c42ea" />
-                  <stop offset="100%" stopColor="#1425aa" />
-                </linearGradient>
-              </defs>
-              <g transform="translate(10, 10)">
-                <path
-                  d="M160 20 C140 10 115 15 105 35 C100 45 102 55 108 65 L40 135 C35 140 35 150 40 155 L55 170 C60 175 70 175 75 170 L145 102 C155 108 165 110 175 105 C195 95 200 70 190 50 L160 70 L140 60 L140 40 Z"
-                  fill="url(#wrenchGrad)"
-                  stroke="#4f6bff"
-                  strokeWidth="3"
-                />
-              </g>
-            </svg>
-          </div>
         </div>
 
         {/* 4. 3D Car with glowing headlights (Bottom-Right) */}
-        <div className="absolute right-0 sm:right-6 lg:right-12 bottom-1 sm:bottom-4 lg:bottom-6 w-60 sm:w-88 lg:w-[480px] pointer-events-none filter drop-shadow-[0_30px_50px_rgba(0,0,0,0.45)] z-10">
+        <div className="absolute -right-4 sm:right-0 md:right-4 lg:right-8 -bottom-2 sm:bottom-0 md:bottom-2 lg:bottom-4 w-64 sm:w-96 md:w-[480px] lg:w-[560px] pointer-events-none filter drop-shadow-[0_30px_50px_rgba(0,0,0,0.45)] z-20 select-none">
+          {/* Ambient Headlight Glow */}
+          <div className="absolute left-[8%] bottom-[32%] w-24 h-16 bg-white/20 rounded-full blur-xl pointer-events-none" />
+          <div className="absolute left-[30%] bottom-[32%] w-28 h-18 bg-white/20 rounded-full blur-xl pointer-events-none" />
           <img
             src="/car.png"
-            alt="3D Car"
+            alt="3D Fleet Vehicle"
             className="w-full h-full object-contain"
-            onError={(e) => {
-              (e.target as HTMLElement).style.display = 'none';
-              const fallback = document.getElementById('placeholder-car');
-              if (fallback) fallback.style.display = 'block';
-            }}
+            draggable={false}
           />
-          {/* 3D clay car silhouette with headlight glow until car.png is placed */}
-          <div id="placeholder-car" className="w-full h-full relative">
-            <svg viewBox="0 0 400 200" className="w-full h-full">
-              <defs>
-                <linearGradient id="carGrad" x1="0%" y1="0%" x2="100%" y2="80%">
-                  <stop offset="0%" stopColor="#556fff" />
-                  <stop offset="45%" stopColor="#293ef0" />
-                  <stop offset="100%" stopColor="#1524a8" />
-                </linearGradient>
-                <radialGradient id="headlightGlow" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-                  <stop offset="40%" stopColor="#d1e0ff" stopOpacity="0.8" />
-                  <stop offset="100%" stopColor="#354ff8" stopOpacity="0" />
-                </radialGradient>
-              </defs>
-              <g>
-                {/* Wheels */}
-                <ellipse cx="90" cy="165" rx="30" ry="24" fill="#0c1566" />
-                <ellipse cx="90" cy="165" rx="18" ry="14" fill="#2d42e6" />
-                <ellipse cx="320" cy="155" rx="32" ry="26" fill="#0c1566" />
-                <ellipse cx="320" cy="155" rx="20" ry="16" fill="#2d42e6" />
-
-                {/* Car Body Clay Render */}
-                <path
-                  d="M40 145 C45 130 65 125 80 125 C100 125 120 120 150 95 C180 70 230 65 280 70 C310 75 340 85 365 110 C380 125 385 140 375 155 C360 162 260 165 180 165 C100 165 50 160 40 145 Z"
-                  fill="url(#carGrad)"
-                  stroke="#4b66ff"
-                  strokeWidth="2"
-                />
-
-                {/* Windshield */}
-                <path
-                  d="M155 98 C180 78 220 75 260 78 C255 100 230 115 160 115 Z"
-                  fill="#16259e"
-                  opacity="0.8"
-                />
-
-                {/* Headlight Left Glow */}
-                <ellipse cx="48" cy="138" rx="14" ry="10" fill="url(#headlightGlow)" />
-                <ellipse cx="48" cy="138" rx="7" ry="5" fill="#ffffff" />
-
-                {/* Headlight Right Glow */}
-                <ellipse cx="108" cy="144" rx="16" ry="11" fill="url(#headlightGlow)" />
-                <ellipse cx="108" cy="144" rx="8" ry="6" fill="#ffffff" />
-              </g>
-            </svg>
-          </div>
         </div>
       </section>
 
