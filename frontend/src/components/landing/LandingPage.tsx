@@ -52,16 +52,18 @@ export const LandingPage: React.FC = () => {
           1. NAVIGATION (Minimalist Header matching uploaded image)
       ========================================================================= */}
       <nav className="relative z-40 w-full px-6 sm:px-12 pt-6 sm:pt-8 flex items-center justify-between">
-        {/* Left: Serviq 3D folded logo + Serviq text */}
+        {/* Left: Serviq 3D folded logo + Serviq name logo */}
         <Link to="/" className="flex items-center gap-2.5 sm:gap-3 group">
           <img
             src="/logo-white.png"
             alt="Serviq"
             className="w-7 h-7 sm:w-8 sm:h-8 object-contain drop-shadow"
           />
-          <span className="font-kabel-black text-2xl sm:text-3xl text-white tracking-tight">
-            Serviq
-          </span>
+          <img
+            src="/serviq-name-logo.png"
+            alt="Serviq"
+            className="h-5 sm:h-6 md:h-7 w-auto object-contain drop-shadow-sm group-hover:opacity-90 transition-opacity"
+          />
         </Link>
 
         {/* Right: Hamburger icon (3 clean white horizontal lines) */}
@@ -84,7 +86,7 @@ export const LandingPage: React.FC = () => {
               <div className="flex items-center justify-between pb-6 border-b border-white/15">
                 <div className="flex items-center gap-2.5">
                   <img src="/logo-white.png" alt="Serviq" className="w-7 h-7 object-contain" />
-                  <span className="font-kabel-black text-2xl text-white">Serviq</span>
+                  <img src="/serviq-name-logo.png" alt="Serviq" className="h-6 w-auto object-contain" />
                 </div>
                 <button
                   onClick={() => setMobileMenuOpen(false)}
