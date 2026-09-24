@@ -6,6 +6,12 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        'anek-latin': ["'Anek Latin'", "'AnekLatin'", 'sans-serif'],
+        'anek': ["'Anek Latin'", "'AnekLatin'", 'sans-serif'],
+        'outfit': ["'Outfit'", 'sans-serif'],
+        'jakarta': ["'Plus Jakarta Sans'", 'sans-serif'],
+      },
       colors: {
         serviq: {
           50: '#f0fdf4',

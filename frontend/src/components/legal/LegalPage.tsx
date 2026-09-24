@@ -377,7 +377,10 @@ export const LegalPage: React.FC<{ policyKey?: string }> = ({ policyKey: propPol
 
         {/* Center Big Bold Title filling first page */}
         <div className="max-w-5xl mx-auto my-auto py-8">
-          <h1 className="font-anek-latin font-bold text-white text-6xl sm:text-7xl md:text-8xl lg:text-[104px] leading-tight tracking-tight select-none drop-shadow-md animate-in zoom-in-95 duration-300">
+          <h1
+            className="font-anek-latin font-bold text-white text-6xl sm:text-7xl md:text-8xl lg:text-[104px] leading-tight tracking-tight select-none drop-shadow-md animate-in zoom-in-95 duration-300"
+            style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+          >
             {policy.title}
           </h1>
 
@@ -431,7 +434,10 @@ export const LegalPage: React.FC<{ policyKey?: string }> = ({ policyKey: propPol
           <div className="space-y-12 leading-relaxed text-sm sm:text-base text-slate-700">
             {policy.sections.map((sec, idx) => (
               <div key={idx} className="space-y-3">
-                <h2 className="text-xl sm:text-2xl font-bold text-slate-900 font-['Outfit',sans-serif]">
+                <h2
+                  className="text-xl sm:text-2xl font-bold text-slate-900 font-anek-latin"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
                   {sec.heading}
                 </h2>
                 {sec.paragraphs.map((p, pIdx) => (

@@ -220,7 +220,10 @@ export const DownloadAppPage: React.FC = () => {
 
         {/* Center: Big bold title and download cards */}
         <div className="max-w-4xl mx-auto my-auto py-6">
-          <h1 className="font-anek-latin font-bold text-white text-6xl sm:text-7xl md:text-8xl lg:text-[108px] leading-tight tracking-tight select-none drop-shadow-md animate-in zoom-in-95 duration-300">
+          <h1
+            className="font-anek-latin font-bold text-white text-6xl sm:text-7xl md:text-8xl lg:text-[108px] leading-tight tracking-tight select-none drop-shadow-md animate-in zoom-in-95 duration-300"
+            style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+          >
             Download Serviq
           </h1>
 
