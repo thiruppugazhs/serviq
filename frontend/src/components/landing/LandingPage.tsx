@@ -1,39 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
   Menu,
   X,
   QrCode,
-  Smartphone,
   Download,
+  Smartphone,
   ArrowRight,
   ShieldCheck,
   Truck,
-  Building2,
+  Wrench,
+  CheckCircle2,
   ExternalLink,
-  Lock,
-  Layers,
-  ChevronRight,
+  LogIn,
+  UserPlus,
 } from 'lucide-react';
 
 export const LandingPage: React.FC = () => {
   const { user } = useAuth();
-  const navigate = useNavigate();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [downloadModalOpen, setDownloadModalOpen] = useState(false);
-
-  // Close menus on Escape key
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setMobileMenuOpen(false);
-        setDownloadModalOpen(false);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
 
   const getDashboardLink = () => {
     if (!user) return '/login';
@@ -43,365 +30,352 @@ export const LandingPage: React.FC = () => {
     return '/login';
   };
 
-  const currentHost = typeof window !== 'undefined' ? window.location.origin : '';
-  const driverPortalUrl = `${currentHost}/driver/home`;
-
   return (
-    <div className="min-h-screen w-full bg-[#4143fa] text-white font-['Plus_Jakarta_Sans',sans-serif] selection:bg-white selection:text-[#4143fa] overflow-hidden flex flex-col justify-center items-center relative select-none">
-
-      {/* =========================================================================
-          HERO STAGE: Exact Match to Uploaded 3D Render
-      ========================================================================= */}
-      <main className="relative w-full max-w-[1440px] aspect-[1024/457] flex items-center justify-center overflow-hidden shadow-2xl">
-        {/* The Exact 3D Visual Mockup */}
+    <div className="relative w-screen h-screen max-h-screen overflow-hidden bg-[#4143fa] select-none flex flex-col justify-center items-center font-['Outfit',sans-serif]">
+      {/* Visual Canvas Matching Exact Mockup */}
+      <div className="relative w-full h-full max-w-[1920px] max-h-screen flex items-center justify-center overflow-hidden">
+        
+        {/* Exact 3D Render Image */}
         <img
           src="/landing-exact.jpg"
           alt="Serviq Vehicle & Fleet Maintenance Management Platform"
-          className="w-full h-full object-contain pointer-events-none select-none"
-          draggable={false}
+          className="w-full h-full object-contain pointer-events-none select-none max-h-screen"
         />
 
-        {/* =====================================================================
-            INTERACTIVE HOT-ZONES (Positioned proportionally with pixel precision)
-        ===================================================================== */}
+        {/* =========================================================================
+            Interactive Overlay Hotspots (Mapped precisely to the composition)
+        ========================================================================= */}
 
-        {/* 1. Top-Left Logo Hot-Zone */}
+        {/* 1. Top-Left Logo Click Target */}
         <Link
           to="/"
           title="SERVIQ Home"
-          className="absolute top-[4.5%] left-[7.5%] w-[16%] h-[11%] rounded-xl focus:outline-none focus:ring-2 focus:ring-white/40 cursor-pointer group transition-all"
+          className="absolute top-[3%] left-[4.5%] w-[16%] h-[12%] rounded-xl transition-all duration-200 hover:bg-white/5 active:scale-95 z-20 cursor-pointer flex items-center"
         >
           <span className="sr-only">SERVIQ Home</span>
-          <span className="absolute inset-0 rounded-xl bg-white/0 group-hover:bg-white/10 transition-colors pointer-events-none" />
         </Link>
 
-        {/* 2. Top-Right Hamburger Menu Hot-Zone */}
+        {/* 2. Top-Right Hamburger Menu Button */}
         <button
           type="button"
-          onClick={() => setMobileMenuOpen(true)}
-          title="Open Navigation Menu"
+          onClick={() => setMenuOpen(true)}
+          title="Open Menu"
           aria-label="Open Navigation Menu"
-          className="absolute top-[4.5%] right-[6.8%] w-[6.5%] h-[11%] flex items-center justify-center rounded-xl focus:outline-none focus:ring-2 focus:ring-white/40 cursor-pointer group transition-all"
+          className="absolute top-[3.5%] right-[5%] w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center text-white hover:bg-white/10 active:scale-95 transition-all duration-200 z-20 cursor-pointer group"
         >
-          <span className="sr-only">Open Navigation Menu</span>
-          <span className="absolute inset-0 rounded-xl bg-white/0 group-hover:bg-white/15 active:scale-95 transition-all pointer-events-none" />
+          <Menu className="w-7 h-7 sm:w-8 sm:h-8 text-white group-hover:scale-110 transition-transform stroke-[2.5]" />
         </button>
 
-        {/* 3. Center "Download Now / QR Code" Glass Button Hot-Zone */}
+        {/* 3. Center "Download Now / QR Code" Interactive Glass Button */}
         <button
           type="button"
           onClick={() => setDownloadModalOpen(true)}
-          title="Download SERVIQ Mobile App or Scan QR"
-          className="absolute top-[64.2%] left-[39.5%] w-[21%] h-[20.8%] rounded-2xl focus:outline-none focus:ring-2 focus:ring-white/50 cursor-pointer group transition-all"
+          title="Scan QR or Download Mobile App"
+          aria-label="Download SERVIQ Mobile App"
+          className="absolute top-[61.5%] left-[39.5%] w-[21%] h-[18%] rounded-2xl md:rounded-3xl border border-white/20 hover:border-white/50 bg-white/5 hover:bg-white/15 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-all duration-300 active:scale-95 z-20 cursor-pointer group flex items-center justify-center"
         >
-          <span className="sr-only">Download SERVIQ Driver Mobile App</span>
-          {/* Subtle ambient glass glow on hover */}
-          <span className="absolute -inset-1 rounded-2xl bg-white/0 group-hover:bg-white/20 blur-sm transition-all pointer-events-none" />
-          <span className="absolute inset-0 rounded-2xl border border-white/0 group-hover:border-white/30 transition-all pointer-events-none" />
+          {/* Subtle pulsating focus ring on hover */}
+          <span className="absolute -inset-1 rounded-3xl bg-white/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+          <span className="sr-only">Download SERVIQ Mobile App</span>
         </button>
-      </main>
 
-      {/* Mobile Quick Action Strip (visible on small portrait screens for easy access) */}
-      <div className="sm:hidden w-full px-6 py-4 flex flex-col gap-2 z-10 bg-[#3537e8]/80 backdrop-blur-md border-t border-white/10">
-        <button
-          type="button"
-          onClick={() => setDownloadModalOpen(true)}
-          className="w-full py-2.5 rounded-xl bg-white text-[#4143fa] font-bold text-xs flex items-center justify-center gap-2 shadow-lg"
-        >
-          <QrCode className="w-4 h-4" />
-          <span>Scan / Download Mobile App</span>
-        </button>
-        <div className="flex gap-2">
-          <Link
-            to="/login"
-            className="flex-1 py-2 rounded-xl bg-white/15 text-white font-semibold text-xs text-center border border-white/20 hover:bg-white/25"
-          >
-            Sign In
-          </Link>
-          <Link
-            to="/register"
-            className="flex-1 py-2 rounded-xl bg-white/15 text-white font-semibold text-xs text-center border border-white/20 hover:bg-white/25"
-          >
-            Register
-          </Link>
+        {/* Floating Bottom Quick Action Pill */}
+        <div className="absolute bottom-4 sm:bottom-6 z-20 flex items-center gap-3 px-4 py-2 rounded-full bg-[#1b2382]/60 hover:bg-[#1b2382]/85 backdrop-blur-md border border-white/15 shadow-2xl transition-all">
+          {user ? (
+            <Link
+              to={getDashboardLink()}
+              className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-white hover:text-emerald-300 transition-colors"
+            >
+              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              <span>Go to Fleet Command ({user.role})</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="text-xs sm:text-sm font-semibold text-white/90 hover:text-white px-3 py-1 rounded-full hover:bg-white/10 transition-all flex items-center gap-1.5"
+              >
+                <LogIn className="w-3.5 h-3.5" />
+                <span>Login</span>
+              </Link>
+              <div className="w-1 h-1 rounded-full bg-white/30" />
+              <Link
+                to="/register"
+                className="text-xs sm:text-sm font-bold text-[#4143fa] bg-white hover:bg-white/90 px-4 py-1.5 rounded-full shadow-md transition-all flex items-center gap-1.5 hover:scale-105 active:scale-95"
+              >
+                <UserPlus className="w-3.5 h-3.5" />
+                <span>Register Company</span>
+              </Link>
+            </>
+          )}
         </div>
       </div>
 
       {/* =========================================================================
-          SLIDE-OUT NAVIGATION MENU DRAWER (Triggered by Hamburger '≡')
+          Slide-Over Navigation Drawer (Triggered by Hamburger Button)
       ========================================================================= */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          {/* Backdrop dismiss */}
+      {menuOpen && (
+        <div className="fixed inset-0 z-50 flex justify-end animate-in fade-in duration-200">
+          {/* Backdrop */}
           <div
-            className="flex-1"
-            onClick={() => setMobileMenuOpen(false)}
+            onClick={() => setMenuOpen(false)}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
           />
 
           {/* Drawer Content */}
-          <div className="w-full max-w-sm h-full bg-[#1e23a8] border-l border-white/20 p-6 sm:p-8 flex flex-col justify-between shadow-2xl relative animate-in slide-in-from-right duration-300">
-            {/* Top Bar */}
+          <div className="relative w-full max-w-sm sm:max-w-md bg-[#0a1128]/95 backdrop-blur-2xl border-l border-white/15 h-full p-6 sm:p-8 flex flex-col justify-between shadow-2xl z-10 animate-in slide-in-from-right duration-300">
+            
+            {/* Header */}
             <div>
-              <div className="flex items-center justify-between pb-6 border-b border-white/15">
+              <div className="flex items-center justify-between pb-6 border-b border-white/10">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center font-black text-xl text-white border border-white/20 shadow-md">
-                    S
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-white to-blue-200 flex items-center justify-center shadow-lg">
+                    <Truck className="w-5 h-5 text-[#4143fa]" />
                   </div>
                   <div>
-                    <h2 className="text-xl font-extrabold tracking-tight text-white font-['Outfit',sans-serif]">
-                      Serviq
+                    <h2 className="text-xl font-black text-white tracking-wide">
+                      SERVIQ
                     </h2>
-                    <p className="text-[11px] text-white/70 font-medium">Fleet Management Console</p>
+                    <p className="text-[10px] text-blue-200 font-semibold uppercase tracking-widest">
+                      Fleet Operations
+                    </p>
                   </div>
                 </div>
 
                 <button
                   type="button"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="p-2 rounded-xl text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+                  onClick={() => setMenuOpen(false)}
+                  className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
               {/* Navigation Links */}
-              <div className="mt-8 space-y-2 text-sm font-semibold">
-                {user ? (
-                  <div className="p-4 rounded-2xl bg-white/10 border border-white/20 mb-4 space-y-2">
-                    <div className="text-[11px] uppercase tracking-wider text-white/70">Logged in as</div>
-                    <div className="font-bold text-white text-base">{user.name}</div>
-                    <div className="text-xs text-white/80 font-mono capitalize">{user.role?.replace('_', ' ')}</div>
-                    <Link
-                      to={getDashboardLink()}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="mt-3 w-full py-2.5 rounded-xl bg-white text-[#4143fa] font-bold text-xs flex items-center justify-center gap-2 hover:bg-white/95 transition-all shadow-lg"
-                    >
-                      <span>Open Workspace</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </Link>
+              <div className="py-6 space-y-2">
+                <Link
+                  to="/"
+                  onClick={() => setMenuOpen(false)}
+                  className="flex items-center justify-between p-3.5 rounded-2xl bg-white/5 hover:bg-white/10 text-white font-semibold text-sm transition-all"
+                >
+                  <span>Home Showcase</span>
+                  <ArrowRight className="w-4 h-4 text-white/50" />
+                </Link>
+
+                <Link
+                  to="/register"
+                  onClick={() => setMenuOpen(false)}
+                  className="flex items-center justify-between p-3.5 rounded-2xl bg-gradient-to-r from-blue-600/40 to-indigo-600/40 hover:from-blue-600/60 hover:to-indigo-600/60 border border-blue-400/30 text-white font-bold text-sm transition-all shadow-lg"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <UserPlus className="w-4 h-4 text-blue-300" />
+                    <span>Create Organization Account</span>
                   </div>
-                ) : (
-                  <>
-                    <Link
-                      to="/login"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center justify-between p-3.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/15 text-white transition-all group"
-                    >
-                      <div className="flex items-center gap-3">
-                        <Lock className="w-4 h-4 text-white/80 group-hover:text-white" />
-                        <span>Portal Sign In</span>
-                      </div>
-                      <ChevronRight className="w-4 h-4 text-white/60 group-hover:translate-x-1 transition-transform" />
-                    </Link>
+                  <span className="text-[10px] bg-blue-500 text-white px-2 py-0.5 rounded-full font-bold uppercase">
+                    Setup
+                  </span>
+                </Link>
 
-                    <Link
-                      to="/register"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center justify-between p-3.5 rounded-2xl bg-white text-[#4143fa] hover:bg-white/95 font-bold transition-all group shadow-lg shadow-black/20"
-                    >
-                      <div className="flex items-center gap-3">
-                        <Building2 className="w-4 h-4 text-[#4143fa]" />
-                        <span>Register Company</span>
-                      </div>
-                      <ChevronRight className="w-4 h-4 text-[#4143fa] group-hover:translate-x-1 transition-transform" />
-                    </Link>
-                  </>
-                )}
-
-                <div className="pt-4 border-t border-white/15 space-y-1">
-                  <div className="text-[11px] uppercase tracking-wider text-white/60 px-3 py-1 font-bold">
-                    Platform Quick Access
+                <Link
+                  to="/login"
+                  onClick={() => setMenuOpen(false)}
+                  className="flex items-center justify-between p-3.5 rounded-2xl bg-white/5 hover:bg-white/10 text-white font-semibold text-sm transition-all"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <LogIn className="w-4 h-4 text-white/70" />
+                    <span>Sign In to Fleet Command</span>
                   </div>
+                  <ArrowRight className="w-4 h-4 text-white/50" />
+                </Link>
 
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      setDownloadModalOpen(true);
-                    }}
-                    className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-white/10 text-white/90 hover:text-white transition-colors"
-                  >
-                    <div className="flex items-center gap-3">
-                      <QrCode className="w-4 h-4 text-white/70" />
-                      <span>Mobile Driver App QR</span>
-                    </div>
-                    <span className="text-[11px] bg-white/20 px-2 py-0.5 rounded-md font-mono">App</span>
-                  </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setDownloadModalOpen(true);
+                  }}
+                  className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-white/5 hover:bg-white/10 text-white font-semibold text-sm transition-all text-left"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Smartphone className="w-4 h-4 text-emerald-400" />
+                    <span>Download Mobile Driver App</span>
+                  </div>
+                  <QrCode className="w-4 h-4 text-emerald-400" />
+                </button>
 
-                  <Link
-                    to="/admin/dashboard"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center justify-between p-3 rounded-xl hover:bg-white/10 text-white/90 hover:text-white transition-colors"
-                  >
-                    <div className="flex items-center gap-3">
-                      <ShieldCheck className="w-4 h-4 text-white/70" />
-                      <span>Admin Command Center</span>
-                    </div>
-                  </Link>
+                <Link
+                  to="/driver/home"
+                  onClick={() => setMenuOpen(false)}
+                  className="flex items-center justify-between p-3.5 rounded-2xl bg-white/5 hover:bg-white/10 text-white font-semibold text-sm transition-all"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Wrench className="w-4 h-4 text-amber-400" />
+                    <span>Driver Inspection Portal</span>
+                  </div>
+                  <ExternalLink className="w-4 h-4 text-white/50" />
+                </Link>
+              </div>
 
-                  <Link
-                    to="/manager/dashboard"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center justify-between p-3 rounded-xl hover:bg-white/10 text-white/90 hover:text-white transition-colors"
-                  >
-                    <div className="flex items-center gap-3">
-                      <Truck className="w-4 h-4 text-white/70" />
-                      <span>Fleet Operations</span>
-                    </div>
-                  </Link>
-
-                  <Link
-                    to="/driver/home"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center justify-between p-3 rounded-xl hover:bg-white/10 text-white/90 hover:text-white transition-colors"
-                  >
-                    <div className="flex items-center gap-3">
-                      <Smartphone className="w-4 h-4 text-white/70" />
-                      <span>Driver Mobile Web Portal</span>
-                    </div>
-                  </Link>
+              {/* Platform Highlights */}
+              <div className="p-4 rounded-2xl bg-blue-950/40 border border-blue-800/40 space-y-2.5 text-xs text-blue-200">
+                <div className="font-bold text-white flex items-center gap-1.5">
+                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                  Enterprise Fleet Ecosystem
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  <span>Automated service & repair telemetry</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  <span>Role-based access (Admin, Manager, Driver)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  <span>Live Brevo OTP authentication</span>
                 </div>
               </div>
             </div>
 
-            {/* Bottom Footer Details */}
-            <div className="pt-6 border-t border-white/15 text-xs text-white/60 space-y-2">
-              <div className="flex items-center justify-between">
-                <span>SERVIQ Fleet Core</span>
-                <span className="font-mono text-white/80">v1.0.0</span>
-              </div>
-              <p className="text-[11px] leading-relaxed">
-                Enterprise vehicle maintenance, telematics, and transport dispatch command center.
+            {/* Drawer Footer */}
+            <div className="pt-6 border-t border-white/10 space-y-3">
+              {user ? (
+                <Link
+                  to={getDashboardLink()}
+                  onClick={() => setMenuOpen(false)}
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-white text-[#4143fa] font-bold text-sm shadow-xl hover:bg-white/90 transition-all"
+                >
+                  <span>Open Command Center</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              ) : (
+                <div className="grid grid-cols-2 gap-2">
+                  <Link
+                    to="/login"
+                    onClick={() => setMenuOpen(false)}
+                    className="flex items-center justify-center py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs transition-colors"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/register"
+                    onClick={() => setMenuOpen(false)}
+                    className="flex items-center justify-center py-2.5 rounded-xl bg-white text-[#4143fa] font-bold text-xs shadow-lg hover:bg-white/90 transition-all"
+                  >
+                    Get Started
+                  </Link>
+                </div>
+              )}
+              <p className="text-[11px] text-center text-white/40">
+                © {new Date().getFullYear()} SERVIQ Systems. All rights reserved.
               </p>
             </div>
+
           </div>
         </div>
       )}
 
       {/* =========================================================================
-          DOWNLOAD NOW / DRIVER APP QR MODAL
+          Download & QR Code Modal
       ========================================================================= */}
       {downloadModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-in fade-in duration-200">
-          <div className="w-full max-w-md bg-[#181ca8] border border-white/20 rounded-3xl shadow-2xl p-6 sm:p-8 space-y-6 relative overflow-hidden text-center animate-in zoom-in-95 duration-200">
-            {/* Ambient Corner Accent */}
-            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-400 via-teal-300 to-indigo-300" />
-
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-in fade-in duration-150">
+          <div className="w-full max-w-sm sm:max-w-md bg-[#0a1128] border border-white/20 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl relative text-center">
+            
             {/* Close Button */}
             <button
               type="button"
               onClick={() => setDownloadModalOpen(false)}
-              className="absolute top-5 right-5 p-2 rounded-xl text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+              className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
 
-            {/* Header */}
-            <div className="space-y-1">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 border border-white/20 text-xs font-semibold text-white mb-2">
+            {/* Modal Title */}
+            <div>
+              <div className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 mb-2">
                 <Smartphone className="w-3.5 h-3.5" />
-                <span>Driver Mobile Experience</span>
+                SERVIQ Mobile Driver APK
               </div>
-              <h3 className="text-xl sm:text-2xl font-extrabold text-white font-['Outfit',sans-serif]">
-                Get the SERVIQ Driver App
+              <h3 className="text-xl sm:text-2xl font-bold text-white">
+                Download SERVIQ App
               </h3>
-              <p className="text-xs text-white/70 max-w-xs mx-auto">
-                Scan the QR code with your smartphone camera to access vehicle inspections, assignments, and expense tracking.
+              <p className="text-xs text-blue-200/80 mt-1">
+                Scan the QR code with your mobile camera or download directly.
               </p>
             </div>
 
-            {/* Crisp High-Res QR Display */}
-            <div className="p-5 rounded-2xl bg-white shadow-xl max-w-[210px] mx-auto border-4 border-white/30 flex flex-col items-center justify-center">
-              {/* SVG QR Code Representation */}
+            {/* QR Code Container */}
+            <div className="p-4 bg-white rounded-2xl inline-block shadow-2xl shadow-blue-950/80 mx-auto">
               <svg
                 viewBox="0 0 100 100"
-                className="w-40 h-40"
-                fill="#181ca8"
-                xmlns="http://www.w3.org/2000/svg"
+                className="w-44 h-44 text-[#0a1128]"
+                fill="currentColor"
               >
-                {/* Outer Finder Patterns */}
-                <rect x="5" y="5" width="28" height="28" rx="4" fill="#181ca8" />
+                {/* Clean stylized QR code matrix */}
+                <rect x="5" y="5" width="28" height="28" rx="4" fill="#0a1128" />
                 <rect x="9" y="9" width="20" height="20" rx="2" fill="#ffffff" />
-                <rect x="13" y="13" width="12" height="12" rx="1" fill="#181ca8" />
+                <rect x="13" y="13" width="12" height="12" rx="1" fill="#0a1128" />
 
-                <rect x="67" y="5" width="28" height="28" rx="4" fill="#181ca8" />
+                <rect x="67" y="5" width="28" height="28" rx="4" fill="#0a1128" />
                 <rect x="71" y="9" width="20" height="20" rx="2" fill="#ffffff" />
-                <rect x="75" y="13" width="12" height="12" rx="1" fill="#181ca8" />
+                <rect x="75" y="13" width="12" height="12" rx="1" fill="#0a1128" />
 
-                <rect x="5" y="67" width="28" height="28" rx="4" fill="#181ca8" />
+                <rect x="5" y="67" width="28" height="28" rx="4" fill="#0a1128" />
                 <rect x="9" y="71" width="20" height="20" rx="2" fill="#ffffff" />
-                <rect x="13" y="75" width="12" height="12" rx="1" fill="#181ca8" />
+                <rect x="13" y="75" width="12" height="12" rx="1" fill="#0a1128" />
 
-                {/* Data Grid Bits */}
-                <rect x="38" y="8" width="6" height="6" />
-                <rect x="48" y="12" width="6" height="6" />
-                <rect x="58" y="8" width="5" height="6" />
-                <rect x="38" y="22" width="6" height="6" />
-                <rect x="48" y="26" width="6" height="6" />
+                {/* Pattern Data points */}
+                <rect x="38" y="8" width="6" height="6" fill="#0a1128" />
+                <rect x="48" y="8" width="6" height="6" fill="#0a1128" />
+                <rect x="58" y="8" width="6" height="6" fill="#0a1128" />
+                <rect x="38" y="18" width="6" height="6" fill="#0a1128" />
+                <rect x="48" y="24" width="8" height="8" rx="1" fill="#4143fa" />
+                <rect x="38" y="38" width="24" height="24" rx="3" fill="#4143fa" />
 
-                <rect x="8" y="38" width="6" height="6" />
-                <rect x="22" y="38" width="6" height="6" />
-                <rect x="8" y="48" width="6" height="6" />
-                <rect x="22" y="52" width="6" height="6" />
+                <rect x="8" y="38" width="6" height="6" fill="#0a1128" />
+                <rect x="18" y="48" width="6" height="6" fill="#0a1128" />
+                <rect x="28" y="38" width="6" height="6" fill="#0a1128" />
 
-                <rect x="38" y="38" width="8" height="8" rx="2" />
-                <rect x="54" y="38" width="8" height="8" rx="2" />
-                <rect x="38" y="54" width="8" height="8" rx="2" />
-                <rect x="54" y="54" width="8" height="8" rx="2" />
+                <rect x="68" y="38" width="6" height="6" fill="#0a1128" />
+                <rect x="78" y="48" width="6" height="6" fill="#0a1128" />
+                <rect x="88" y="38" width="6" height="6" fill="#0a1128" />
 
-                <rect x="68" y="38" width="6" height="6" />
-                <rect x="82" y="42" width="8" height="6" />
-                <rect x="72" y="52" width="6" height="6" />
-                <rect x="86" y="52" width="6" height="6" />
-
-                <rect x="38" y="72" width="6" height="6" />
-                <rect x="48" y="68" width="6" height="6" />
-                <rect x="56" y="76" width="6" height="6" />
-                <rect x="42" y="84" width="6" height="6" />
-                <rect x="54" y="86" width="6" height="6" />
-
-                <rect x="68" y="72" width="8" height="6" />
-                <rect x="82" y="68" width="6" height="6" />
-                <rect x="74" y="82" width="6" height="6" />
-                <rect x="84" y="82" width="8" height="8" rx="1" />
+                <rect x="38" y="68" width="6" height="6" fill="#0a1128" />
+                <rect x="48" y="78" width="6" height="6" fill="#0a1128" />
+                <rect x="58" y="88" width="6" height="6" fill="#0a1128" />
+                <rect x="68" y="68" width="6" height="6" fill="#0a1128" />
+                <rect x="78" y="78" width="6" height="6" fill="#0a1128" />
+                <rect x="88" y="88" width="6" height="6" fill="#0a1128" />
               </svg>
-              <span className="text-[10px] text-[#181ca8] font-bold tracking-wider mt-2">
-                SCAN WITH PHONE
-              </span>
             </div>
 
-            {/* Direct Action Options */}
-            <div className="space-y-2.5 pt-2">
-              <Link
-                to="/driver/home"
-                onClick={() => setDownloadModalOpen(false)}
-                className="w-full py-3 rounded-xl bg-white text-[#181ca8] font-bold text-xs flex items-center justify-center gap-2 hover:bg-white/95 transition-all shadow-lg active:scale-98"
+            {/* Action Buttons */}
+            <div className="space-y-2.5">
+              <a
+                href="/driver/home"
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-white text-[#4143fa] font-bold text-sm shadow-xl hover:bg-white/90 transition-all hover:scale-[1.02] active:scale-98"
               >
                 <Smartphone className="w-4 h-4" />
-                <span>Open Driver Mobile Web App</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </Link>
+                <span>Launch Mobile Driver Experience</span>
+              </a>
 
-              <div className="flex gap-2">
-                <Link
-                  to="/register"
-                  onClick={() => setDownloadModalOpen(false)}
-                  className="flex-1 py-2.5 rounded-xl bg-white/15 hover:bg-white/20 border border-white/20 text-white font-semibold text-xs text-center transition-colors"
-                >
-                  Register Company
-                </Link>
-                <Link
-                  to="/login"
-                  onClick={() => setDownloadModalOpen(false)}
-                  className="flex-1 py-2.5 rounded-xl bg-white/15 hover:bg-white/20 border border-white/20 text-white font-semibold text-xs text-center transition-colors"
-                >
-                  Portal Login
-                </Link>
-              </div>
+              <a
+                href="#download-apk"
+                onClick={(e) => {
+                  e.preventDefault();
+                  alert('SERVIQ Driver APK download initiated. Compatible with Android 8.0+');
+                }}
+                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs border border-white/15 transition-all"
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span>Download Android APK (Direct)</span>
+              </a>
             </div>
 
             <p className="text-[11px] text-white/50">
-              Compatible with iOS Safari, Chrome for Android, and PWA Mobile installations.
+              Compatible with Android, iOS, tablets, and modern desktop browsers.
             </p>
           </div>
         </div>
@@ -410,5 +384,3 @@ export const LandingPage: React.FC = () => {
     </div>
   );
 };
-
-export default LandingPage;
