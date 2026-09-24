@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
@@ -29,6 +29,15 @@ import {
 export const LandingPage: React.FC = () => {
   const { user } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const getDashboardLink = () => {
     if (!user) return '/login';
@@ -46,138 +55,143 @@ export const LandingPage: React.FC = () => {
       <div className="fixed bottom-20 right-10 w-[500px] h-[500px] bg-indigo-400/10 rounded-full blur-[160px] pointer-events-none -z-10 animate-pulse-glow" style={{ animationDelay: '2s' }} />
 
       {/* =========================================================================
-          1. NAVIGATION (Fixed on Electric Blue with White Logo)
+          1. NAVIGATION — FIXED TRANSPARENT FROSTED GLASS HEADER (OVER ALL PAGES)
       ========================================================================= */}
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 w-full px-6 sm:px-12 transition-all duration-300 flex items-center justify-between ${
+          scrolled
+            ? 'py-3 bg-white/70 backdrop-blur-2xl border-b border-slate-200/40 shadow-lg shadow-black/5'
+            : 'py-3.5 sm:py-4 bg-white/50 backdrop-blur-xl border-b border-white/25 shadow-sm'
+        }`}
+      >
+        {/* Left: Serviq Blue folded logo + Serviq Blue name logo */}
+        <Link to="/" className="flex items-center gap-2.5 sm:gap-3 group">
+          <img
+            src="/logo-blue.png"
+            alt="Serviq"
+            className="w-7 h-7 sm:w-8 sm:h-8 object-contain"
+          />
+          <img
+            src="/serviq-name-logo-blue.png"
+            alt="Serviq"
+            className="h-5 sm:h-6 md:h-7 w-auto object-contain group-hover:opacity-90 transition-opacity"
+          />
+        </Link>
+
+        {/* Right: Hamburger icon (2 clean horizontal black lines matching reference) */}
+        <button
+          onClick={() => setMobileMenuOpen(true)}
+          className="w-10 h-10 flex flex-col justify-center items-end gap-1.5 p-2 focus:outline-none cursor-pointer group"
+          aria-label="Navigation Menu"
+        >
+          <span className="w-6 h-[2px] bg-slate-900 rounded-full transition-all group-hover:w-7"></span>
+          <span className="w-6 h-[2px] bg-slate-900 rounded-full transition-all group-hover:w-7"></span>
+        </button>
+      </header>
+
+      {/* Slide-over Navigation Drawer */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-[60] flex justify-end bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="w-full max-w-sm bg-studio-blue border-l border-white/20 h-full p-8 flex flex-col justify-between shadow-2xl animate-in slide-in-from-right duration-250">
+            <div>
+              <div className="flex items-center justify-between pb-6 border-b border-white/15">
+                <div className="flex items-center gap-2.5">
+                  <img src="/logo-white.png" alt="Serviq" className="w-7 h-7 object-contain" />
+                  <img src="/serviq-name-logo.png" alt="Serviq" className="h-6 w-auto object-contain" />
+                </div>
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-xl transition-colors"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+
+              <div className="mt-8 space-y-4 font-neue-haas-medium text-base">
+                <a
+                  href="#hero"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 text-white/90 hover:text-white transition-colors"
+                >
+                  Home
+                </a>
+                <a
+                  href="#features"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 text-white/90 hover:text-white transition-colors"
+                >
+                  Features & Telemetry
+                </a>
+                <a
+                  href="#how-it-works"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 text-white/90 hover:text-white transition-colors"
+                >
+                  How It Works
+                </a>
+                <a
+                  href="#roles"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 text-white/90 hover:text-white transition-colors"
+                >
+                  Fleet Solutions
+                </a>
+                <a
+                  href="#about"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 text-white/90 hover:text-white transition-colors"
+                >
+                  About SERVIQ
+                </a>
+                <a
+                  href="#contact"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2 text-white/90 hover:text-white transition-colors"
+                >
+                  Contact
+                </a>
+              </div>
+            </div>
+
+            <div className="pt-6 border-t border-white/15 space-y-3 font-neue-haas-medium">
+              {user ? (
+                <Link
+                  to={getDashboardLink()}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full py-3 bg-white text-[#393df0] font-bold text-center block rounded-xl shadow-lg hover:bg-white/95 transition-all"
+                >
+                  Open Console →
+                </Link>
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-full py-3 bg-white/10 hover:bg-white/20 text-white font-semibold text-center block rounded-xl transition-all"
+                  >
+                    Log In
+                  </Link>
+                  <Link
+                    to="/register"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-full py-3 bg-white text-[#393df0] font-bold text-center block rounded-xl shadow-lg hover:bg-white/95 transition-all"
+                  >
+                    Get Started Free
+                  </Link>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* =========================================================================
           HERO SECTION — EXACT MATCH OF UPLOADED DESIGN (FULL VIEWPORT)
       ========================================================================= */}
       <section
         id="hero"
-        className="relative min-h-screen flex flex-col justify-between overflow-hidden bg-studio-blue"
+        className="relative min-h-screen flex flex-col justify-between overflow-hidden bg-studio-blue pt-20 sm:pt-24"
       >
-        {/* Navigation — Full-Width Frosted Glass Header matching reference */}
-        <header className="sticky top-0 z-50 w-full bg-white/85 backdrop-blur-xl border-b border-slate-200/50 px-6 sm:px-12 py-3.5 sm:py-4 flex items-center justify-between shadow-sm transition-all">
-          {/* Left: Serviq Blue folded logo + Serviq Blue name logo */}
-          <Link to="/" className="flex items-center gap-2.5 sm:gap-3 group">
-            <img
-              src="/logo-blue.png"
-              alt="Serviq"
-              className="w-7 h-7 sm:w-8 sm:h-8 object-contain"
-            />
-            <img
-              src="/serviq-name-logo-blue.png"
-              alt="Serviq"
-              className="h-5 sm:h-6 md:h-7 w-auto object-contain group-hover:opacity-90 transition-opacity"
-            />
-          </Link>
-
-          {/* Right: Hamburger icon (2 clean horizontal black lines matching reference) */}
-          <button
-            onClick={() => setMobileMenuOpen(true)}
-            className="w-10 h-10 flex flex-col justify-center items-end gap-1.5 p-2 focus:outline-none cursor-pointer group"
-            aria-label="Navigation Menu"
-          >
-            <span className="w-6 h-[2px] bg-slate-900 rounded-full transition-all group-hover:w-7"></span>
-            <span className="w-6 h-[2px] bg-slate-900 rounded-full transition-all group-hover:w-7"></span>
-          </button>
-        </header>
-
-        {/* Slide-over Navigation Drawer */}
-        {mobileMenuOpen && (
-          <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className="w-full max-w-sm bg-studio-blue border-l border-white/20 h-full p-8 flex flex-col justify-between shadow-2xl animate-in slide-in-from-right duration-250">
-              <div>
-                <div className="flex items-center justify-between pb-6 border-b border-white/15">
-                  <div className="flex items-center gap-2.5">
-                    <img src="/logo-white.png" alt="Serviq" className="w-7 h-7 object-contain" />
-                    <img src="/serviq-name-logo.png" alt="Serviq" className="h-6 w-auto object-contain" />
-                  </div>
-                  <button
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-xl transition-colors"
-                  >
-                    <X className="w-6 h-6" />
-                  </button>
-                </div>
-
-                <div className="mt-8 space-y-4 font-neue-haas-medium text-base">
-                  <a
-                    href="#hero"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block py-2 text-white/90 hover:text-white transition-colors"
-                  >
-                    Home
-                  </a>
-                  <a
-                    href="#features"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block py-2 text-white/90 hover:text-white transition-colors"
-                  >
-                    Features & Telemetry
-                  </a>
-                  <a
-                    href="#how-it-works"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block py-2 text-white/90 hover:text-white transition-colors"
-                  >
-                    How It Works
-                  </a>
-                  <a
-                    href="#roles"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block py-2 text-white/90 hover:text-white transition-colors"
-                  >
-                    Fleet Solutions
-                  </a>
-                  <a
-                    href="#about"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block py-2 text-white/90 hover:text-white transition-colors"
-                  >
-                    About SERVIQ
-                  </a>
-                  <a
-                    href="#contact"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="block py-2 text-white/90 hover:text-white transition-colors"
-                  >
-                    Contact
-                  </a>
-                </div>
-              </div>
-
-              <div className="pt-6 border-t border-white/15 space-y-3 font-neue-haas-medium">
-                {user ? (
-                  <Link
-                    to={getDashboardLink()}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="w-full py-3 bg-white text-[#393df0] font-bold text-center block rounded-xl shadow-lg hover:bg-white/95 transition-all"
-                  >
-                    Open Console →
-                  </Link>
-                ) : (
-                  <>
-                    <Link
-                      to="/login"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="w-full py-3 bg-white/10 hover:bg-white/20 text-white font-semibold text-center block rounded-xl transition-all"
-                    >
-                      Log In
-                    </Link>
-                    <Link
-                      to="/register"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="w-full py-3 bg-white text-[#393df0] font-bold text-center block rounded-xl shadow-lg hover:bg-white/95 transition-all"
-                    >
-                      Get Started Free
-                    </Link>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Center Typography & QR Code */}
         <div className="relative z-20 max-w-4xl mx-auto flex flex-col items-center my-auto text-center px-4 py-8 animate-in fade-in zoom-in-95 duration-300">
           {/* Kicker: Smarter Fleet. Smarter Maintenance */}
