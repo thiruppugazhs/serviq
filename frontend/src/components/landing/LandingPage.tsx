@@ -29,8 +29,6 @@ import {
 export const LandingPage: React.FC = () => {
   const { user } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [showDownloadModal, setShowDownloadModal] = useState(false);
-  const [activeHotspot, setActiveHotspot] = useState<string | null>(null);
 
   const getDashboardLink = () => {
     if (!user) return '/login';
@@ -41,362 +39,131 @@ export const LandingPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#2435e5] text-white font-['Plus_Jakarta_Sans',sans-serif] selection:bg-white selection:text-[#2435e5] overflow-x-hidden relative">
+    <div className="min-h-screen bg-[#3831eb] text-white font-['Plus_Jakarta_Sans',sans-serif] selection:bg-white selection:text-[#3831eb] overflow-x-hidden relative">
+
+      {/* Ambient background glow orbs */}
+      <div className="fixed top-20 left-10 w-96 h-96 bg-white/5 rounded-full blur-[130px] pointer-events-none -z-10 animate-pulse-glow" />
+      <div className="fixed bottom-20 right-10 w-[500px] h-[500px] bg-indigo-400/10 rounded-full blur-[160px] pointer-events-none -z-10 animate-pulse-glow" style={{ animationDelay: '2s' }} />
 
       {/* =========================================================================
-          PAGE 1: 3D HERO STAGE (INSPIRED BY UPLOADED ARTWORK: GEAR, SPANNER, CAR, CUBE)
+          1. NAVIGATION (Fixed on Electric Blue with White Logo)
       ========================================================================= */}
-      <section id="hero" className="relative w-full min-h-screen flex flex-col justify-between overflow-hidden bg-[#2435e5]">
-        
-        {/* Full-bleed 3D Background Layer */}
-        <div className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden">
+      {/* =========================================================================
+          1. NAVIGATION (Minimalist Header matching uploaded image)
+      ========================================================================= */}
+      <nav className="relative z-40 w-full px-6 sm:px-12 pt-6 sm:pt-8 flex items-center justify-between">
+        {/* Left: Serviq 3D folded logo + Serviq text */}
+        <Link to="/" className="flex items-center gap-2.5 sm:gap-3 group">
           <img
-            src="/hero-bg.jpg"
-            alt="SERVIQ 3D Fleet Management Scene"
-            className="w-full h-full object-cover object-center filter saturate-[1.04] contrast-[1.02]"
+            src="/logo-white.png"
+            alt="Serviq"
+            className="w-7 h-7 sm:w-8 sm:h-8 object-contain drop-shadow"
           />
-          {/* Subtle Ambient Radial Depth Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#2435e5]/40 pointer-events-none" />
-        </div>
-
-        {/* TOP BAR: Clean Minimalist Brand on Left, 3-Bar Hamburger Menu on Right */}
-        <header className="relative z-30 w-full px-6 sm:px-10 lg:px-14 pt-6 sm:pt-8 flex items-center justify-between">
-          {/* Brand Logo & Wordmark matching uploaded design */}
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white flex items-center justify-center p-2 shadow-xl group-hover:scale-105 transition-transform">
-              <svg viewBox="0 0 32 32" fill="none" className="w-full h-full">
-                <rect x="3" y="6" width="26" height="20" rx="4" fill="#2435e5"/>
-                <path d="M12 6H8C6.34315 6 5 7.34315 5 9V13H15V6H12Z" fill="#1825b5"/>
-                <circle cx="16" cy="16" r="3.5" fill="white"/>
-                <path d="M16 10V12M16 20V22M10 16H12M20 16H22M11.8 11.8L13.2 13.2M18.8 18.8L20.2 20.2M11.8 20.2L13.2 18.8M18.8 13.2L20.2 11.8" stroke="white" strokeWidth="1.8" strokeLinecap="round"/>
-              </svg>
-            </div>
-            <span className="font-extrabold text-2xl sm:text-3xl tracking-tight text-white font-['Outfit',sans-serif]">
-              Serviq
-            </span>
-          </Link>
-
-          {/* Right Hamburger Icon matching reference */}
-          <div className="flex items-center gap-3">
-            {user && (
-              <Link
-                to={getDashboardLink()}
-                className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/15 hover:bg-white/25 border border-white/25 backdrop-blur-md text-white text-xs font-bold transition-all"
-              >
-                <span>Console</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            )}
-            <button
-              onClick={() => setMobileMenuOpen(true)}
-              className="p-2.5 sm:p-3 rounded-2xl bg-white/10 hover:bg-white/25 border border-white/20 backdrop-blur-md text-white transition-all hover:scale-105 active:scale-95 shadow-xl group"
-              aria-label="Toggle navigation drawer"
-            >
-              <Menu className="w-6 h-6 sm:w-7 sm:h-7 stroke-[2.5] group-hover:scale-110 transition-transform" />
-            </button>
-          </div>
-        </header>
-
-        {/* INTERACTIVE 3D OBJECT HOTSPOTS (Gear on Left, Spanner on Right, Car on Bottom-Right) */}
-        
-        {/* 1. 3D Gear Hotspot (Left) */}
-        <div className="hidden lg:block absolute left-[2%] top-[22%] z-20">
-          <div
-            className="relative cursor-pointer"
-            onMouseEnter={() => setActiveHotspot('gear')}
-            onMouseLeave={() => setActiveHotspot(null)}
-          >
-            <div className="w-44 h-44 rounded-full border border-white/0 hover:border-white/40 hover:bg-white/10 backdrop-blur-[2px] transition-all duration-300 flex items-center justify-center">
-              <span className={`w-3.5 h-3.5 rounded-full bg-white shadow-[0_0_15px_#ffffff] transition-opacity duration-300 ${activeHotspot === 'gear' ? 'opacity-100 scale-125' : 'opacity-70 animate-ping'}`} />
-            </div>
-
-            {/* Floating Glass Tooltip */}
-            <div className={`absolute left-full ml-3 top-1/2 -translate-y-1/2 w-72 p-4 rounded-2xl bg-[#0d1633]/90 border border-white/25 backdrop-blur-xl shadow-2xl transition-all duration-300 pointer-events-none ${activeHotspot === 'gear' ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-3'}`}>
-              <div className="flex items-center gap-2 text-xs font-bold text-sky-300 uppercase tracking-wider">
-                <Wrench className="w-4 h-4" />
-                Preventive Maintenance
-              </div>
-              <p className="text-xs text-white/90 mt-1 font-medium leading-relaxed">
-                Automated service schedules with calendar and odometer dual-triggers.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* 2. 3D Spanner Hotspot (Right) */}
-        <div className="hidden lg:block absolute right-[2%] top-[18%] z-20">
-          <div
-            className="relative cursor-pointer"
-            onMouseEnter={() => setActiveHotspot('spanner')}
-            onMouseLeave={() => setActiveHotspot(null)}
-          >
-            <div className="w-48 h-48 rounded-full border border-white/0 hover:border-white/40 hover:bg-white/10 backdrop-blur-[2px] transition-all duration-300 flex items-center justify-center">
-              <span className={`w-3.5 h-3.5 rounded-full bg-white shadow-[0_0_15px_#ffffff] transition-opacity duration-300 ${activeHotspot === 'spanner' ? 'opacity-100 scale-125' : 'opacity-70 animate-ping'}`} style={{ animationDelay: '1s' }} />
-            </div>
-
-            {/* Floating Glass Tooltip */}
-            <div className={`absolute right-full mr-3 top-1/2 -translate-y-1/2 w-72 p-4 rounded-2xl bg-[#0d1633]/90 border border-white/25 backdrop-blur-xl shadow-2xl transition-all duration-300 pointer-events-none ${activeHotspot === 'spanner' ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-3'}`}>
-              <div className="flex items-center gap-2 text-xs font-bold text-amber-300 uppercase tracking-wider">
-                <AlertTriangle className="w-4 h-4" />
-                Diagnostics & Repairs
-              </div>
-              <p className="text-xs text-white/90 mt-1 font-medium leading-relaxed">
-                Roadside breakdown logs, mechanic work orders, and parts expense tracking.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* 3. 3D Car Hotspot & Headlights Glow (Bottom-Right) */}
-        <div className="hidden md:block absolute right-[6%] bottom-[4%] z-20">
-          <div
-            className="relative cursor-pointer"
-            onMouseEnter={() => setActiveHotspot('car')}
-            onMouseLeave={() => setActiveHotspot(null)}
-          >
-            {/* Glowing animated headlight beams */}
-            <div className="absolute -left-20 bottom-8 w-40 h-20 bg-gradient-to-l from-white/35 via-sky-200/20 to-transparent blur-lg rounded-full pointer-events-none animate-pulse-glow" />
-
-            <div className="w-80 h-44 rounded-3xl border border-white/0 hover:border-white/30 hover:bg-white/5 transition-all duration-300 flex items-center justify-center">
-              <span className={`w-3.5 h-3.5 rounded-full bg-white shadow-[0_0_15px_#ffffff] transition-opacity duration-300 ${activeHotspot === 'car' ? 'opacity-100 scale-125' : 'opacity-70 animate-ping'}`} style={{ animationDelay: '2s' }} />
-            </div>
-
-            {/* Floating Glass Tooltip */}
-            <div className={`absolute bottom-full mb-3 right-1/2 translate-x-1/2 w-72 p-4 rounded-2xl bg-[#0d1633]/90 border border-white/25 backdrop-blur-xl shadow-2xl transition-all duration-300 pointer-events-none ${activeHotspot === 'car' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'}`}>
-              <div className="flex items-center gap-2 text-xs font-bold text-emerald-300 uppercase tracking-wider">
-                <Truck className="w-4 h-4" />
-                Fleet Telemetry & Tracking
-              </div>
-              <p className="text-xs text-white/90 mt-1 font-medium leading-relaxed">
-                Live vehicle status, driver assignment, fuel metrics, and odometer logs.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* 4. 3D Cube Hotspot (Bottom-Left) */}
-        <div className="hidden lg:block absolute left-[3%] bottom-[3%] z-20">
-          <div
-            className="relative cursor-pointer"
-            onMouseEnter={() => setActiveHotspot('cube')}
-            onMouseLeave={() => setActiveHotspot(null)}
-          >
-            <div className="w-32 h-32 rounded-2xl border border-white/0 hover:border-white/30 hover:bg-white/5 transition-all" />
-            
-            {/* Floating Glass Tooltip */}
-            <div className={`absolute bottom-full mb-3 left-0 w-64 p-3.5 rounded-2xl bg-[#0d1633]/90 border border-white/25 backdrop-blur-xl shadow-2xl transition-all duration-300 pointer-events-none ${activeHotspot === 'cube' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'}`}>
-              <div className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-                <Layers className="w-3.5 h-3.5 text-sky-400" />
-                Modular Fleet Engine
-              </div>
-              <p className="text-xs text-slate-300 mt-1">
-                Zero-mock architecture built for commercial transports & logistics.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* CENTER STAGE: Typography & Frosted Glass Download Card */}
-        <div className="relative z-20 flex-1 flex flex-col items-center justify-center px-4 sm:px-6 text-center my-auto pb-10 sm:pb-14">
-          
-          {/* Eyebrow Sub-heading */}
-          <p className="text-sm sm:text-lg md:text-xl font-medium text-white tracking-wide mb-1 sm:mb-2 font-['Outfit',sans-serif] drop-shadow">
-            Vehicle & Fleet Maintenance
-          </p>
-
-          {/* Massive Hero Wordmark */}
-          <h1 className="text-6xl sm:text-8xl md:text-9xl lg:text-[10.5rem] font-black text-white tracking-tight font-['Outfit',sans-serif] leading-none drop-shadow-[0_12px_30px_rgba(0,0,0,0.3)] select-none">
+          <span className="font-kabel-black text-2xl sm:text-3xl text-white tracking-tight">
             Serviq
-          </h1>
+          </span>
+        </Link>
 
-          {/* Sub-heading */}
-          <p className="text-base sm:text-xl md:text-2xl font-medium text-white mt-1 sm:mt-2 tracking-wide font-['Outfit',sans-serif] drop-shadow">
-            Management Platform
-          </p>
+        {/* Right: Hamburger icon (3 clean white horizontal lines) */}
+        <button
+          onClick={() => setMobileMenuOpen(true)}
+          className="w-10 h-10 flex flex-col justify-center items-end gap-1.5 p-2 focus:outline-none cursor-pointer group"
+          aria-label="Navigation Menu"
+        >
+          <span className="w-7 h-[2px] bg-white rounded-full transition-all group-hover:w-8"></span>
+          <span className="w-5 h-[2px] bg-white rounded-full transition-all group-hover:w-8"></span>
+          <span className="w-7 h-[2px] bg-white rounded-full transition-all group-hover:w-8"></span>
+        </button>
+      </nav>
 
-          {/* Frosted Glass Download Card matching reference */}
-          <button
-            onClick={() => setShowDownloadModal(true)}
-            className="mt-6 sm:mt-9 group relative inline-flex items-center gap-4 sm:gap-5 px-5 py-3 sm:px-6 sm:py-3.5 rounded-2xl bg-white/20 hover:bg-white/30 border border-white/35 hover:border-white/60 backdrop-blur-xl shadow-[0_15px_35px_rgba(0,0,0,0.25)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.35)] transition-all duration-300 hover:scale-105 active:scale-95 text-left"
-          >
-            {/* White QR box */}
-            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white rounded-xl p-1.5 flex items-center justify-center shadow-md group-hover:rotate-3 transition-transform">
-              <QrCode className="w-9 h-9 sm:w-11 sm:h-11 text-[#2435e5]" />
-            </div>
-
-            {/* Download Now label */}
-            <div className="pr-2">
-              <div className="text-base sm:text-xl font-bold text-white leading-tight font-['Outfit',sans-serif]">
-                Download
-              </div>
-              <div className="text-base sm:text-xl font-bold text-white leading-tight font-['Outfit',sans-serif]">
-                Now
-              </div>
-            </div>
-
-            {/* Subtle glow border hover indicator */}
-            <span className="absolute -inset-0.5 rounded-2xl bg-gradient-to-r from-white/0 via-white/30 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-          </button>
-        </div>
-
-        {/* BOTTOM INVITATION BAR: Scroll Prompt to Explore Platform */}
-        <div className="relative z-20 w-full pb-6 text-center">
-          <a
-            href="#features"
-            className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-white/80 hover:text-white transition-colors group"
-          >
-            <span>Explore Fleet Capabilities</span>
-            <ChevronDown className="w-4 h-4 group-hover:translate-y-1 transition-transform" />
-          </a>
-        </div>
-      </section>
-
-      {/* =========================================================================
-          SLIDE-OUT NAVIGATION DRAWER (TRIGGERED BY HAMBURGER MENU)
-      ========================================================================= */}
+      {/* Slide-over Navigation Drawer */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end animate-in fade-in duration-200">
-          {/* Backdrop blur overlay */}
-          <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm"
-            onClick={() => setMobileMenuOpen(false)}
-          />
-
-          {/* Drawer panel */}
-          <div className="relative w-full max-w-md bg-[#0a1124] border-l border-white/15 h-full p-6 sm:p-8 flex flex-col justify-between overflow-y-auto shadow-2xl z-10 text-white animate-in slide-in-from-right duration-300">
+        <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="w-full max-w-sm bg-[#1a29db] border-l border-white/20 h-full p-8 flex flex-col justify-between shadow-2xl animate-in slide-in-from-right duration-250">
             <div>
-              {/* Drawer Header */}
-              <div className="flex items-center justify-between pb-6 border-b border-white/10">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-white flex items-center justify-center p-1.5 shadow-md">
-                    <svg viewBox="0 0 32 32" fill="none" className="w-full h-full">
-                      <rect x="3" y="6" width="26" height="20" rx="4" fill="#2435e5"/>
-                      <circle cx="16" cy="16" r="3.5" fill="white"/>
-                    </svg>
-                  </div>
-                  <span className="font-extrabold text-2xl tracking-tight text-white font-['Outfit',sans-serif]">
-                    Serviq
-                  </span>
+              <div className="flex items-center justify-between pb-6 border-b border-white/15">
+                <div className="flex items-center gap-2.5">
+                  <img src="/logo-white.png" alt="Serviq" className="w-7 h-7 object-contain" />
+                  <span className="font-kabel-black text-2xl text-white">Serviq</span>
                 </div>
                 <button
                   onClick={() => setMobileMenuOpen(false)}
-                  className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
-                  aria-label="Close menu"
+                  className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-xl transition-colors"
                 >
                   <X className="w-6 h-6" />
                 </button>
               </div>
 
-              {/* Navigation Links */}
-              <div className="py-6 space-y-4">
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2">
-                  Navigation
-                </span>
+              <div className="mt-8 space-y-4 font-neue-haas-medium text-base">
                 <a
                   href="#hero"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block text-base font-semibold text-white/90 hover:text-white py-1 hover:translate-x-1 transition-all"
+                  className="block py-2 text-white/90 hover:text-white transition-colors"
                 >
                   Home
                 </a>
                 <a
                   href="#features"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block text-base font-semibold text-white/90 hover:text-white py-1 hover:translate-x-1 transition-all"
+                  className="block py-2 text-white/90 hover:text-white transition-colors"
                 >
-                  Platform Features
+                  Features & Telemetry
                 </a>
                 <a
                   href="#how-it-works"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block text-base font-semibold text-white/90 hover:text-white py-1 hover:translate-x-1 transition-all"
+                  className="block py-2 text-white/90 hover:text-white transition-colors"
                 >
                   How It Works
                 </a>
                 <a
                   href="#roles"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block text-base font-semibold text-white/90 hover:text-white py-1 hover:translate-x-1 transition-all"
+                  className="block py-2 text-white/90 hover:text-white transition-colors"
                 >
                   Fleet Solutions
                 </a>
                 <a
                   href="#about"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block text-base font-semibold text-white/90 hover:text-white py-1 hover:translate-x-1 transition-all"
+                  className="block py-2 text-white/90 hover:text-white transition-colors"
                 >
                   About SERVIQ
                 </a>
-              </div>
-
-              {/* Role Portals */}
-              <div className="py-4 border-t border-white/10 space-y-2">
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2">
-                  Role Portals
-                </span>
-                <Link
-                  to={user?.role === 'admin' ? '/admin/dashboard' : '/login'}
+                <a
+                  href="#contact"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all text-xs font-semibold"
+                  className="block py-2 text-white/90 hover:text-white transition-colors"
                 >
-                  <div className="flex items-center gap-2.5">
-                    <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                    <span>Organization Admin Console</span>
-                  </div>
-                  <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
-                </Link>
-                <Link
-                  to={user?.role === 'fleet_manager' ? '/manager/dashboard' : '/login'}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all text-xs font-semibold"
-                >
-                  <div className="flex items-center gap-2.5">
-                    <Gauge className="w-4 h-4 text-sky-400" />
-                    <span>Fleet Operations Manager</span>
-                  </div>
-                  <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
-                </Link>
-                <Link
-                  to="/driver/home"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all text-xs font-semibold"
-                >
-                  <div className="flex items-center gap-2.5">
-                    <Smartphone className="w-4 h-4 text-amber-400" />
-                    <span>Driver Mobile Experience</span>
-                  </div>
-                  <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
-                </Link>
+                  Contact
+                </a>
               </div>
             </div>
 
-            {/* Drawer Action Footer */}
-            <div className="pt-6 border-t border-white/10 space-y-3">
+            <div className="pt-6 border-t border-white/15 space-y-3 font-neue-haas-medium">
               {user ? (
                 <Link
                   to={getDashboardLink()}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-full py-3 rounded-xl bg-white text-[#2435e5] font-extrabold text-sm text-center flex items-center justify-center gap-2 shadow-xl hover:bg-white/90 transition-all"
+                  className="w-full py-3 bg-white text-[#1a29db] font-bold text-center block rounded-xl shadow-lg hover:bg-white/95 transition-all"
                 >
-                  <span>Open Your Dashboard</span>
-                  <ArrowRight className="w-4 h-4" />
+                  Open Console →
                 </Link>
               ) : (
                 <>
                   <Link
-                    to="/register"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="w-full py-3 rounded-xl bg-white text-[#2435e5] font-extrabold text-sm text-center flex items-center justify-center gap-2 shadow-xl hover:bg-white/90 transition-all"
-                  >
-                    <span>Get Started Free</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
-                  <Link
                     to="/login"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="w-full py-2.5 rounded-xl border border-white/20 text-white font-semibold text-xs text-center block hover:bg-white/10 transition-colors"
+                    className="w-full py-3 bg-white/10 hover:bg-white/20 text-white font-semibold text-center block rounded-xl transition-all"
                   >
-                    Sign In
+                    Log In
+                  </Link>
+                  <Link
+                    to="/register"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-full py-3 bg-white text-[#1a29db] font-bold text-center block rounded-xl shadow-lg hover:bg-white/95 transition-all"
+                  >
+                    Get Started Free
                   </Link>
                 </>
               )}
@@ -406,63 +173,231 @@ export const LandingPage: React.FC = () => {
       )}
 
       {/* =========================================================================
-          DOWNLOAD DRIVER APP MODAL (TRIGGERED BY "DOWNLOAD NOW" QR CARD)
+          HERO SECTION — EXACT MATCH OF UPLOADED DESIGN
       ========================================================================= */}
-      {showDownloadModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-          <div className="relative w-full max-w-lg bg-[#0e1628] border border-white/20 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 text-center overflow-hidden">
-            {/* Top gradient glow */}
-            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-sky-400 via-indigo-500 to-emerald-400" />
+      <section
+        id="hero"
+        className="relative min-h-[calc(100vh-80px)] flex flex-col items-center justify-center text-center px-4 overflow-hidden pt-4 pb-24"
+      >
+        {/* Center Typography & QR Code */}
+        <div className="relative z-20 max-w-4xl mx-auto flex flex-col items-center animate-in fade-in zoom-in-95 duration-300">
+          {/* Kicker: Smarter Fleet. Smarter Maintenance */}
+          <p className="font-neue-haas-medium text-white/95 text-base sm:text-lg md:text-xl tracking-normal mb-1 sm:mb-2">
+            Smarter Fleet. Smarter Maintenance
+          </p>
 
-            <div className="flex items-center justify-between pb-2">
-              <div className="text-left">
-                <span className="text-[11px] font-bold text-sky-400 uppercase tracking-widest block">
-                  SERVIQ Driver Mobile Suite
-                </span>
-                <h3 className="text-xl sm:text-2xl font-extrabold text-white font-['Outfit',sans-serif]">
-                  Download Companion App
-                </h3>
-              </div>
-              <button
-                onClick={() => setShowDownloadModal(false)}
-                className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
+          {/* Main Headline: Serviq (Kabel Black without bold) */}
+          <h1 className="font-kabel-black text-white text-7xl sm:text-8xl md:text-[112px] lg:text-[132px] leading-none my-1 tracking-tight select-none drop-shadow-md">
+            Serviq
+          </h1>
+
+          {/* Sub-headline in Neue Haas Medium */}
+          <p className="font-neue-haas-medium text-white/90 text-sm sm:text-base md:text-lg max-w-xl mx-auto leading-relaxed mt-2 sm:mt-3 px-4">
+            Everything your fleet needs to stay organized, maintained, and ready for the road.
+          </p>
+
+          {/* Translucent QR Pill Card */}
+          <div className="mt-8 sm:mt-10 inline-flex items-center gap-4.5 px-6 py-3.5 rounded-2xl bg-white/20 hover:bg-white/25 backdrop-blur-xl border border-white/30 shadow-2xl shadow-blue-950/40 transition-all cursor-pointer group hover:scale-[1.02]">
+            <div className="w-14 h-14 bg-white rounded-xl p-1.5 flex items-center justify-center shadow-md group-hover:rotate-2 transition-transform">
+              <QrCode className="w-full h-full text-[#2335f2]" />
             </div>
-
-            {/* QR Code Presentation */}
-            <div className="p-6 rounded-2xl bg-white/5 border border-white/10 flex flex-col items-center">
-              <div className="w-48 h-48 bg-white p-3 rounded-2xl shadow-2xl flex items-center justify-center">
-                <QrCode className="w-40 h-40 text-[#2435e5]" />
-              </div>
-              <p className="text-xs text-slate-300 mt-4 max-w-xs leading-relaxed">
-                Scan with your Android camera to immediately access your driver portal, inspection checklist, and roadside logs.
-              </p>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="space-y-3 pt-1">
-              <Link
-                to="/driver/home"
-                onClick={() => setShowDownloadModal(false)}
-                className="w-full py-3 rounded-xl bg-white text-[#2435e5] font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg hover:bg-white/90 transition-all hover:scale-[1.02]"
-              >
-                <Smartphone className="w-4 h-4" />
-                <span>Launch Driver Mobile Web App</span>
-              </Link>
-              <Link
-                to="/register"
-                onClick={() => setShowDownloadModal(false)}
-                className="w-full py-2.5 rounded-xl border border-white/20 text-white font-semibold text-xs flex items-center justify-center gap-2 hover:bg-white/10 transition-colors"
-              >
-                <span>Register Fleet Organization</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
+            <div className="text-left font-neue-haas-medium text-white leading-tight">
+              <div className="text-sm sm:text-base font-medium tracking-wide">Download</div>
+              <div className="text-sm sm:text-base font-medium tracking-wide">Now</div>
             </div>
           </div>
         </div>
-      )}
+
+        {/* =========================================================================
+            3D FLOATING ELEMENTS (Slots ready for your element images)
+        ========================================================================= */}
+
+        {/* 1. 3D Gear (Top-Left / Mid-Left) */}
+        <div className="absolute left-2 sm:left-6 lg:left-12 top-[16%] sm:top-[18%] w-28 sm:w-44 lg:w-60 pointer-events-none filter drop-shadow-[0_20px_35px_rgba(0,0,0,0.35)] animate-float-slow z-10">
+          <img
+            src="/gear.png"
+            alt="3D Gear"
+            className="w-full h-full object-contain"
+            onError={(e) => {
+              (e.target as HTMLElement).style.display = 'none';
+              const fallback = document.getElementById('placeholder-gear');
+              if (fallback) fallback.style.display = 'block';
+            }}
+          />
+          {/* High-fidelity 3D clay gear placeholder until gear.png is placed */}
+          <div id="placeholder-gear" className="w-full h-full">
+            <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-2xl">
+              <defs>
+                <linearGradient id="gearGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#4f68ff" />
+                  <stop offset="50%" stopColor="#2e46f6" />
+                  <stop offset="100%" stopColor="#1a2edb" />
+                </linearGradient>
+                <filter id="gearBevel" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="3" dy="6" stdDeviation="5" floodColor="#0d1880" floodOpacity="0.6" />
+                </filter>
+              </defs>
+              <g filter="url(#gearBevel)">
+                <path
+                  d="M100 20 L115 20 L120 40 L135 45 L150 32 L162 44 L152 61 L160 75 L180 78 L180 96 L160 102 L155 118 L168 132 L156 146 L138 138 L124 148 L120 168 L102 168 L98 148 L84 140 L68 152 L54 140 L64 122 L56 108 L36 104 L36 86 L56 80 L62 64 L48 50 L60 38 L78 46 L92 38 Z"
+                  fill="url(#gearGrad)"
+                />
+                <circle cx="100" cy="94" r="32" fill="#1f33e0" stroke="#4f68ff" strokeWidth="4" />
+                <circle cx="100" cy="94" r="16" fill="#1422a8" />
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        {/* 2. 3D Cube (Bottom-Left) */}
+        <div className="absolute left-4 sm:left-10 lg:left-16 bottom-4 sm:bottom-8 lg:bottom-12 w-20 sm:w-32 lg:w-44 pointer-events-none filter drop-shadow-[0_25px_40px_rgba(0,0,0,0.4)] animate-float-delayed z-10">
+          <img
+            src="/cube.png"
+            alt="3D Cube"
+            className="w-full h-full object-contain"
+            onError={(e) => {
+              (e.target as HTMLElement).style.display = 'none';
+              const fallback = document.getElementById('placeholder-cube');
+              if (fallback) fallback.style.display = 'block';
+            }}
+          />
+          {/* Isometric 3D blue cube placeholder until cube.png is placed */}
+          <div id="placeholder-cube" className="w-full h-full">
+            <svg viewBox="0 0 160 160" className="w-full h-full">
+              <defs>
+                <linearGradient id="cubeTop" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#7a93ff" />
+                  <stop offset="100%" stopColor="#4f6bff" />
+                </linearGradient>
+                <linearGradient id="cubeLeft" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#2c42ea" />
+                  <stop offset="100%" stopColor="#1524a8" />
+                </linearGradient>
+                <linearGradient id="cubeRight" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#3d56f5" />
+                  <stop offset="100%" stopColor="#1e32c4" />
+                </linearGradient>
+              </defs>
+              <g transform="translate(10, 15)">
+                {/* Top Face */}
+                <polygon points="70,10 130,45 70,80 10,45" fill="url(#cubeTop)" />
+                {/* Left Face */}
+                <polygon points="10,45 70,80 70,145 10,110" fill="url(#cubeLeft)" />
+                {/* Right Face */}
+                <polygon points="70,80 130,45 130,110 70,145" fill="url(#cubeRight)" />
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        {/* 3. 3D Spanner / Wrench (Top-Right / Mid-Right) */}
+        <div className="absolute right-2 sm:right-6 lg:right-12 top-[12%] sm:top-[14%] w-32 sm:w-52 lg:w-72 pointer-events-none filter drop-shadow-[0_25px_40px_rgba(0,0,0,0.35)] animate-float-reverse z-10">
+          <img
+            src="/spanner.png"
+            alt="3D Spanner"
+            className="w-full h-full object-contain -rotate-12"
+            onError={(e) => {
+              (e.target as HTMLElement).style.display = 'none';
+              const fallback = document.getElementById('placeholder-spanner');
+              if (fallback) fallback.style.display = 'block';
+            }}
+          />
+          {/* High-fidelity 3D wrench placeholder until spanner.png is placed */}
+          <div id="placeholder-spanner" className="w-full h-full -rotate-12">
+            <svg viewBox="0 0 220 220" className="w-full h-full">
+              <defs>
+                <linearGradient id="wrenchGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#556fff" />
+                  <stop offset="50%" stopColor="#2c42ea" />
+                  <stop offset="100%" stopColor="#1425aa" />
+                </linearGradient>
+              </defs>
+              <g transform="translate(10, 10)">
+                <path
+                  d="M160 20 C140 10 115 15 105 35 C100 45 102 55 108 65 L40 135 C35 140 35 150 40 155 L55 170 C60 175 70 175 75 170 L145 102 C155 108 165 110 175 105 C195 95 200 70 190 50 L160 70 L140 60 L140 40 Z"
+                  fill="url(#wrenchGrad)"
+                  stroke="#4f6bff"
+                  strokeWidth="3"
+                />
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        {/* 4. 3D Car with glowing headlights (Bottom-Right) */}
+        <div className="absolute right-0 sm:right-6 lg:right-12 bottom-1 sm:bottom-4 lg:bottom-6 w-60 sm:w-88 lg:w-[480px] pointer-events-none filter drop-shadow-[0_30px_50px_rgba(0,0,0,0.45)] z-10">
+          <img
+            src="/car.png"
+            alt="3D Car"
+            className="w-full h-full object-contain"
+            onError={(e) => {
+              (e.target as HTMLElement).style.display = 'none';
+              const fallback = document.getElementById('placeholder-car');
+              if (fallback) fallback.style.display = 'block';
+            }}
+          />
+          {/* 3D clay car silhouette with headlight glow until car.png is placed */}
+          <div id="placeholder-car" className="w-full h-full relative">
+            <svg viewBox="0 0 400 200" className="w-full h-full">
+              <defs>
+                <linearGradient id="carGrad" x1="0%" y1="0%" x2="100%" y2="80%">
+                  <stop offset="0%" stopColor="#556fff" />
+                  <stop offset="45%" stopColor="#293ef0" />
+                  <stop offset="100%" stopColor="#1524a8" />
+                </linearGradient>
+                <radialGradient id="headlightGlow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                  <stop offset="40%" stopColor="#d1e0ff" stopOpacity="0.8" />
+                  <stop offset="100%" stopColor="#354ff8" stopOpacity="0" />
+                </radialGradient>
+              </defs>
+              <g>
+                {/* Wheels */}
+                <ellipse cx="90" cy="165" rx="30" ry="24" fill="#0c1566" />
+                <ellipse cx="90" cy="165" rx="18" ry="14" fill="#2d42e6" />
+                <ellipse cx="320" cy="155" rx="32" ry="26" fill="#0c1566" />
+                <ellipse cx="320" cy="155" rx="20" ry="16" fill="#2d42e6" />
+
+                {/* Car Body Clay Render */}
+                <path
+                  d="M40 145 C45 130 65 125 80 125 C100 125 120 120 150 95 C180 70 230 65 280 70 C310 75 340 85 365 110 C380 125 385 140 375 155 C360 162 260 165 180 165 C100 165 50 160 40 145 Z"
+                  fill="url(#carGrad)"
+                  stroke="#4b66ff"
+                  strokeWidth="2"
+                />
+
+                {/* Windshield */}
+                <path
+                  d="M155 98 C180 78 220 75 260 78 C255 100 230 115 160 115 Z"
+                  fill="#16259e"
+                  opacity="0.8"
+                />
+
+                {/* Headlight Left Glow */}
+                <ellipse cx="48" cy="138" rx="14" ry="10" fill="url(#headlightGlow)" />
+                <ellipse cx="48" cy="138" rx="7" ry="5" fill="#ffffff" />
+
+                {/* Headlight Right Glow */}
+                <ellipse cx="108" cy="144" rx="16" ry="11" fill="url(#headlightGlow)" />
+                <ellipse cx="108" cy="144" rx="8" ry="6" fill="#ffffff" />
+              </g>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          VFX TRANSITION 1: Slanted Diagonal Cut with Floating Gear Seal (Blue to White)
+      ========================================================================= */}
+      <div className="relative w-full overflow-hidden leading-none bg-[#3831eb]">
+        {/* Floating animated transition seal */}
+        <div className="absolute left-1/2 -translate-x-1/2 -top-6 z-20 w-12 h-12 bg-white rounded-full shadow-2xl p-2.5 flex items-center justify-center animate-spin-very-slow border-2 border-[#3831eb]">
+          <img src="/logo-blue.png" alt="" className="w-full h-full object-contain" />
+        </div>
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-16 sm:h-24 text-white fill-current">
+          <path d="M1200 0L0 120V120H1200V0Z"></path>
+        </svg>
+      </div>
 
       {/* =========================================================================
           PAGE 2 (EVEN): TRUST / VALUE STRIP — WHITE BACKGROUND

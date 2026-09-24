@@ -181,3 +181,21 @@ body {
 .square-card-blue:hover::after, .square-card-white:hover::after {
   left: 150%;
 }
+
+/* Custom Typography matching user specifications */
+.font-kabel-black {
+  font-family: 'Kabel Black', 'ITC Kabel Black', 'Kabel', 'Outfit', sans-serif;
+  font-weight: 400 !important;
+  letter-spacing: -0.015em;
+}
+
+.font-neue-haas-medium {
+  font-family: 'Neue Haas Grotesk Text Pro', 'Neue Haas Grotesk', 'Neue Haas Display', 'Neue Haas', 'Helvetica Neue', 'Plus Jakarta Sans', sans-serif;
+  font-weight: 500 !important;
+}
+
+/* Studio Blue Gradient Background */
+.bg-studio-blue {
+  background: radial-gradient(circle at 50% 42%, #384ef7 0%, #293cf4 45%, #1f30e6 75%, #1826d0 100%);
+}
+
