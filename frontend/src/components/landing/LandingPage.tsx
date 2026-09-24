@@ -221,19 +221,12 @@ export const LandingPage: React.FC = () => {
             : 'py-3.5 bg-white/80 backdrop-blur-xl shadow-sm shadow-slate-900/5'
         }`}
       >
-        {/* Left: Logo & Wordmark matching section background */}
-        <Link to="/" className="flex items-center gap-2.5 sm:gap-3 group">
+        {/* Left: Clean Icon Logo without text */}
+        <Link to="/" className="flex items-center group">
           <img
             src={headerTheme === 'white' ? '/logo-blue.png' : '/logo-white.png'}
             alt="Serviq"
-            className="w-7 h-7 sm:w-8 sm:h-8 object-contain drop-shadow"
-          />
-          <img
-            src="/serviq-name-logo.png"
-            alt="Serviq"
-            className={`h-5 sm:h-6 md:h-7 w-auto object-contain transition-all group-hover:opacity-90 ${
-              headerTheme === 'white' ? 'filter brightness-0' : 'drop-shadow-sm'
-            }`}
+            className="w-8 h-8 sm:w-9 sm:h-9 object-contain drop-shadow group-hover:scale-105 transition-transform"
           />
         </Link>
 
@@ -422,32 +415,46 @@ export const LandingPage: React.FC = () => {
         id="hero"
         className="relative min-h-screen flex flex-col justify-between overflow-hidden bg-studio-blue pt-20 sm:pt-24"
       >
-        {/* Center Typography & QR Code */}
-        <div className="relative z-20 max-w-4xl mx-auto flex flex-col items-center my-auto text-center px-4 py-8 animate-in fade-in zoom-in-95 duration-300">
-          {/* Kicker: Smarter Fleet. Smarter Maintenance */}
-          <p className="font-neue-haas-medium text-white/95 text-base sm:text-lg md:text-xl tracking-normal mb-1 sm:mb-2">
+        {/* Center Typography & CTA Buttons */}
+        <div className="relative z-20 max-w-5xl mx-auto flex flex-col items-center my-auto text-center px-4 py-8 animate-in fade-in zoom-in-95 duration-300">
+          {/* Main Headline: Smarter Fleet. Smarter Maintenance (Anek Latin font) */}
+          <h1
+            className="font-anek-latin font-bold text-white text-5xl sm:text-6xl md:text-7xl lg:text-[84px] xl:text-[92px] leading-[1.08] tracking-tight select-none drop-shadow-md max-w-4xl mx-auto"
+            style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+          >
             Smarter Fleet. Smarter Maintenance
-          </p>
-
-          {/* Main Headline: Serviq (Anek Latin font) */}
-          <h1 className="font-anek-latin font-bold text-white text-7xl sm:text-8xl md:text-[112px] lg:text-[132px] leading-none my-1 tracking-tight select-none drop-shadow-md">
-            Serviq
           </h1>
 
           {/* Sub-headline in Neue Haas Medium */}
-          <p className="font-neue-haas-medium text-white/90 text-sm sm:text-base md:text-lg max-w-xl mx-auto leading-relaxed mt-2 sm:mt-3 px-4">
+          <p className="font-neue-haas-medium text-white/90 text-sm sm:text-base md:text-lg max-w-xl mx-auto leading-relaxed mt-4 sm:mt-5 px-4">
             Everything your fleet needs to stay organized, maintained, and ready for the road.
           </p>
 
-          {/* Translucent QR Pill Card */}
-          <div className="mt-8 sm:mt-10 inline-flex items-center gap-4.5 px-6 py-3.5 rounded-2xl bg-white/20 hover:bg-white/25 backdrop-blur-xl border border-white/30 shadow-2xl shadow-blue-950/40 transition-all cursor-pointer group hover:scale-[1.02]">
-            <div className="w-14 h-14 bg-white rounded-xl p-1.5 flex items-center justify-center shadow-md group-hover:rotate-2 transition-transform">
-              <QrCode className="w-full h-full text-[#2335f2]" />
-            </div>
-            <div className="text-left font-neue-haas-medium text-white leading-tight">
-              <div className="text-sm sm:text-base font-medium tracking-wide">Download</div>
-              <div className="text-sm sm:text-base font-medium tracking-wide">Now</div>
-            </div>
+          {/* CTA Action Buttons with Continuous BG Shining */}
+          <div className="mt-8 sm:mt-10 flex flex-wrap items-center justify-center gap-4 sm:gap-5 z-20">
+            {/* Get Started Button */}
+            <Link
+              to={user ? getDashboardLink() : "/register"}
+              className="relative overflow-hidden group inline-flex items-center gap-2.5 px-8 py-3.5 sm:px-9 sm:py-4 rounded-2xl bg-white text-[#2335f2] font-extrabold text-base sm:text-lg shadow-xl shadow-blue-950/30 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
+            >
+              {/* Continuous BG Shining Sheen */}
+              <span className="absolute inset-0 -translate-x-full animate-continuous-shimmer bg-gradient-to-r from-transparent via-blue-400/40 to-transparent pointer-events-none" />
+              <span className="relative z-10">{user ? "Open Console" : "Get Started"}</span>
+              <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform stroke-[2.5]" />
+            </Link>
+
+            {/* Sign In Button */}
+            <Link
+              to={user ? getDashboardLink() : "/login"}
+              className="relative overflow-hidden group inline-flex items-center gap-2 px-8 py-3.5 sm:px-9 sm:py-4 rounded-2xl bg-white/15 hover:bg-white/20 text-white font-bold text-base sm:text-lg border border-white/30 backdrop-blur-xl shadow-lg hover:border-white/50 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
+            >
+              {/* Continuous BG Shining Sheen */}
+              <span
+                className="absolute inset-0 -translate-x-full animate-continuous-shimmer bg-gradient-to-r from-transparent via-white/50 to-transparent pointer-events-none"
+                style={{ animationDelay: '1.2s' }}
+              />
+              <span className="relative z-10">{user ? "My Dashboard" : "Sign In"}</span>
+            </Link>
           </div>
         </div>
 

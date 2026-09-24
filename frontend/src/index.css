@@ -85,6 +85,19 @@ body {
   }
 }
 
+@keyframes continuous-shimmer {
+  0% {
+    transform: translateX(-180%) skewX(-20deg);
+  }
+  50%, 100% {
+    transform: translateX(280%) skewX(-20deg);
+  }
+}
+
+.animate-continuous-shimmer {
+  animation: continuous-shimmer 2.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
 @keyframes pulse-glow {
   0%, 100% {
     opacity: 0.4;
