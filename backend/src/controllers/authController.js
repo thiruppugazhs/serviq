@@ -2,6 +2,17 @@ const jwt = require('jsonwebtoken');
 const Organization = require('../models/Organization');
 const User = require('../models/User');
 const Driver = require('../models/Driver');
+const Vehicle = require('../models/Vehicle');
+const Maintenance = require('../models/Maintenance');
+const Repair = require('../models/Repair');
+const Expense = require('../models/Expense');
+const Document = require('../models/Document');
+const Notification = require('../models/Notification');
+const Otp = require('../models/Otp');
+const {
+  sendRegistrationOtpEmail,
+  sendDeletionOtpEmail,
+} = require('../utils/emailService');
 
 const generateToken = (id, role, organizationId) => {
   return jwt.sign(
@@ -11,20 +22,23 @@ const generateToken = (id, role, organizationId) => {
   );
 };
 
-// In-memory OTP store for email verification
-const otpStore = new Map();
+// In-memory fallback OTP store
+const memoryOtpStore = new Map();
 
-// Periodic cleanup of expired OTPs
-setInterval(() => {
+// Periodic cleanup of in-memory store
+const cleanupTimer = setInterval(() => {
   const now = Date.now();
-  for (const [email, data] of otpStore.entries()) {
+  for (const [key, data] of memoryOtpStore.entries()) {
     if (data.expiresAt < now) {
-      otpStore.delete(email);
+      memoryOtpStore.delete(key);
     }
   }
 }, 5 * 60 * 1000);
+if (cleanupTimer && cleanupTimer.unref) {
+  cleanupTimer.unref();
+}
 
-// @desc    Generate and send 6-digit OTP for email verification
+// @desc    Generate and send 6-digit OTP for email verification during account creation
 // @route   POST /api/auth/send-otp
 // @access  Public
 exports.sendOtp = async (req, res, next) => {
@@ -37,26 +51,61 @@ exports.sendOtp = async (req, res, next) => {
     const normalizedEmail = email.toLowerCase().trim();
 
     // Check if user email is already registered
-    const existing = await User.findOne({ email: normalizedEmail });
-    if (existing) {
-      return res.status(400).json({ success: false, message: 'An account with this email already exists' });
+    try {
+      if (User.db && User.db.readyState === 1) {
+        const existing = await User.findOne({ email: normalizedEmail }).maxTimeMS(3000);
+        if (existing) {
+          return res.status(400).json({ success: false, message: 'An account with this email already exists' });
+        }
+      }
+    } catch (e) {
+      // Allow proceeding if DB check is not ready
     }
 
     // Generate 6-digit OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
 
-    otpStore.set(normalizedEmail, { otp, expiresAt, verified: false });
+    // Persist to MongoDB with TTL
+    try {
+      if (Otp.db && Otp.db.readyState === 1) {
+        await Otp.findOneAndUpdate(
+          { email: normalizedEmail, purpose: 'registration' },
+          { otp, verified: false, createdAt: new Date() },
+          { upsert: true, new: true }
+        ).maxTimeMS(3000);
+      }
+    } catch (dbErr) {
+      console.warn('[OTP DB SAVE WARN]', dbErr.message);
+    }
+
+    // Backup to in-memory store
+    memoryOtpStore.set(`reg_${normalizedEmail}`, { otp, expiresAt, verified: false });
 
     console.log(`\n======================================================`);
-    console.log(`[SERVIQ AUTH OTP] Email: ${normalizedEmail}`);
-    console.log(`[SERVIQ AUTH OTP] 6-Digit Code: ${otp}`);
+    console.log(`[SERVIQ REGISTRATION OTP] Email: ${normalizedEmail}`);
+    console.log(`[SERVIQ REGISTRATION OTP] 6-Digit Code: ${otp}`);
     console.log(`======================================================\n`);
+
+    // Dispatch real email via Brevo API
+    let emailDispatched = false;
+    let emailError = null;
+    try {
+      const emailResult = await sendRegistrationOtpEmail(normalizedEmail, otp);
+      if (emailResult && emailResult.success) {
+        emailDispatched = true;
+      }
+    } catch (mailErr) {
+      emailError = mailErr.message;
+      console.error('[SERVIQ BREVO DISPATCH ERROR]:', mailErr.message);
+    }
 
     res.status(200).json({
       success: true,
-      message: `OTP verification code sent to ${normalizedEmail}`,
-      otp, // Provided for instant development/testing experience
+      message: emailDispatched
+        ? `A 6-digit verification code has been dispatched to ${normalizedEmail}. Please check your inbox.`
+        : `Verification code generated for ${normalizedEmail}. (Note: Email delivery encountered an issue: ${emailError || 'fallback mode'})`,
+      emailDispatched,
       expiresInMinutes: 10,
     });
   } catch (error) {
@@ -64,7 +113,7 @@ exports.sendOtp = async (req, res, next) => {
   }
 };
 
-// @desc    Verify 6-digit OTP
+// @desc    Verify 6-digit OTP for email verification
 // @route   POST /api/auth/verify-otp
 // @access  Public
 exports.verifyOtp = async (req, res, next) => {
@@ -75,28 +124,229 @@ exports.verifyOtp = async (req, res, next) => {
     }
 
     const normalizedEmail = email.toLowerCase().trim();
-    const record = otpStore.get(normalizedEmail);
+    const cleanOtp = otp.toString().trim();
 
-    if (!record) {
-      return res.status(400).json({ success: false, message: 'No OTP requested for this email or it has expired' });
+    // Check MongoDB Otp first
+    let record = null;
+    try {
+      if (Otp.db && Otp.db.readyState === 1) {
+        record = await Otp.findOne({ email: normalizedEmail, purpose: 'registration' }).maxTimeMS(3000);
+      }
+    } catch (e) {
+      // Fallback to memory
     }
 
-    if (Date.now() > record.expiresAt) {
-      otpStore.delete(normalizedEmail);
-      return res.status(400).json({ success: false, message: 'OTP has expired. Please request a new code' });
+    // Fallback to in-memory
+    const memRecord = memoryOtpStore.get(`reg_${normalizedEmail}`);
+
+    const targetOtp = record?.otp || memRecord?.otp;
+
+    if (!targetOtp) {
+      return res.status(400).json({
+        success: false,
+        message: 'No active OTP verification code found for this email, or code has expired. Please request a new code.',
+      });
     }
 
-    if (record.otp !== otp.toString().trim()) {
-      return res.status(400).json({ success: false, message: 'Invalid OTP code. Please check and try again' });
+    if (memRecord && Date.now() > memRecord.expiresAt) {
+      memoryOtpStore.delete(`reg_${normalizedEmail}`);
+      if (record && Otp.db && Otp.db.readyState === 1) await Otp.deleteOne({ _id: record._id }).catch(() => {});
+      return res.status(400).json({
+        success: false,
+        message: 'Verification code has expired. Please request a new code.',
+      });
     }
 
-    record.verified = true;
-    otpStore.set(normalizedEmail, record);
+    if (targetOtp !== cleanOtp) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid verification code. Please check and try again.',
+      });
+    }
+
+    // Mark verified
+    if (record && Otp.db && Otp.db.readyState === 1) {
+      record.verified = true;
+      await record.save().catch(() => {});
+    }
+    if (memRecord) {
+      memRecord.verified = true;
+      memoryOtpStore.set(`reg_${normalizedEmail}`, memRecord);
+    }
 
     res.status(200).json({
       success: true,
       verified: true,
-      message: 'Email successfully verified',
+      message: 'Email successfully verified.',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Send 6-digit OTP for Account Deletion
+// @route   POST /api/auth/send-deletion-otp
+// @access  Private (Requires authentication)
+exports.sendDeletionOtp = async (req, res, next) => {
+  try {
+    const user = req.user;
+    if (!user || !user.email) {
+      return res.status(401).json({ success: false, message: 'User not authenticated' });
+    }
+
+    const normalizedEmail = user.email.toLowerCase().trim();
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+    // Persist to MongoDB with TTL
+    try {
+      if (Otp.db && Otp.db.readyState === 1) {
+        await Otp.findOneAndUpdate(
+          { email: normalizedEmail, purpose: 'deletion' },
+          { otp, verified: false, createdAt: new Date() },
+          { upsert: true, new: true }
+        ).maxTimeMS(3000);
+      }
+    } catch (dbErr) {
+      console.warn('[DELETION OTP DB SAVE WARN]', dbErr.message);
+    }
+
+    // Backup to in-memory store
+    memoryOtpStore.set(`del_${normalizedEmail}`, { otp, expiresAt, verified: false });
+
+    console.log(`\n======================================================`);
+    console.log(`[SERVIQ DELETION OTP] Email: ${normalizedEmail}`);
+    console.log(`[SERVIQ DELETION OTP] 6-Digit Code: ${otp}`);
+    console.log(`======================================================\n`);
+
+    // Dispatch critical deletion warning email via Brevo
+    let emailDispatched = false;
+    let emailError = null;
+    try {
+      const emailResult = await sendDeletionOtpEmail(
+        normalizedEmail,
+        otp,
+        user.name || `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Administrator'
+      );
+      if (emailResult && emailResult.success) {
+        emailDispatched = true;
+      }
+    } catch (mailErr) {
+      emailError = mailErr.message;
+      console.error('[SERVIQ BREVO DELETION DISPATCH ERROR]:', mailErr.message);
+    }
+
+    res.status(200).json({
+      success: true,
+      message: emailDispatched
+        ? `A critical deletion authorization code has been sent to ${normalizedEmail}. Please check your inbox.`
+        : `Deletion code generated for ${normalizedEmail}. (Note: ${emailError || 'Email fallback'})`,
+      emailDispatched,
+      expiresInMinutes: 10,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Verify OTP and permanently delete account (and cascade organization data if Admin)
+// @route   POST /api/auth/verify-and-delete-account
+// @access  Private (Requires authentication)
+exports.verifyAndDeleteAccount = async (req, res, next) => {
+  try {
+    const user = req.user;
+    const { otp } = req.body;
+
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'User not authenticated' });
+    }
+
+    if (!otp) {
+      return res.status(400).json({
+        success: false,
+        message: 'Security authorization code is required to confirm account deletion.',
+      });
+    }
+
+    const normalizedEmail = user.email.toLowerCase().trim();
+    const cleanOtp = otp.toString().trim();
+
+    // Check MongoDB Otp first
+    let record = null;
+    try {
+      if (Otp.db && Otp.db.readyState === 1) {
+        record = await Otp.findOne({ email: normalizedEmail, purpose: 'deletion' }).maxTimeMS(3000);
+      }
+    } catch (e) {
+      // Fallback
+    }
+
+    const memRecord = memoryOtpStore.get(`del_${normalizedEmail}`);
+    const targetOtp = record?.otp || memRecord?.otp;
+
+    if (!targetOtp) {
+      return res.status(400).json({
+        success: false,
+        message: 'No active deletion code found or it has expired. Please request a new code.',
+      });
+    }
+
+    if (memRecord && Date.now() > memRecord.expiresAt) {
+      memoryOtpStore.delete(`del_${normalizedEmail}`);
+      if (record && Otp.db && Otp.db.readyState === 1) await Otp.deleteOne({ _id: record._id }).catch(() => {});
+      return res.status(400).json({
+        success: false,
+        message: 'Authorization code has expired. Please request a new code.',
+      });
+    }
+
+    if (targetOtp !== cleanOtp) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid authorization code. Deletion cancelled for your security.',
+      });
+    }
+
+    // Cleanup OTPs for this email
+    try {
+      await Otp.deleteMany({ email: normalizedEmail });
+    } catch (e) {}
+    memoryOtpStore.delete(`del_${normalizedEmail}`);
+
+    const orgId = user.organization;
+
+    if (user.role === 'admin' && orgId) {
+      // Cascade delete entire fleet organization
+      console.log(`[ACCOUNT DELETION] Admin initiated permanent purge of Organization ID: ${orgId}`);
+
+      await Promise.all([
+        Vehicle.deleteMany({ organization: orgId }),
+        Driver.deleteMany({ organization: orgId }),
+        Maintenance.deleteMany({ organization: orgId }),
+        Repair.deleteMany({ organization: orgId }),
+        Expense.deleteMany({ organization: orgId }),
+        Document.deleteMany({ organization: orgId }),
+        Notification.deleteMany({ organization: orgId }),
+        User.deleteMany({ organization: orgId }),
+        Organization.findByIdAndDelete(orgId),
+      ]);
+
+      return res.status(200).json({
+        success: true,
+        message: 'Organization, all fleet telemetry, and associated user accounts have been permanently deleted.',
+      });
+    }
+
+    // Individual non-admin user deletion
+    if (user.role === 'driver') {
+      await Driver.deleteMany({ user: user._id });
+    }
+    await Notification.deleteMany({ recipient: user._id });
+    await User.findByIdAndDelete(user._id);
+
+    res.status(200).json({
+      success: true,
+      message: 'Your account has been permanently deleted from SERVIQ.',
     });
   } catch (error) {
     next(error);
@@ -197,6 +447,12 @@ exports.registerCompany = async (req, res, next) => {
       phone: phone || '',
       status: 'active',
     });
+
+    // Clean up any remaining registration OTP records for this email
+    try {
+      await Otp.deleteMany({ email: resolvedEmail });
+    } catch (e) {}
+    memoryOtpStore.delete(`reg_${resolvedEmail}`);
 
     const token = generateToken(adminUser._id, adminUser.role, organization._id);
 

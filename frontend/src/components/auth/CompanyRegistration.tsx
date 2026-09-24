@@ -116,7 +116,7 @@ export const CompanyRegistration: React.FC = () => {
       const res = await api.post('/auth/send-otp', { email: email.trim() });
       if (res.data.success) {
         setOtpSent(true);
-        setOtpMessage(`Verification code sent! (Dev Code: ${res.data.otp})`);
+        setOtpMessage(res.data.message || `A 6-digit verification code has been sent to ${email.trim()}. Please check your inbox.`);
       }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to send OTP verification code.');
