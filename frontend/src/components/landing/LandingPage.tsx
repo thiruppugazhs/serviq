@@ -49,140 +49,138 @@ export const LandingPage: React.FC = () => {
           1. NAVIGATION (Fixed on Electric Blue with White Logo)
       ========================================================================= */}
       {/* =========================================================================
-          1. NAVIGATION (Minimalist Header matching uploaded image)
-      ========================================================================= */}
-      <nav className="relative z-40 w-full px-6 sm:px-12 pt-6 sm:pt-8 flex items-center justify-between">
-        {/* Left: Serviq 3D folded logo + Serviq name logo */}
-        <Link to="/" className="flex items-center gap-2.5 sm:gap-3 group">
-          <img
-            src="/logo-white.png"
-            alt="Serviq"
-            className="w-7 h-7 sm:w-8 sm:h-8 object-contain drop-shadow"
-          />
-          <img
-            src="/serviq-name-logo.png"
-            alt="Serviq"
-            className="h-5 sm:h-6 md:h-7 w-auto object-contain drop-shadow-sm group-hover:opacity-90 transition-opacity"
-          />
-        </Link>
-
-        {/* Right: Hamburger icon (3 clean white horizontal lines) */}
-        <button
-          onClick={() => setMobileMenuOpen(true)}
-          className="w-10 h-10 flex flex-col justify-center items-end gap-1.5 p-2 focus:outline-none cursor-pointer group"
-          aria-label="Navigation Menu"
-        >
-          <span className="w-7 h-[2px] bg-white rounded-full transition-all group-hover:w-8"></span>
-          <span className="w-5 h-[2px] bg-white rounded-full transition-all group-hover:w-8"></span>
-          <span className="w-7 h-[2px] bg-white rounded-full transition-all group-hover:w-8"></span>
-        </button>
-      </nav>
-
-      {/* Slide-over Navigation Drawer */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="w-full max-w-sm bg-studio-blue border-l border-white/20 h-full p-8 flex flex-col justify-between shadow-2xl animate-in slide-in-from-right duration-250">
-            <div>
-              <div className="flex items-center justify-between pb-6 border-b border-white/15">
-                <div className="flex items-center gap-2.5">
-                  <img src="/logo-white.png" alt="Serviq" className="w-7 h-7 object-contain" />
-                  <img src="/serviq-name-logo.png" alt="Serviq" className="h-6 w-auto object-contain" />
-                </div>
-                <button
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-xl transition-colors"
-                >
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
-
-              <div className="mt-8 space-y-4 font-neue-haas-medium text-base">
-                <a
-                  href="#hero"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block py-2 text-white/90 hover:text-white transition-colors"
-                >
-                  Home
-                </a>
-                <a
-                  href="#features"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block py-2 text-white/90 hover:text-white transition-colors"
-                >
-                  Features & Telemetry
-                </a>
-                <a
-                  href="#how-it-works"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block py-2 text-white/90 hover:text-white transition-colors"
-                >
-                  How It Works
-                </a>
-                <a
-                  href="#roles"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block py-2 text-white/90 hover:text-white transition-colors"
-                >
-                  Fleet Solutions
-                </a>
-                <a
-                  href="#about"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block py-2 text-white/90 hover:text-white transition-colors"
-                >
-                  About SERVIQ
-                </a>
-                <a
-                  href="#contact"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block py-2 text-white/90 hover:text-white transition-colors"
-                >
-                  Contact
-                </a>
-              </div>
-            </div>
-
-            <div className="pt-6 border-t border-white/15 space-y-3 font-neue-haas-medium">
-              {user ? (
-                <Link
-                  to={getDashboardLink()}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="w-full py-3 bg-white text-[#393df0] font-bold text-center block rounded-xl shadow-lg hover:bg-white/95 transition-all"
-                >
-                  Open Console →
-                </Link>
-              ) : (
-                <>
-                  <Link
-                    to="/login"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="w-full py-3 bg-white/10 hover:bg-white/20 text-white font-semibold text-center block rounded-xl transition-all"
-                  >
-                    Log In
-                  </Link>
-                  <Link
-                    to="/register"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="w-full py-3 bg-white text-[#393df0] font-bold text-center block rounded-xl shadow-lg hover:bg-white/95 transition-all"
-                  >
-                    Get Started Free
-                  </Link>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* =========================================================================
-          HERO SECTION — EXACT MATCH OF UPLOADED DESIGN
+          HERO SECTION — EXACT MATCH OF UPLOADED DESIGN (FULL VIEWPORT)
       ========================================================================= */}
       <section
         id="hero"
-        className="relative min-h-[calc(100vh-80px)] flex flex-col items-center justify-center text-center px-4 overflow-hidden pt-4 pb-24"
+        className="relative min-h-screen flex flex-col justify-between overflow-hidden bg-studio-blue"
       >
+        {/* Navigation */}
+        <nav className="relative z-40 w-full px-6 sm:px-12 pt-6 sm:pt-8 flex items-center justify-between shrink-0">
+          {/* Left: Serviq 3D folded logo + Serviq name logo */}
+          <Link to="/" className="flex items-center gap-2.5 sm:gap-3 group">
+            <img
+              src="/logo-white.png"
+              alt="Serviq"
+              className="w-7 h-7 sm:w-8 sm:h-8 object-contain drop-shadow"
+            />
+            <img
+              src="/serviq-name-logo.png"
+              alt="Serviq"
+              className="h-5 sm:h-6 md:h-7 w-auto object-contain drop-shadow-sm group-hover:opacity-90 transition-opacity"
+            />
+          </Link>
+
+          {/* Right: Hamburger icon (3 clean white horizontal lines) */}
+          <button
+            onClick={() => setMobileMenuOpen(true)}
+            className="w-10 h-10 flex flex-col justify-center items-end gap-1.5 p-2 focus:outline-none cursor-pointer group"
+            aria-label="Navigation Menu"
+          >
+            <span className="w-7 h-[2px] bg-white rounded-full transition-all group-hover:w-8"></span>
+            <span className="w-5 h-[2px] bg-white rounded-full transition-all group-hover:w-8"></span>
+            <span className="w-7 h-[2px] bg-white rounded-full transition-all group-hover:w-8"></span>
+          </button>
+        </nav>
+
+        {/* Slide-over Navigation Drawer */}
+        {mobileMenuOpen && (
+          <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+            <div className="w-full max-w-sm bg-studio-blue border-l border-white/20 h-full p-8 flex flex-col justify-between shadow-2xl animate-in slide-in-from-right duration-250">
+              <div>
+                <div className="flex items-center justify-between pb-6 border-b border-white/15">
+                  <div className="flex items-center gap-2.5">
+                    <img src="/logo-white.png" alt="Serviq" className="w-7 h-7 object-contain" />
+                    <img src="/serviq-name-logo.png" alt="Serviq" className="h-6 w-auto object-contain" />
+                  </div>
+                  <button
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-xl transition-colors"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
+
+                <div className="mt-8 space-y-4 font-neue-haas-medium text-base">
+                  <a
+                    href="#hero"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block py-2 text-white/90 hover:text-white transition-colors"
+                  >
+                    Home
+                  </a>
+                  <a
+                    href="#features"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block py-2 text-white/90 hover:text-white transition-colors"
+                  >
+                    Features & Telemetry
+                  </a>
+                  <a
+                    href="#how-it-works"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block py-2 text-white/90 hover:text-white transition-colors"
+                  >
+                    How It Works
+                  </a>
+                  <a
+                    href="#roles"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block py-2 text-white/90 hover:text-white transition-colors"
+                  >
+                    Fleet Solutions
+                  </a>
+                  <a
+                    href="#about"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block py-2 text-white/90 hover:text-white transition-colors"
+                  >
+                    About SERVIQ
+                  </a>
+                  <a
+                    href="#contact"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block py-2 text-white/90 hover:text-white transition-colors"
+                  >
+                    Contact
+                  </a>
+                </div>
+              </div>
+
+              <div className="pt-6 border-t border-white/15 space-y-3 font-neue-haas-medium">
+                {user ? (
+                  <Link
+                    to={getDashboardLink()}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-full py-3 bg-white text-[#393df0] font-bold text-center block rounded-xl shadow-lg hover:bg-white/95 transition-all"
+                  >
+                    Open Console →
+                  </Link>
+                ) : (
+                  <>
+                    <Link
+                      to="/login"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="w-full py-3 bg-white/10 hover:bg-white/20 text-white font-semibold text-center block rounded-xl transition-all"
+                    >
+                      Log In
+                    </Link>
+                    <Link
+                      to="/register"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="w-full py-3 bg-white text-[#393df0] font-bold text-center block rounded-xl shadow-lg hover:bg-white/95 transition-all"
+                    >
+                      Get Started Free
+                    </Link>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Center Typography & QR Code */}
-        <div className="relative z-20 max-w-4xl mx-auto flex flex-col items-center animate-in fade-in zoom-in-95 duration-300">
+        <div className="relative z-20 max-w-4xl mx-auto flex flex-col items-center my-auto text-center px-4 py-8 animate-in fade-in zoom-in-95 duration-300">
           {/* Kicker: Smarter Fleet. Smarter Maintenance */}
           <p className="font-neue-haas-medium text-white/95 text-base sm:text-lg md:text-xl tracking-normal mb-1 sm:mb-2">
             Smarter Fleet. Smarter Maintenance
@@ -211,15 +209,11 @@ export const LandingPage: React.FC = () => {
         </div>
 
         {/* =========================================================================
-            3D FLOATING ELEMENTS (Slots ready for your element images)
-        ========================================================================= */}
-
-        {/* =========================================================================
             3D ELEMENTS (Matching Reference Image: Spacing, Placement, Size & Soft Shadows)
         ========================================================================= */}
 
-        {/* 1. 3D Gear (Top-Left / Mid-Left) - Pushed to the left edge, partially off-screen, reduced size, soft shadow */}
-        <div className="absolute -left-12 sm:-left-16 md:-left-20 lg:-left-24 top-[15%] sm:top-[18%] md:top-[20%] w-28 sm:w-36 md:w-44 lg:w-52 pointer-events-none filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.12)] z-10 select-none">
+        {/* 1. 3D Gear (Top-Left / Mid-Left) - Moved upward, partially off-screen, soft shadow */}
+        <div className="absolute -left-12 sm:-left-16 md:-left-20 lg:-left-24 top-[7%] sm:top-[8%] md:top-[9%] w-28 sm:w-36 md:w-44 lg:w-52 pointer-events-none filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.12)] z-10 select-none">
           <img
             src="/gear.png"
             alt="3D Fleet Gear"
@@ -228,18 +222,18 @@ export const LandingPage: React.FC = () => {
           />
         </div>
 
-        {/* 2. 3D Cube (Lower-Left Foreground) - Reduced size, pushed slightly away from left border */}
-        <div className="absolute left-3 sm:left-6 md:left-10 lg:left-14 bottom-0 w-20 sm:w-26 md:w-32 lg:w-40 pointer-events-none filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.12)] z-20 select-none">
+        {/* 2. 3D Cube (Lower-Left Foreground) - Touches the bottom of the screen */}
+        <div className="absolute left-3 sm:left-6 md:left-10 lg:left-14 bottom-0 w-22 sm:w-28 md:w-34 lg:w-42 pointer-events-none filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.12)] z-20 select-none">
           <img
             src="/cube.png"
             alt="3D Angled Cube"
-            className="w-full h-auto object-contain object-bottom"
+            className="w-full h-auto object-contain object-bottom block"
             draggable={false}
           />
         </div>
 
-        {/* 3. 3D Spanner / Wrench (Top-Right) - Pushed to right edge, reduced size, soft shadow */}
-        <div className="absolute -right-8 sm:-right-12 md:-right-16 lg:-right-20 top-[6%] sm:top-[8%] md:top-[10%] w-32 sm:w-44 md:w-52 lg:w-64 pointer-events-none filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.14)] z-10 select-none">
+        {/* 3. 3D Spanner / Wrench (Top-Right) - Pushed to right edge, soft shadow */}
+        <div className="absolute -right-8 sm:-right-12 md:-right-16 lg:-right-20 top-[4%] sm:top-[5%] md:top-[6%] w-32 sm:w-44 md:w-52 lg:w-64 pointer-events-none filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.14)] z-10 select-none">
           <img
             src="/spanner.png"
             alt="3D Spanner Wrench"
@@ -248,8 +242,8 @@ export const LandingPage: React.FC = () => {
           />
         </div>
 
-        {/* 4. 3D Car with headlights (Bottom-Right) - Compact size, spaced with ground shadow underneath */}
-        <div className="absolute -right-2 sm:right-2 md:right-6 lg:right-10 bottom-0 sm:bottom-1 md:bottom-2 lg:bottom-4 w-44 sm:w-60 md:w-72 lg:w-[350px] pointer-events-none z-20 select-none">
+        {/* 4. 3D Car with headlights (Bottom-Right) - Sits on bottom of screen with ground shadow */}
+        <div className="absolute -right-2 sm:right-2 md:right-6 lg:right-10 bottom-0 w-44 sm:w-60 md:w-72 lg:w-[350px] pointer-events-none z-20 select-none">
           {/* Ground Contact Shadow Under the Car */}
           <div className="absolute -bottom-1.5 left-[4%] right-[2%] h-4 sm:h-5 md:h-6 bg-[#0c1445]/60 rounded-[100%] blur-[8px] pointer-events-none" />
           <div className="absolute -bottom-1 left-[10%] right-[8%] h-3 sm:h-4 bg-black/40 rounded-[100%] blur-[5px] pointer-events-none" />
@@ -260,24 +254,11 @@ export const LandingPage: React.FC = () => {
           <img
             src="/car.png"
             alt="3D Fleet Vehicle"
-            className="w-full h-full object-contain filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.12)]"
+            className="w-full h-auto object-contain object-bottom block filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.12)]"
             draggable={false}
           />
         </div>
       </section>
-
-      {/* =========================================================================
-          VFX TRANSITION 1: Slanted Diagonal Cut with Floating Gear Seal (Blue to White)
-      ========================================================================= */}
-      <div className="relative w-full overflow-hidden leading-none bg-studio-blue">
-        {/* Floating animated transition seal */}
-        <div className="absolute left-1/2 -translate-x-1/2 -top-6 z-20 w-12 h-12 bg-white rounded-full shadow-2xl p-2.5 flex items-center justify-center animate-spin-very-slow border-2 border-[#393df0]">
-          <img src="/logo-blue.png" alt="" className="w-full h-full object-contain" />
-        </div>
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-16 sm:h-24 text-white fill-current">
-          <path d="M1200 0L0 120V120H1200V0Z"></path>
-        </svg>
-      </div>
 
       {/* =========================================================================
           PAGE 2 (EVEN): TRUST / VALUE STRIP — WHITE BACKGROUND
