@@ -218,8 +218,8 @@ export const LandingPage: React.FC = () => {
             3D FLOATING ELEMENTS (Matching Reference Image)
         ========================================================================= */}
 
-        {/* 1. 3D Gear (Top-Left / Mid-Left) */}
-        <div className="absolute -left-6 sm:-left-4 md:left-2 lg:left-6 top-[12%] sm:top-[14%] md:top-[16%] w-36 sm:w-52 md:w-64 lg:w-76 pointer-events-none filter drop-shadow-[0_20px_35px_rgba(0,0,0,0.35)] animate-float-slow z-10 select-none">
+        {/* 1. 3D Gear (Top-Left / Mid-Left) - Fixed in place */}
+        <div className="absolute -left-6 sm:-left-4 md:left-2 lg:left-6 top-[12%] sm:top-[14%] md:top-[16%] w-36 sm:w-52 md:w-64 lg:w-76 pointer-events-none filter drop-shadow-[0_20px_35px_rgba(0,0,0,0.35)] z-10 select-none">
           <img
             src="/gear.png"
             alt="3D Fleet Gear"
@@ -228,7 +228,7 @@ export const LandingPage: React.FC = () => {
           />
         </div>
 
-        {/* 2. 3D Cube: Angled in the lower-left foreground */}
+        {/* 2. 3D Cube: Angled in the lower-left foreground - Fixed in place */}
         <div className="absolute left-0 bottom-0 w-32 sm:w-44 md:w-56 lg:w-72 pointer-events-none filter drop-shadow-[0_25px_45px_rgba(0,0,0,0.4)] z-20 select-none">
           <img
             src="/cube.png"
@@ -238,8 +238,8 @@ export const LandingPage: React.FC = () => {
           />
         </div>
 
-        {/* 3. 3D Spanner / Wrench (Top-Right / Mid-Right) */}
-        <div className="absolute -right-4 sm:right-0 md:right-4 lg:right-8 top-[10%] sm:top-[12%] md:top-[14%] w-40 sm:w-56 md:w-72 lg:w-84 pointer-events-none filter drop-shadow-[0_25px_40px_rgba(0,0,0,0.35)] animate-float-reverse z-10 select-none">
+        {/* 3. 3D Spanner / Wrench (Top-Right / Mid-Right) - Fixed in place */}
+        <div className="absolute -right-4 sm:right-0 md:right-4 lg:right-8 top-[10%] sm:top-[12%] md:top-[14%] w-40 sm:w-56 md:w-72 lg:w-84 pointer-events-none filter drop-shadow-[0_25px_40px_rgba(0,0,0,0.35)] z-10 select-none">
           <img
             src="/spanner.png"
             alt="3D Spanner Wrench"
