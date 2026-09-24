@@ -1344,18 +1344,9 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* =========================================================================
-          VFX TRANSITION: Wave Flow (Blue to White before Footer)
-      ========================================================================= */}
-      <div className="relative w-full overflow-hidden leading-none bg-studio-blue">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-16 sm:h-24 text-white fill-current animate-wave-flow">
-          <path d="M0,0 C300,120 900,120 1200,0 L1200,120 L0,120 Z"></path>
-        </svg>
-      </div>
-
-      {/* =========================================================================
           PAGE 14 (EVEN): FOOTER — WHITE BACKGROUND (Matching Images 2 & 3)
       ========================================================================= */}
-      <footer id="contact" className="bg-white text-slate-800 border-t-2 border-slate-100 pt-20 pb-10 px-4 sm:px-6 lg:px-8 relative overflow-hidden text-left">
+      <footer id="contact" className="bg-white text-slate-800 pt-20 pb-10 px-4 sm:px-6 lg:px-8 relative overflow-hidden text-left">
         <div className="max-w-7xl mx-auto">
           
           {/* Top Logo and Tagline matching Image 2 */}
