@@ -440,14 +440,14 @@ export const LandingPage: React.FC = () => {
         className="relative min-h-screen flex flex-col justify-between overflow-hidden bg-studio-blue pt-20 sm:pt-24"
       >
         {/* Center Typography & CTA Buttons */}
-        <div className="relative z-20 max-w-6xl mx-auto flex flex-col items-center my-auto text-center px-4 py-8 animate-in fade-in zoom-in-95 duration-300">
-          {/* Main Headline in Two Lines (Anek Latin font) */}
+        <div className="relative z-20 max-w-5xl mx-auto flex flex-col items-center my-auto text-center px-4 py-8 animate-in fade-in zoom-in-95 duration-300">
+          {/* Main Headline: Two lines in Anek Latin font */}
           <h1
-            className="font-anek-latin font-bold text-white text-4xl sm:text-6xl md:text-7xl lg:text-[80px] xl:text-[90px] leading-[1.08] sm:leading-[1.06] tracking-tight select-none drop-shadow-md uppercase max-w-5xl mx-auto"
+            className="font-anek-latin font-bold text-white text-2xl sm:text-3xl md:text-4xl lg:text-[46px] xl:text-[52px] leading-[1.15] tracking-tight select-none drop-shadow-md uppercase"
             style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
           >
             <span className="block">EVERY MILE, EVERY VEHICLE</span>
-            <span className="block text-white/95 mt-1 sm:mt-2">UNDER CONTROL</span>
+            <span className="block text-white/95 mt-1 sm:mt-1.5">UNDER CONTROL</span>
           </h1>
 
           {/* Sub-headline in Neue Haas Medium */}
@@ -455,30 +455,17 @@ export const LandingPage: React.FC = () => {
             Everything your fleet needs to stay organized, maintained, and ready for the road.
           </p>
 
-          {/* CTA Action Buttons with Continuous BG Shining */}
-          <div className="mt-8 sm:mt-10 flex flex-wrap items-center justify-center gap-4 sm:gap-5 z-20">
-            {/* Get Started Button */}
+          {/* CTA Action Button with Continuous BG Shining */}
+          <div className="mt-7 sm:mt-8 flex items-center justify-center z-20">
+            {/* Get Started Button (Small Size) */}
             <Link
               to={user ? getDashboardLink() : "/register"}
-              className="relative overflow-hidden group inline-flex items-center gap-2.5 px-8 py-3.5 sm:px-9 sm:py-4 rounded-2xl bg-white text-[#2335f2] font-extrabold text-base sm:text-lg shadow-xl shadow-blue-950/30 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
+              className="relative overflow-hidden group inline-flex items-center gap-2 px-6 py-2.5 sm:px-7 sm:py-2.5 rounded-xl bg-white text-[#2335f2] font-bold text-xs sm:text-sm shadow-lg shadow-blue-950/25 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
             >
               {/* Continuous BG Shining Sheen */}
-              <span className="absolute inset-0 -translate-x-full animate-continuous-shimmer bg-gradient-to-r from-transparent via-blue-400/40 to-transparent pointer-events-none" />
+              <span className="absolute inset-0 -translate-x-full animate-continuous-shimmer bg-gradient-to-r from-transparent via-blue-400/35 to-transparent pointer-events-none" />
               <span className="relative z-10">{user ? "Open Console" : "Get Started"}</span>
-              <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform stroke-[2.5]" />
-            </Link>
-
-            {/* Sign In Button */}
-            <Link
-              to={user ? getDashboardLink() : "/login"}
-              className="relative overflow-hidden group inline-flex items-center gap-2 px-8 py-3.5 sm:px-9 sm:py-4 rounded-2xl bg-white/15 hover:bg-white/20 text-white font-bold text-base sm:text-lg border border-white/30 backdrop-blur-xl shadow-lg hover:border-white/50 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
-            >
-              {/* Continuous BG Shining Sheen */}
-              <span
-                className="absolute inset-0 -translate-x-full animate-continuous-shimmer bg-gradient-to-r from-transparent via-white/50 to-transparent pointer-events-none"
-                style={{ animationDelay: '1.2s' }}
-              />
-              <span className="relative z-10">{user ? "My Dashboard" : "Sign In"}</span>
+              <ArrowRight className="w-4 h-4 relative z-10 group-hover:translate-x-0.5 transition-transform stroke-[2.5]" />
             </Link>
           </div>
         </div>
