@@ -29,13 +29,37 @@ import {
 export const LandingPage: React.FC = () => {
   const { user } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [headerTheme, setHeaderTheme] = useState<'transparent' | 'blue' | 'white'>('transparent');
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      // First page / hero top: it should be like there is no header
+      if (window.scrollY < 40) {
+        setHeaderTheme('transparent');
+        return;
+      }
+
+      // Check which section is passing underneath the fixed header (y ≈ 50)
+      const sections = document.querySelectorAll('section, footer');
+      let currentSectionBg: 'blue' | 'white' = 'blue';
+
+      sections.forEach((sec) => {
+        const rect = sec.getBoundingClientRect();
+        // If the section covers the header area (top <= 50 and bottom > 50)
+        if (rect.top <= 50 && rect.bottom > 50) {
+          if (sec.classList.contains('bg-white') || sec.getAttribute('data-bg') === 'white') {
+            currentSectionBg = 'white';
+          } else {
+            currentSectionBg = 'blue';
+          }
+        }
+      });
+
+      setHeaderTheme(currentSectionBg);
     };
+
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -66,37 +90,53 @@ export const LandingPage: React.FC = () => {
       <div className="fixed bottom-20 right-10 w-[500px] h-[500px] bg-indigo-400/10 rounded-full blur-[160px] pointer-events-none -z-10 animate-pulse-glow" style={{ animationDelay: '2s' }} />
 
       {/* =========================================================================
-          1. NAVIGATION — PURE TRANSPARENT CLEAR GLASS HEADER (OVER ALL PAGES)
+          1. NAVIGATION — DYNAMIC GLASS HEADER
+             - On first page: like there is no header (bg-transparent, no line, no blur)
+             - On scroll over blue sections: blue glass, white logo, white name logo, white hamburger
+             - On scroll over white sections: white glass, blue/white logo, black name logo, black hamburger
+             - NO thin line at bottom
       ========================================================================= */}
       <header
-        className={`fixed top-0 left-0 right-0 z-50 w-full px-6 sm:px-12 transition-all duration-300 flex items-center justify-between ${
-          scrolled
-            ? 'py-3.5 bg-black/40 backdrop-blur-2xl border-b border-white/15 shadow-xl shadow-black/15'
-            : 'py-4 sm:py-5 bg-white/[0.02] backdrop-blur-md border-b border-white/10'
+        className={`fixed top-0 left-0 right-0 z-50 w-full px-6 sm:px-12 transition-all duration-300 flex items-center justify-between border-none ${
+          headerTheme === 'transparent'
+            ? 'py-4 sm:py-5 bg-transparent backdrop-blur-none shadow-none'
+            : headerTheme === 'blue'
+            ? 'py-3.5 bg-[#1826d0]/80 backdrop-blur-xl shadow-lg shadow-blue-950/20'
+            : 'py-3.5 bg-white/80 backdrop-blur-xl shadow-sm shadow-slate-900/5'
         }`}
       >
-        {/* Left: White Serviq Logo + White Wordmark on Pure Clear Glass */}
+        {/* Left: Logo & Wordmark matching section background */}
         <Link to="/" className="flex items-center gap-2.5 sm:gap-3 group">
           <img
-            src="/logo-white.png"
+            src={headerTheme === 'white' ? '/logo-blue.png' : '/logo-white.png'}
             alt="Serviq"
             className="w-7 h-7 sm:w-8 sm:h-8 object-contain drop-shadow"
           />
           <img
             src="/serviq-name-logo.png"
             alt="Serviq"
-            className="h-5 sm:h-6 md:h-7 w-auto object-contain drop-shadow-sm group-hover:opacity-90 transition-opacity"
+            className={`h-5 sm:h-6 md:h-7 w-auto object-contain transition-all group-hover:opacity-90 ${
+              headerTheme === 'white' ? 'filter brightness-0' : 'drop-shadow-sm'
+            }`}
           />
         </Link>
 
-        {/* Right: Hamburger icon (2 clean horizontal white lines) */}
+        {/* Right: Hamburger icon (White on blue/transparent, Black on white) */}
         <button
           onClick={() => setMobileMenuOpen(true)}
           className="w-10 h-10 flex flex-col justify-center items-end gap-1.5 p-2 focus:outline-none cursor-pointer group"
           aria-label="Navigation Menu"
         >
-          <span className="w-6 h-[2px] bg-white rounded-full transition-all group-hover:w-7"></span>
-          <span className="w-6 h-[2px] bg-white rounded-full transition-all group-hover:w-7"></span>
+          <span
+            className={`w-6 h-[2px] rounded-full transition-all group-hover:w-7 ${
+              headerTheme === 'white' ? 'bg-slate-900' : 'bg-white'
+            }`}
+          ></span>
+          <span
+            className={`w-6 h-[2px] rounded-full transition-all group-hover:w-7 ${
+              headerTheme === 'white' ? 'bg-slate-900' : 'bg-white'
+            }`}
+          ></span>
         </button>
       </header>
 
@@ -302,7 +342,7 @@ export const LandingPage: React.FC = () => {
         </div>
 
         {/* 3. 3D Spanner / Wrench (Top-Right) - Moved slightly down */}
-        <div className="absolute -right-8 sm:-right-12 md:-right-16 lg:-right-20 top-[11%] sm:top-[12%] md:top-[13%] w-32 sm:w-44 md:w-52 lg:w-64 pointer-events-none filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.14)] z-10 select-none">
+        <div className="absolute -right-8 sm:-right-12 md:-right-16 lg:-right-20 top-[13%] sm:top-[14%] md:top-[15%] w-32 sm:w-44 md:w-52 lg:w-64 pointer-events-none filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.14)] z-10 select-none">
           <img
             src="/spanner.png"
             alt="3D Spanner Wrench"
