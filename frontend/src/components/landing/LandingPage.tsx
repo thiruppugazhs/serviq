@@ -1124,26 +1124,21 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* =========================================================================
-          VFX TRANSITION: Wave Flow (Blue to White)
+          FAQS SECTION — BLUE BACKGROUND WITH 10 ACCORDION CARDS
       ========================================================================= */}
-      <div className="relative w-full overflow-hidden leading-none bg-studio-blue">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-16 sm:h-24 text-white fill-current animate-wave-flow">
-          <path d="M0,0 C300,120 900,120 1200,0 L1200,120 L0,120 Z"></path>
-        </svg>
-      </div>
+      <section id="faq" className="py-24 sm:py-32 bg-studio-blue text-white relative">
+        {/* Ambient background glow orbs */}
+        <div className="absolute top-10 left-10 w-96 h-96 bg-white/5 rounded-full blur-[140px] pointer-events-none" />
+        <div className="absolute bottom-10 right-10 w-[500px] h-[500px] bg-indigo-400/10 rounded-full blur-[160px] pointer-events-none" />
 
-      {/* =========================================================================
-          FAQS SECTION — 10 QUESTIONS MATCHING REFERENCE IMAGE
-      ========================================================================= */}
-      <section id="faq" className="py-24 sm:py-32 bg-white text-slate-900 relative">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Centered Big Bold FAQs Title matching reference image */}
-          <h2 className="text-5xl sm:text-6xl md:text-7xl font-black text-slate-900 font-['Outfit',sans-serif] text-center mb-14 tracking-tight">
+          <h2 className="text-5xl sm:text-6xl md:text-7xl font-black text-white font-['Outfit',sans-serif] text-center mb-14 tracking-tight drop-shadow-sm select-none">
             FAQs
           </h2>
 
-          {/* 10 Accordion Cards */}
+          {/* 10 Accordion Cards matching reference screenshot */}
           <div className="space-y-4">
             {[
               {
@@ -1201,7 +1196,7 @@ export const LandingPage: React.FC = () => {
               return (
                 <div
                   key={index}
-                  className="border border-slate-200/90 rounded-2xl bg-white shadow-sm overflow-hidden transition-all duration-200 hover:border-slate-300"
+                  className="rounded-2xl bg-white shadow-xl overflow-hidden transition-all duration-200 border border-white/20 hover:shadow-2xl"
                 >
                   <button
                     onClick={() => setOpenFaqIndex(isOpen ? null : index)}
@@ -1212,7 +1207,7 @@ export const LandingPage: React.FC = () => {
                       {faq.question}
                     </span>
                     <div
-                      className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#3949f5] flex items-center justify-center shrink-0 transition-transform duration-300 shadow-sm ${
+                      className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#3949f5] hover:bg-[#2535e0] flex items-center justify-center shrink-0 transition-transform duration-300 shadow-sm ${
                         isOpen ? 'rotate-180 bg-[#2535e0]' : ''
                       }`}
                     >
@@ -1231,6 +1226,15 @@ export const LandingPage: React.FC = () => {
 
         </div>
       </section>
+
+      {/* =========================================================================
+          VFX TRANSITION: Wave Flow (Blue to White before Footer)
+      ========================================================================= */}
+      <div className="relative w-full overflow-hidden leading-none bg-studio-blue">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-16 sm:h-24 text-white fill-current animate-wave-flow">
+          <path d="M0,0 C300,120 900,120 1200,0 L1200,120 L0,120 Z"></path>
+        </svg>
+      </div>
 
       {/* =========================================================================
           PAGE 14 (EVEN): FOOTER — WHITE BACKGROUND (Matching Images 2 & 3)
