@@ -28,34 +28,25 @@ import {
 
 import { HelpFeedbackModal } from '../support/HelpFeedbackModal';
 
-const ABOUT_PARAGRAPHS = [
-  "Every commercial vehicle on the road powers a business, a family, and the dreams we are quietly working towards. We believe every one of those journeys should move you forward without fear of breakdowns. That's why we built SERVIQ.",
-  "Launched by Orcescale in Chennai, SERVIQ was created with a simple belief: fleet maintenance should create value, not chaos. Every vehicle should run smoothly. Every driver should be protected. Every service partner should operate with complete transparency, verified pricing, and zero guesswork."
+const ABOUT_LINES_1 = [
+  "Every commercial vehicle on the road powers a business, a family, and our future.",
+  "We believe every single journey should move you forward without fear of breakdowns.",
+  "That is why we built SERVIQ."
+];
+
+const ABOUT_LINES_2 = [
+  "Launched by Orcescale in Chennai, SERVIQ was created with a simple belief:",
+  "Fleet maintenance should create value, not chaos.",
+  "Every vehicle should run smoothly. Every driver should be protected.",
+  "And every workshop should operate with verified pricing, total trust, and zero guesswork."
 ];
 
 const ScrollWordReveal: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [activeWords, setActiveWords] = useState(0);
+  const [activeLines, setActiveLines] = useState(0);
   const rafId = useRef<number | null>(null);
 
-  const paragraphWords = useMemo(
-    () => ABOUT_PARAGRAPHS.map((p) => p.split(/\s+/).filter(Boolean)),
-    []
-  );
-
-  const totalWords = useMemo(
-    () => paragraphWords.reduce((sum, words) => sum + words.length, 0),
-    [paragraphWords]
-  );
-
-  const paragraphOffsets = useMemo(() => {
-    let count = 0;
-    return paragraphWords.map((words) => {
-      const offset = count;
-      count += words.length;
-      return offset;
-    });
-  }, [paragraphWords]);
+  const totalLines = ABOUT_LINES_1.length + ABOUT_LINES_2.length;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -67,12 +58,12 @@ const ScrollWordReveal: React.FC = () => {
         const totalScrollable = rect.height - window.innerHeight;
         if (totalScrollable <= 0) return;
 
-        // When container top reaches 0 (pins at top of viewport), scrolled begins from 0
+        // When container top reaches 0 (pins in viewport), scrolled starts at 0
         const scrolled = -rect.top;
-        // Reach 100% active words at 80% scroll distance so user can read finished black text comfortably
+        // Each scroll step reveals the next line across 80% of track
         const progress = Math.max(0, Math.min(1, scrolled / (totalScrollable * 0.8)));
-        const count = Math.round(progress * totalWords);
-        setActiveWords((prev) => (prev !== count ? count : prev));
+        const currentLine = Math.floor(progress * (totalLines + 1));
+        setActiveLines((prev) => (prev !== currentLine ? currentLine : prev));
       });
     };
 
@@ -85,52 +76,78 @@ const ScrollWordReveal: React.FC = () => {
       window.removeEventListener('resize', handleScroll);
       if (rafId.current) cancelAnimationFrame(rafId.current);
     };
-  }, [totalWords]);
+  }, [totalLines]);
 
   return (
-    <div ref={containerRef} className="relative min-h-[220vh] sm:min-h-[260vh]">
-      <div className="sticky top-0 h-[100dvh] flex flex-col items-center justify-center px-4 sm:px-8 max-w-4xl lg:max-w-5xl mx-auto select-none pointer-events-none">
+    <div ref={containerRef} className="relative min-h-[220vh] sm:min-h-[250vh]">
+      <div className="sticky top-0 h-[100dvh] flex flex-col items-center justify-center px-6 sm:px-10 max-w-4xl lg:max-w-5xl mx-auto select-none pointer-events-none">
         
         {/* Section Kicker Badge */}
-        <div className="flex items-center gap-2 mb-6 sm:mb-10 pointer-events-auto">
+        <div className="flex items-center gap-2 mb-8 sm:mb-12 pointer-events-auto">
           <div className="w-2.5 h-2.5 rounded-full bg-[#2335f2] animate-pulse" />
-          <span className="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-[#2335f2]">
+          <span
+            className="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-[#2335f2] font-anek-latin"
+            style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+          >
             About SERVIQ By Orcescale
           </span>
         </div>
 
-        {/* Manifesto Paragraphs matching super.money layout */}
-        <div className="space-y-6 sm:space-y-10 text-center font-['Outfit',sans-serif] pointer-events-auto">
-          {paragraphWords.map((words, pIdx) => (
-            <p
-              key={pIdx}
-              className="text-xl sm:text-3xl md:text-4xl lg:text-[40px] xl:text-[44px] font-extrabold tracking-tight leading-[1.3] sm:leading-[1.35] text-center"
-            >
-              {words.map((word, wIdx) => {
-                const globalIdx = paragraphOffsets[pIdx] + wIdx;
-                const isBlack = globalIdx < activeWords;
-                return (
-                  <span
-                    key={wIdx}
-                    className={`inline-block mr-[0.25em] transition-colors duration-150 ${
-                      isBlack ? 'text-slate-950 font-extrabold' : 'text-slate-300 font-extrabold'
-                    }`}
-                  >
-                    {word}
-                  </span>
-                );
-              })}
-            </p>
-          ))}
+        {/* Manifesto Content: Line-by-Line Reveal with Anek Latin & Generous Spacing */}
+        <div
+          className="w-full text-center font-anek-latin pointer-events-auto"
+          style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+        >
+          {/* Section 1 */}
+          <div className="space-y-3 sm:space-y-4">
+            {ABOUT_LINES_1.map((line, idx) => {
+              const isRevealed = idx < activeLines;
+              return (
+                <p
+                  key={idx}
+                  className={`text-xl sm:text-2xl md:text-3xl lg:text-[34px] leading-relaxed sm:leading-[1.7] md:leading-[1.75] tracking-wide transition-all duration-300 ease-out select-none ${
+                    isRevealed
+                      ? 'text-slate-950 font-bold opacity-100 transform translate-y-0'
+                      : 'text-slate-300 font-semibold opacity-30 transform translate-y-1'
+                  }`}
+                >
+                  {line}
+                </p>
+              );
+            })}
+          </div>
+
+          {/* Section 2 with Clear Breathable Spacing */}
+          <div className="space-y-3 sm:space-y-4 mt-8 sm:mt-12">
+            {ABOUT_LINES_2.map((line, idx) => {
+              const globalIdx = ABOUT_LINES_1.length + idx;
+              const isRevealed = globalIdx < activeLines;
+              return (
+                <p
+                  key={idx}
+                  className={`text-xl sm:text-2xl md:text-3xl lg:text-[34px] leading-relaxed sm:leading-[1.7] md:leading-[1.75] tracking-wide transition-all duration-300 ease-out select-none ${
+                    isRevealed
+                      ? 'text-slate-950 font-bold opacity-100 transform translate-y-0'
+                      : 'text-slate-300 font-semibold opacity-30 transform translate-y-1'
+                  }`}
+                >
+                  {line}
+                </p>
+              );
+            })}
+          </div>
         </div>
 
         {/* Scroll down indicator */}
         <div
-          className={`mt-8 sm:mt-12 transition-opacity duration-300 pointer-events-auto ${
-            activeWords >= totalWords ? 'opacity-0' : 'opacity-70'
+          className={`mt-10 sm:mt-14 transition-opacity duration-300 pointer-events-auto ${
+            activeLines >= totalLines ? 'opacity-0' : 'opacity-70'
           }`}
         >
-          <span className="text-xs uppercase tracking-widest text-slate-400 font-bold flex items-center gap-1.5">
+          <span
+            className="text-xs uppercase tracking-widest text-slate-400 font-bold flex items-center gap-1.5 font-anek-latin"
+            style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+          >
             Scroll down to reveal
             <ChevronDown className="w-3.5 h-3.5 animate-bounce text-[#2335f2]" />
           </span>
