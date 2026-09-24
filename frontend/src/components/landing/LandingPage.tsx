@@ -441,12 +441,13 @@ export const LandingPage: React.FC = () => {
       >
         {/* Center Typography & CTA Buttons */}
         <div className="relative z-20 max-w-6xl mx-auto flex flex-col items-center my-auto text-center px-4 py-8 animate-in fade-in zoom-in-95 duration-300">
-          {/* Main Headline: Smarter Fleet. Smarter Maintenance (Single Line in Anek Latin font) */}
+          {/* Main Headline in Two Lines (Anek Latin font) */}
           <h1
-            className="font-anek-latin font-bold text-white text-[22px] min-[390px]:text-[26px] sm:text-4xl md:text-5xl lg:text-[56px] xl:text-[66px] leading-tight tracking-tight select-none drop-shadow-md whitespace-nowrap"
+            className="font-anek-latin font-bold text-white text-4xl sm:text-6xl md:text-7xl lg:text-[80px] xl:text-[90px] leading-[1.08] sm:leading-[1.06] tracking-tight select-none drop-shadow-md uppercase max-w-5xl mx-auto"
             style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
           >
-            Smarter Fleet. Smarter Maintenance
+            <span className="block">EVERY MILE, EVERY VEHICLE</span>
+            <span className="block text-white/95 mt-1 sm:mt-2">UNDER CONTROL</span>
           </h1>
 
           {/* Sub-headline in Neue Haas Medium */}
