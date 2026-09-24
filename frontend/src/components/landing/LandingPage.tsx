@@ -55,33 +55,35 @@ export const LandingPage: React.FC = () => {
         id="hero"
         className="relative min-h-screen flex flex-col justify-between overflow-hidden bg-studio-blue"
       >
-        {/* Navigation */}
-        <nav className="relative z-40 w-full px-6 sm:px-12 pt-6 sm:pt-8 flex items-center justify-between shrink-0">
-          {/* Left: Serviq 3D folded logo + Serviq name logo */}
-          <Link to="/" className="flex items-center gap-2.5 sm:gap-3 group">
-            <img
-              src="/logo-white.png"
-              alt="Serviq"
-              className="w-7 h-7 sm:w-8 sm:h-8 object-contain drop-shadow"
-            />
-            <img
-              src="/serviq-name-logo.png"
-              alt="Serviq"
-              className="h-5 sm:h-6 md:h-7 w-auto object-contain drop-shadow-sm group-hover:opacity-90 transition-opacity"
-            />
-          </Link>
+        {/* Navigation — Premium Glass Type Header */}
+        <header className="relative z-40 w-full px-4 sm:px-8 md:px-12 pt-4 sm:pt-6 shrink-0">
+          <nav className="max-w-7xl mx-auto px-5 sm:px-8 py-3 sm:py-3.5 rounded-2xl sm:rounded-3xl bg-white/10 hover:bg-white/[0.13] backdrop-blur-xl border border-white/20 shadow-xl shadow-blue-950/20 flex items-center justify-between transition-all">
+            {/* Left: Serviq 3D folded logo + Serviq name logo */}
+            <Link to="/" className="flex items-center gap-2.5 sm:gap-3 group">
+              <img
+                src="/logo-white.png"
+                alt="Serviq"
+                className="w-7 h-7 sm:w-8 sm:h-8 object-contain drop-shadow"
+              />
+              <img
+                src="/serviq-name-logo.png"
+                alt="Serviq"
+                className="h-5 sm:h-6 md:h-7 w-auto object-contain drop-shadow-sm group-hover:opacity-90 transition-opacity"
+              />
+            </Link>
 
-          {/* Right: Hamburger icon (3 clean white horizontal lines) */}
-          <button
-            onClick={() => setMobileMenuOpen(true)}
-            className="w-10 h-10 flex flex-col justify-center items-end gap-1.5 p-2 focus:outline-none cursor-pointer group"
-            aria-label="Navigation Menu"
-          >
-            <span className="w-7 h-[2px] bg-white rounded-full transition-all group-hover:w-8"></span>
-            <span className="w-5 h-[2px] bg-white rounded-full transition-all group-hover:w-8"></span>
-            <span className="w-7 h-[2px] bg-white rounded-full transition-all group-hover:w-8"></span>
-          </button>
-        </nav>
+            {/* Right: Hamburger icon (3 clean white horizontal lines) */}
+            <button
+              onClick={() => setMobileMenuOpen(true)}
+              className="w-10 h-10 flex flex-col justify-center items-end gap-1.5 p-2 focus:outline-none cursor-pointer group"
+              aria-label="Navigation Menu"
+            >
+              <span className="w-7 h-[2px] bg-white rounded-full transition-all group-hover:w-8"></span>
+              <span className="w-5 h-[2px] bg-white rounded-full transition-all group-hover:w-8"></span>
+              <span className="w-7 h-[2px] bg-white rounded-full transition-all group-hover:w-8"></span>
+            </button>
+          </nav>
+        </header>
 
         {/* Slide-over Navigation Drawer */}
         {mobileMenuOpen && (
