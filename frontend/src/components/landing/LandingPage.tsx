@@ -1049,10 +1049,10 @@ export const LandingPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Huge Faint Watermark Text at Bottom matching Image 3 */}
+          {/* Huge Faint Watermark Text at Bottom */}
           <div className="pt-6 text-center select-none pointer-events-none opacity-40">
             <span className="font-black text-6xl sm:text-9xl lg:text-[140px] text-slate-200 tracking-tight leading-none block font-['Outfit',sans-serif]">
-              Let's be ready.
+              Let's Begin Serviq
             </span>
           </div>
         </div>
