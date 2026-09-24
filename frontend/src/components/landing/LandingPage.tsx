@@ -39,6 +39,17 @@ export const LandingPage: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
+
   const getDashboardLink = () => {
     if (!user) return '/login';
     if (user.role === 'admin') return '/admin/dashboard';
@@ -89,76 +100,74 @@ export const LandingPage: React.FC = () => {
         </button>
       </header>
 
-      {/* Slide-over Navigation Drawer */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 z-[60] flex justify-end bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="w-full max-w-sm bg-studio-blue border-l border-white/20 h-full p-8 flex flex-col justify-between shadow-2xl animate-in slide-in-from-right duration-250">
-            <div>
-              <div className="flex items-center justify-between pb-6 border-b border-white/15">
-                <div className="flex items-center gap-2.5">
-                  <img src="/logo-white.png" alt="Serviq" className="w-7 h-7 object-contain" />
-                  <img src="/serviq-name-logo.png" alt="Serviq" className="h-6 w-auto object-contain" />
-                </div>
-                <button
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-xl transition-colors"
-                >
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
+      {/* =========================================================================
+          FULL-PAGE DROP-DOWN MENU (MATCHING REFERENCE IMAGE)
+          Slides smoothly down from the top on open, and slides back up on close
+      ========================================================================= */}
+      <div
+        className={`fixed inset-0 z-[100] bg-studio-blue text-white flex flex-col overflow-y-auto transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          mobileMenuOpen ? 'translate-y-0 pointer-events-auto' : '-translate-y-full pointer-events-none'
+        }`}
+      >
+        {/* Ambient background glow orbs inside the menu */}
+        <div className="absolute top-10 left-10 w-96 h-96 bg-white/5 rounded-full blur-[140px] pointer-events-none" />
+        <div className="absolute bottom-10 right-10 w-[500px] h-[500px] bg-indigo-400/10 rounded-full blur-[160px] pointer-events-none" />
 
-              <div className="mt-8 space-y-4 font-neue-haas-medium text-base">
-                <a
-                  href="#hero"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block py-2 text-white/90 hover:text-white transition-colors"
-                >
-                  Home
-                </a>
-                <a
-                  href="#features"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block py-2 text-white/90 hover:text-white transition-colors"
-                >
-                  Features & Telemetry
-                </a>
-                <a
-                  href="#how-it-works"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block py-2 text-white/90 hover:text-white transition-colors"
-                >
-                  How It Works
-                </a>
-                <a
-                  href="#roles"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block py-2 text-white/90 hover:text-white transition-colors"
-                >
-                  Fleet Solutions
-                </a>
-                <a
-                  href="#about"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block py-2 text-white/90 hover:text-white transition-colors"
-                >
-                  About SERVIQ
-                </a>
-                <a
-                  href="#contact"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block py-2 text-white/90 hover:text-white transition-colors"
-                >
-                  Contact
-                </a>
-              </div>
-            </div>
+        {/* Top Bar: Serviq Logo (White) + Rounded Close 'X' Button */}
+        <div className="relative z-10 w-full px-6 sm:px-12 md:px-16 py-5 sm:py-6 flex items-center justify-between border-b border-white/10">
+          <Link
+            to="/"
+            onClick={() => setMobileMenuOpen(false)}
+            className="flex items-center gap-2.5 sm:gap-3 group"
+          >
+            <img
+              src="/logo-white.png"
+              alt="Serviq"
+              className="w-7 h-7 sm:w-8 sm:h-8 object-contain drop-shadow"
+            />
+            <img
+              src="/serviq-name-logo.png"
+              alt="Serviq"
+              className="h-5 sm:h-6 md:h-7 w-auto object-contain drop-shadow-sm group-hover:opacity-90 transition-opacity"
+            />
+          </Link>
 
-            <div className="pt-6 border-t border-white/15 space-y-3 font-neue-haas-medium">
+          {/* Close 'X' button in rounded translucent square matching screenshot */}
+          <button
+            onClick={() => setMobileMenuOpen(false)}
+            className="w-10 h-10 sm:w-11 sm:h-11 bg-white/20 hover:bg-white/30 active:scale-95 rounded-xl flex items-center justify-center transition-all cursor-pointer shadow-sm"
+            aria-label="Close Menu"
+          >
+            <X className="w-6 h-6 text-white stroke-[2.5]" />
+          </button>
+        </div>
+
+        {/* Content Area: 2 Columns matching screenshot */}
+        <div className="relative z-10 flex-1 w-full max-w-7xl mx-auto px-6 sm:px-12 md:px-16 py-10 md:py-16 flex flex-col md:flex-row justify-between items-start gap-12 md:gap-16">
+          
+          {/* Left Column: Reach out & Support + Action Buttons */}
+          <div className="md:w-5/12 lg:w-4/12 flex flex-col justify-start pt-2 sm:pt-4">
+            <p className="text-white text-base sm:text-lg">
+              Reach out to us via{' '}
+              <a
+                href="#contact"
+                onClick={() => setMobileMenuOpen(false)}
+                className="underline underline-offset-4 decoration-2 font-medium hover:text-white/80 transition-colors"
+              >
+                App Support
+              </a>
+            </p>
+            <p className="text-white/80 text-xs sm:text-sm mt-3 leading-relaxed max-w-sm">
+              Need assistance with your fleet or account? Log in to your portal, explore our help center, or reach out to our 24/7 dedicated support team.
+            </p>
+
+            {/* Quick Actions */}
+            <div className="mt-8 flex flex-col sm:flex-row gap-3">
               {user ? (
                 <Link
                   to={getDashboardLink()}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-full py-3 bg-white text-[#393df0] font-bold text-center block rounded-xl shadow-lg hover:bg-white/95 transition-all"
+                  className="px-6 py-3 bg-white text-[#2335f2] font-bold rounded-xl shadow-lg hover:bg-white/95 text-center transition-all"
                 >
                   Open Console →
                 </Link>
@@ -167,14 +176,14 @@ export const LandingPage: React.FC = () => {
                   <Link
                     to="/login"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="w-full py-3 bg-white/10 hover:bg-white/20 text-white font-semibold text-center block rounded-xl transition-all"
+                    className="px-6 py-3 bg-white/15 hover:bg-white/25 text-white font-semibold rounded-xl text-center transition-colors"
                   >
                     Log In
                   </Link>
                   <Link
                     to="/register"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="w-full py-3 bg-white text-[#393df0] font-bold text-center block rounded-xl shadow-lg hover:bg-white/95 transition-all"
+                    className="px-6 py-3 bg-white text-[#2335f2] font-bold rounded-xl shadow-lg hover:bg-white/95 text-center transition-all"
                   >
                     Get Started Free
                   </Link>
@@ -182,8 +191,55 @@ export const LandingPage: React.FC = () => {
               )}
             </div>
           </div>
+
+          {/* Right Column: Large Bold Nav Links matching screenshot */}
+          <div className="md:w-7/12 lg:w-8/12 flex flex-col space-y-1 sm:space-y-2 md:space-y-3">
+            <a
+              href="#hero"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-[72px] font-bold text-white/70 hover:text-white leading-[1.12] tracking-tight block transition-colors select-none"
+            >
+              Home
+            </a>
+            <a
+              href="#about"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-[72px] font-bold text-white/70 hover:text-white leading-[1.12] tracking-tight block transition-colors select-none"
+            >
+              About Us
+            </a>
+            <a
+              href="#features"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-[72px] font-bold text-white/70 hover:text-white leading-[1.12] tracking-tight block transition-colors select-none"
+            >
+              Features
+            </a>
+            <a
+              href="#how-it-works"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-[72px] font-bold text-white/70 hover:text-white leading-[1.12] tracking-tight block transition-colors select-none"
+            >
+              How It Works
+            </a>
+            <a
+              href="#roles"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-[72px] font-bold text-white/70 hover:text-white leading-[1.12] tracking-tight block transition-colors select-none"
+            >
+              Fleet Solutions
+            </a>
+            <a
+              href="#contact"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-[72px] font-bold text-white/70 hover:text-white leading-[1.12] tracking-tight block transition-colors select-none"
+            >
+              Contact Us
+            </a>
+          </div>
+
         </div>
-      )}
+      </div>
 
       {/* =========================================================================
           HERO SECTION — EXACT MATCH OF UPLOADED DESIGN (FULL VIEWPORT)
