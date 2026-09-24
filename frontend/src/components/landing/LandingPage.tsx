@@ -39,7 +39,7 @@ export const LandingPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-studio-blue text-white font-['Plus_Jakarta_Sans',sans-serif] selection:bg-white selection:text-[#3831eb] overflow-x-hidden relative">
+    <div className="min-h-screen bg-studio-blue text-white font-['Plus_Jakarta_Sans',sans-serif] selection:bg-white selection:text-[#393df0] overflow-x-hidden relative">
 
       {/* Ambient background glow orbs */}
       <div className="fixed top-20 left-10 w-96 h-96 bg-white/5 rounded-full blur-[130px] pointer-events-none -z-10 animate-pulse-glow" />
@@ -81,7 +81,7 @@ export const LandingPage: React.FC = () => {
       {/* Slide-over Navigation Drawer */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="w-full max-w-sm bg-[#1a29db] border-l border-white/20 h-full p-8 flex flex-col justify-between shadow-2xl animate-in slide-in-from-right duration-250">
+          <div className="w-full max-w-sm bg-studio-blue border-l border-white/20 h-full p-8 flex flex-col justify-between shadow-2xl animate-in slide-in-from-right duration-250">
             <div>
               <div className="flex items-center justify-between pb-6 border-b border-white/15">
                 <div className="flex items-center gap-2.5">
@@ -147,7 +147,7 @@ export const LandingPage: React.FC = () => {
                 <Link
                   to={getDashboardLink()}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-full py-3 bg-white text-[#1a29db] font-bold text-center block rounded-xl shadow-lg hover:bg-white/95 transition-all"
+                  className="w-full py-3 bg-white text-[#393df0] font-bold text-center block rounded-xl shadow-lg hover:bg-white/95 transition-all"
                 >
                   Open Console →
                 </Link>
@@ -163,7 +163,7 @@ export const LandingPage: React.FC = () => {
                   <Link
                     to="/register"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="w-full py-3 bg-white text-[#1a29db] font-bold text-center block rounded-xl shadow-lg hover:bg-white/95 transition-all"
+                    className="w-full py-3 bg-white text-[#393df0] font-bold text-center block rounded-xl shadow-lg hover:bg-white/95 transition-all"
                   >
                     Get Started Free
                   </Link>
@@ -228,8 +228,8 @@ export const LandingPage: React.FC = () => {
           />
         </div>
 
-        {/* 2. 3D Cube (Lower-Left Foreground) - Reduced size, anchored at bottom-left corner with soft shadow */}
-        <div className="absolute left-0 bottom-0 w-24 sm:w-32 md:w-40 lg:w-48 pointer-events-none filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.14)] z-20 select-none">
+        {/* 2. 3D Cube (Lower-Left Foreground) - Reduced size, pushed slightly away from left border */}
+        <div className="absolute left-3 sm:left-6 md:left-10 lg:left-14 bottom-0 w-20 sm:w-26 md:w-32 lg:w-40 pointer-events-none filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.12)] z-20 select-none">
           <img
             src="/cube.png"
             alt="3D Angled Cube"
@@ -248,15 +248,19 @@ export const LandingPage: React.FC = () => {
           />
         </div>
 
-        {/* 4. 3D Car with headlights (Bottom-Right) - Compact size, spaced from center, soft shadow */}
-        <div className="absolute -right-2 sm:right-2 md:right-6 lg:right-10 bottom-0 sm:bottom-1 md:bottom-2 lg:bottom-4 w-52 sm:w-72 md:w-84 lg:w-[420px] pointer-events-none filter drop-shadow-[0_14px_28px_rgba(0,0,0,0.16)] z-20 select-none">
+        {/* 4. 3D Car with headlights (Bottom-Right) - Compact size, spaced with ground shadow underneath */}
+        <div className="absolute -right-2 sm:right-2 md:right-6 lg:right-10 bottom-0 sm:bottom-1 md:bottom-2 lg:bottom-4 w-44 sm:w-60 md:w-72 lg:w-[350px] pointer-events-none z-20 select-none">
+          {/* Ground Contact Shadow Under the Car */}
+          <div className="absolute -bottom-1.5 left-[4%] right-[2%] h-4 sm:h-5 md:h-6 bg-[#0c1445]/60 rounded-[100%] blur-[8px] pointer-events-none" />
+          <div className="absolute -bottom-1 left-[10%] right-[8%] h-3 sm:h-4 bg-black/40 rounded-[100%] blur-[5px] pointer-events-none" />
+
           {/* Soft Headlight Glow */}
-          <div className="absolute left-[8%] bottom-[32%] w-16 h-12 bg-white/15 rounded-full blur-lg pointer-events-none" />
-          <div className="absolute left-[30%] bottom-[32%] w-20 h-14 bg-white/15 rounded-full blur-lg pointer-events-none" />
+          <div className="absolute left-[8%] bottom-[32%] w-14 h-10 bg-white/15 rounded-full blur-lg pointer-events-none" />
+          <div className="absolute left-[30%] bottom-[32%] w-18 h-12 bg-white/15 rounded-full blur-lg pointer-events-none" />
           <img
             src="/car.png"
             alt="3D Fleet Vehicle"
-            className="w-full h-full object-contain"
+            className="w-full h-full object-contain filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.12)]"
             draggable={false}
           />
         </div>
@@ -265,9 +269,9 @@ export const LandingPage: React.FC = () => {
       {/* =========================================================================
           VFX TRANSITION 1: Slanted Diagonal Cut with Floating Gear Seal (Blue to White)
       ========================================================================= */}
-      <div className="relative w-full overflow-hidden leading-none bg-[#3831eb]">
+      <div className="relative w-full overflow-hidden leading-none bg-studio-blue">
         {/* Floating animated transition seal */}
-        <div className="absolute left-1/2 -translate-x-1/2 -top-6 z-20 w-12 h-12 bg-white rounded-full shadow-2xl p-2.5 flex items-center justify-center animate-spin-very-slow border-2 border-[#3831eb]">
+        <div className="absolute left-1/2 -translate-x-1/2 -top-6 z-20 w-12 h-12 bg-white rounded-full shadow-2xl p-2.5 flex items-center justify-center animate-spin-very-slow border-2 border-[#393df0]">
           <img src="/logo-blue.png" alt="" className="w-full h-full object-contain" />
         </div>
         <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-16 sm:h-24 text-white fill-current">
@@ -280,18 +284,18 @@ export const LandingPage: React.FC = () => {
       ========================================================================= */}
       <section className="py-20 bg-white text-slate-900 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-center text-xs font-extrabold uppercase tracking-widest text-[#3831eb] mb-12">
+          <h2 className="text-center text-xs font-extrabold uppercase tracking-widest text-[#393df0] mb-12">
             Everything your fleet needs, in one place.
           </h2>
 
           {/* Square Cards with Hover VFX */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="aspect-square bg-slate-50 border-2 border-slate-100 p-8 flex flex-col justify-between square-card-white group">
-              <div className="w-12 h-12 bg-[#3831eb]/10 text-[#3831eb] flex items-center justify-center font-bold group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 bg-studio-blue/10 text-[#393df0] flex items-center justify-center font-bold group-hover:scale-110 transition-transform">
                 <Truck className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#3831eb] transition-colors">
+                <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#393df0] transition-colors">
                   Fleet Management
                 </h3>
                 <p className="text-xs text-slate-600 mt-2 leading-relaxed">
@@ -301,11 +305,11 @@ export const LandingPage: React.FC = () => {
             </div>
 
             <div className="aspect-square bg-slate-50 border-2 border-slate-100 p-8 flex flex-col justify-between square-card-white group">
-              <div className="w-12 h-12 bg-[#3831eb]/10 text-[#3831eb] flex items-center justify-center font-bold group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 bg-studio-blue/10 text-[#393df0] flex items-center justify-center font-bold group-hover:scale-110 transition-transform">
                 <Wrench className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#3831eb] transition-colors">
+                <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#393df0] transition-colors">
                   Maintenance Tracking
                 </h3>
                 <p className="text-xs text-slate-600 mt-2 leading-relaxed">
@@ -315,11 +319,11 @@ export const LandingPage: React.FC = () => {
             </div>
 
             <div className="aspect-square bg-slate-50 border-2 border-slate-100 p-8 flex flex-col justify-between square-card-white group">
-              <div className="w-12 h-12 bg-[#3831eb]/10 text-[#3831eb] flex items-center justify-center font-bold group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 bg-studio-blue/10 text-[#393df0] flex items-center justify-center font-bold group-hover:scale-110 transition-transform">
                 <AlertTriangle className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#3831eb] transition-colors">
+                <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#393df0] transition-colors">
                   Repair Management
                 </h3>
                 <p className="text-xs text-slate-600 mt-2 leading-relaxed">
@@ -329,11 +333,11 @@ export const LandingPage: React.FC = () => {
             </div>
 
             <div className="aspect-square bg-slate-50 border-2 border-slate-100 p-8 flex flex-col justify-between square-card-white group">
-              <div className="w-12 h-12 bg-[#3831eb]/10 text-[#3831eb] flex items-center justify-center font-bold group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 bg-studio-blue/10 text-[#393df0] flex items-center justify-center font-bold group-hover:scale-110 transition-transform">
                 <UserCheck className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#3831eb] transition-colors">
+                <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#393df0] transition-colors">
                   Driver Management
                 </h3>
                 <p className="text-xs text-slate-600 mt-2 leading-relaxed">
@@ -349,7 +353,7 @@ export const LandingPage: React.FC = () => {
           VFX TRANSITION 2: Flowing Wave Curve with Shimmer Line (White to Blue)
       ========================================================================= */}
       <div className="relative w-full overflow-hidden leading-none bg-white">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-16 sm:h-24 text-[#3831eb] fill-current animate-wave-flow">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-16 sm:h-24 text-[#393df0] fill-current animate-wave-flow">
           <path d="M0,0 C300,90 800,90 1200,0 L1200,120 L0,120 Z"></path>
         </svg>
       </div>
@@ -357,7 +361,7 @@ export const LandingPage: React.FC = () => {
       {/* =========================================================================
           PAGE 3 (ODD): PROBLEM SECTION — BLUE BACKGROUND
       ========================================================================= */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-left bg-[#3831eb] relative">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-left bg-studio-blue relative">
         <div className="max-w-3xl mb-14">
           <h2 className="text-3xl sm:text-5xl font-black text-white font-['Outfit',sans-serif] leading-tight">
             Fleet management shouldn't be this complicated.
@@ -430,7 +434,7 @@ export const LandingPage: React.FC = () => {
       {/* =========================================================================
           VFX TRANSITION 3: Stepped Geometric Tooth Divider (Blue to White)
       ========================================================================= */}
-      <div className="relative w-full overflow-hidden leading-none bg-[#3831eb]">
+      <div className="relative w-full overflow-hidden leading-none bg-studio-blue">
         <svg viewBox="0 0 1200 60" preserveAspectRatio="none" className="relative block w-full h-12 sm:h-16 text-white fill-current">
           <path d="M0,0 L480,0 L520,60 L680,60 L720,0 L1200,0 L1200,60 L0,60 Z"></path>
         </svg>
@@ -451,7 +455,7 @@ export const LandingPage: React.FC = () => {
           <div className="aspect-square bg-slate-50 border-2 border-slate-100 p-7 flex flex-col justify-between square-card-white group">
             <div className="text-3xl group-hover:scale-110 transition-transform">🚗</div>
             <div>
-              <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#3831eb] transition-colors">
+              <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#393df0] transition-colors">
                 Vehicle Management
               </h3>
               <p className="text-xs text-slate-600 mt-2 leading-relaxed">
@@ -463,7 +467,7 @@ export const LandingPage: React.FC = () => {
           <div className="aspect-square bg-slate-50 border-2 border-slate-100 p-7 flex flex-col justify-between square-card-white group">
             <div className="text-3xl group-hover:scale-110 transition-transform">👨✈️</div>
             <div>
-              <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#3831eb] transition-colors">
+              <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#393df0] transition-colors">
                 Driver Management
               </h3>
               <p className="text-xs text-slate-600 mt-2 leading-relaxed">
@@ -475,7 +479,7 @@ export const LandingPage: React.FC = () => {
           <div className="aspect-square bg-slate-50 border-2 border-slate-100 p-7 flex flex-col justify-between square-card-white group">
             <div className="text-3xl group-hover:scale-110 transition-transform">🔧</div>
             <div>
-              <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#3831eb] transition-colors">
+              <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#393df0] transition-colors">
                 Maintenance Management
               </h3>
               <p className="text-xs text-slate-600 mt-2 leading-relaxed">
@@ -487,7 +491,7 @@ export const LandingPage: React.FC = () => {
           <div className="aspect-square bg-slate-50 border-2 border-slate-100 p-7 flex flex-col justify-between square-card-white group">
             <div className="text-3xl group-hover:scale-110 transition-transform">🛠️</div>
             <div>
-              <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#3831eb] transition-colors">
+              <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#393df0] transition-colors">
                 Repair Tracking
               </h3>
               <p className="text-xs text-slate-600 mt-2 leading-relaxed">
@@ -499,7 +503,7 @@ export const LandingPage: React.FC = () => {
           <div className="aspect-square bg-slate-50 border-2 border-slate-100 p-7 flex flex-col justify-between square-card-white group">
             <div className="text-3xl group-hover:scale-110 transition-transform">💰</div>
             <div>
-              <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#3831eb] transition-colors">
+              <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#393df0] transition-colors">
                 Expense Management
               </h3>
               <p className="text-xs text-slate-600 mt-2 leading-relaxed">
@@ -511,7 +515,7 @@ export const LandingPage: React.FC = () => {
           <div className="aspect-square bg-slate-50 border-2 border-slate-100 p-7 flex flex-col justify-between square-card-white group">
             <div className="text-3xl group-hover:scale-110 transition-transform">📄</div>
             <div>
-              <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#3831eb] transition-colors">
+              <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#393df0] transition-colors">
                 Document Management
               </h3>
               <p className="text-xs text-slate-600 mt-2 leading-relaxed">
@@ -523,7 +527,7 @@ export const LandingPage: React.FC = () => {
           <div className="aspect-square bg-slate-50 border-2 border-slate-100 p-7 flex flex-col justify-between square-card-white group">
             <div className="text-3xl group-hover:scale-110 transition-transform">🔔</div>
             <div>
-              <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#3831eb] transition-colors">
+              <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#393df0] transition-colors">
                 Notifications & Reminders
               </h3>
               <p className="text-xs text-slate-600 mt-2 leading-relaxed">
@@ -535,7 +539,7 @@ export const LandingPage: React.FC = () => {
           <div className="aspect-square bg-slate-50 border-2 border-slate-100 p-7 flex flex-col justify-between square-card-white group">
             <div className="text-3xl group-hover:scale-110 transition-transform">📊</div>
             <div>
-              <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#3831eb] transition-colors">
+              <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#393df0] transition-colors">
                 Reports & Analytics
               </h3>
               <p className="text-xs text-slate-600 mt-2 leading-relaxed">
@@ -550,7 +554,7 @@ export const LandingPage: React.FC = () => {
           VFX TRANSITION 4: Asymmetric Triangle Peak with Drop Shadow (White to Blue)
       ========================================================================= */}
       <div className="relative w-full overflow-hidden leading-none bg-white">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-16 sm:h-24 text-[#3831eb] fill-current">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-16 sm:h-24 text-[#393df0] fill-current">
           <path d="M0,0 L600,120 L1200,0 L1200,120 L0,120 Z"></path>
         </svg>
       </div>
@@ -558,7 +562,7 @@ export const LandingPage: React.FC = () => {
       {/* =========================================================================
           PAGE 5 (ODD): DASHBOARD SECTION — BLUE BACKGROUND
       ========================================================================= */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-left bg-[#3831eb]">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-left bg-studio-blue">
         <div className="bg-white/10 border-2 border-white/20 p-8 sm:p-14 flex flex-col lg:flex-row items-center justify-between gap-12 square-card-blue">
           <div className="max-w-xl">
             <h2 className="text-3xl sm:text-5xl font-black text-white font-['Outfit',sans-serif] leading-tight">
@@ -607,7 +611,7 @@ export const LandingPage: React.FC = () => {
             <div className="mt-8">
               <Link
                 to={user ? getDashboardLink() : '/register'}
-                className="inline-flex items-center gap-2 px-7 py-3.5 bg-white text-[#3831eb] font-bold text-sm shadow-xl hover:bg-white/90 transition-all hover:scale-105"
+                className="inline-flex items-center gap-2 px-7 py-3.5 bg-white text-[#393df0] font-bold text-sm shadow-xl hover:bg-white/90 transition-all hover:scale-105"
               >
                 <span>Manage Your Fleet →</span>
               </Link>
@@ -647,7 +651,7 @@ export const LandingPage: React.FC = () => {
       {/* =========================================================================
           VFX TRANSITION 5: Sharp Inverted Chevron (Blue to White)
       ========================================================================= */}
-      <div className="relative w-full overflow-hidden leading-none bg-[#3831eb]">
+      <div className="relative w-full overflow-hidden leading-none bg-studio-blue">
         <svg viewBox="0 0 1200 60" preserveAspectRatio="none" className="relative block w-full h-12 sm:h-16 text-white fill-current">
           <path d="M0,0 L600,60 L1200,0 L1200,60 L0,60 Z"></path>
         </svg>
@@ -666,9 +670,9 @@ export const LandingPage: React.FC = () => {
         {/* 5 Square Steps with Step Number VFX */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
           <div className="aspect-square bg-slate-50 border-2 border-slate-100 p-6 flex flex-col justify-between square-card-white group">
-            <span className="font-mono font-black text-3xl text-[#3831eb] group-hover:scale-110 transition-transform">01</span>
+            <span className="font-mono font-black text-3xl text-[#393df0] group-hover:scale-110 transition-transform">01</span>
             <div>
-              <h3 className="font-bold text-base text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#3831eb] transition-colors">
+              <h3 className="font-bold text-base text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#393df0] transition-colors">
                 Register Your Company
               </h3>
               <p className="text-xs text-slate-600 mt-2 leading-relaxed">
@@ -678,9 +682,9 @@ export const LandingPage: React.FC = () => {
           </div>
 
           <div className="aspect-square bg-slate-50 border-2 border-slate-100 p-6 flex flex-col justify-between square-card-white group">
-            <span className="font-mono font-black text-3xl text-[#3831eb] group-hover:scale-110 transition-transform">02</span>
+            <span className="font-mono font-black text-3xl text-[#393df0] group-hover:scale-110 transition-transform">02</span>
             <div>
-              <h3 className="font-bold text-base text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#3831eb] transition-colors">
+              <h3 className="font-bold text-base text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#393df0] transition-colors">
                 Build Your Fleet
               </h3>
               <p className="text-xs text-slate-600 mt-2 leading-relaxed">
@@ -690,9 +694,9 @@ export const LandingPage: React.FC = () => {
           </div>
 
           <div className="aspect-square bg-slate-50 border-2 border-slate-100 p-6 flex flex-col justify-between square-card-white group">
-            <span className="font-mono font-black text-3xl text-[#3831eb] group-hover:scale-110 transition-transform">03</span>
+            <span className="font-mono font-black text-3xl text-[#393df0] group-hover:scale-110 transition-transform">03</span>
             <div>
-              <h3 className="font-bold text-base text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#3831eb] transition-colors">
+              <h3 className="font-bold text-base text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#393df0] transition-colors">
                 Assign & Manage
               </h3>
               <p className="text-xs text-slate-600 mt-2 leading-relaxed">
@@ -702,9 +706,9 @@ export const LandingPage: React.FC = () => {
           </div>
 
           <div className="aspect-square bg-slate-50 border-2 border-slate-100 p-6 flex flex-col justify-between square-card-white group">
-            <span className="font-mono font-black text-3xl text-[#3831eb] group-hover:scale-110 transition-transform">04</span>
+            <span className="font-mono font-black text-3xl text-[#393df0] group-hover:scale-110 transition-transform">04</span>
             <div>
-              <h3 className="font-bold text-base text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#3831eb] transition-colors">
+              <h3 className="font-bold text-base text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#393df0] transition-colors">
                 Track Everything
               </h3>
               <p className="text-xs text-slate-600 mt-2 leading-relaxed">
@@ -714,9 +718,9 @@ export const LandingPage: React.FC = () => {
           </div>
 
           <div className="aspect-square bg-slate-50 border-2 border-slate-100 p-6 flex flex-col justify-between square-card-white group">
-            <span className="font-mono font-black text-3xl text-[#3831eb] group-hover:scale-110 transition-transform">05</span>
+            <span className="font-mono font-black text-3xl text-[#393df0] group-hover:scale-110 transition-transform">05</span>
             <div>
-              <h3 className="font-bold text-base text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#3831eb] transition-colors">
+              <h3 className="font-bold text-base text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#393df0] transition-colors">
                 Stay Ahead
               </h3>
               <p className="text-xs text-slate-600 mt-2 leading-relaxed">
@@ -731,7 +735,7 @@ export const LandingPage: React.FC = () => {
           VFX TRANSITION 6: Convex Geometric Arch (White to Blue)
       ========================================================================= */}
       <div className="relative w-full overflow-hidden leading-none bg-white">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-16 sm:h-24 text-[#3831eb] fill-current">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-16 sm:h-24 text-[#393df0] fill-current">
           <path d="M0,0 Q600,120 1200,0 L1200,120 L0,120 Z"></path>
         </svg>
       </div>
@@ -739,7 +743,7 @@ export const LandingPage: React.FC = () => {
       {/* =========================================================================
           PAGE 7 (ODD): BUILT FOR EVERY ROLE — BLUE BACKGROUND
       ========================================================================= */}
-      <section id="roles" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-left bg-[#3831eb]">
+      <section id="roles" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-left bg-studio-blue">
         <div className="max-w-3xl mb-14">
           <p className="text-xs font-bold uppercase tracking-widest text-white/70">One platform. Different experiences.</p>
           <h2 className="text-3xl sm:text-5xl font-black text-white font-['Outfit',sans-serif] mt-1">
@@ -765,7 +769,7 @@ export const LandingPage: React.FC = () => {
             </div>
             <Link
               to="/login"
-              className="mt-8 block text-center py-3 px-4 bg-white text-[#3831eb] font-bold text-xs shadow-md hover:bg-white/90 transition-all hover:scale-105"
+              className="mt-8 block text-center py-3 px-4 bg-white text-[#393df0] font-bold text-xs shadow-md hover:bg-white/90 transition-all hover:scale-105"
             >
               Manage Organization →
             </Link>
@@ -788,7 +792,7 @@ export const LandingPage: React.FC = () => {
             </div>
             <Link
               to="/login"
-              className="mt-8 block text-center py-3 px-4 bg-white text-[#3831eb] font-bold text-xs shadow-md hover:bg-white/90 transition-all hover:scale-105"
+              className="mt-8 block text-center py-3 px-4 bg-white text-[#393df0] font-bold text-xs shadow-md hover:bg-white/90 transition-all hover:scale-105"
             >
               Manage Fleet →
             </Link>
@@ -811,7 +815,7 @@ export const LandingPage: React.FC = () => {
             </div>
             <Link
               to="/driver/home"
-              className="mt-8 block text-center py-3 px-4 bg-white text-[#3831eb] font-bold text-xs shadow-md hover:bg-white/90 transition-all hover:scale-105"
+              className="mt-8 block text-center py-3 px-4 bg-white text-[#393df0] font-bold text-xs shadow-md hover:bg-white/90 transition-all hover:scale-105"
             >
               Download Driver App →
             </Link>
@@ -822,7 +826,7 @@ export const LandingPage: React.FC = () => {
       {/* =========================================================================
           VFX TRANSITION 7: Reversed Diagonal Cut (Blue to White)
       ========================================================================= */}
-      <div className="relative w-full overflow-hidden leading-none bg-[#3831eb]">
+      <div className="relative w-full overflow-hidden leading-none bg-studio-blue">
         <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-16 sm:h-24 text-white fill-current">
           <path d="M0 0L1200 120V120H0V0Z"></path>
         </svg>
@@ -842,29 +846,29 @@ export const LandingPage: React.FC = () => {
             </p>
 
             <div className="mt-5 flex flex-wrap gap-2 text-xs font-bold">
-              <span className="bg-[#3831eb]/10 text-[#3831eb] px-3 py-1.5">Check your vehicle.</span>
-              <span className="bg-[#3831eb]/10 text-[#3831eb] px-3 py-1.5">Report an issue.</span>
-              <span className="bg-[#3831eb]/10 text-[#3831eb] px-3 py-1.5">Track a repair.</span>
-              <span className="bg-[#3831eb]/10 text-[#3831eb] px-3 py-1.5">Stay updated.</span>
+              <span className="bg-studio-blue/10 text-[#393df0] px-3 py-1.5">Check your vehicle.</span>
+              <span className="bg-studio-blue/10 text-[#393df0] px-3 py-1.5">Report an issue.</span>
+              <span className="bg-studio-blue/10 text-[#393df0] px-3 py-1.5">Track a repair.</span>
+              <span className="bg-studio-blue/10 text-[#393df0] px-3 py-1.5">Stay updated.</span>
             </div>
 
             {/* Square Feature Checkboxes */}
             <div className="mt-6 text-xs text-slate-700 grid grid-cols-2 gap-2.5">
-              <div className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#3831eb]" /> Assigned vehicle</div>
-              <div className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#3831eb]" /> Vehicle health</div>
-              <div className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#3831eb]" /> Odometer</div>
-              <div className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#3831eb]" /> Maintenance schedule</div>
-              <div className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#3831eb]" /> Issue reporting</div>
-              <div className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#3831eb]" /> Photo-based issue reporting</div>
-              <div className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#3831eb]" /> Repair status</div>
-              <div className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#3831eb]" /> Notifications</div>
-              <div className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#3831eb]" /> Documents</div>
+              <div className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#393df0]" /> Assigned vehicle</div>
+              <div className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#393df0]" /> Vehicle health</div>
+              <div className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#393df0]" /> Odometer</div>
+              <div className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#393df0]" /> Maintenance schedule</div>
+              <div className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#393df0]" /> Issue reporting</div>
+              <div className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#393df0]" /> Photo-based issue reporting</div>
+              <div className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#393df0]" /> Repair status</div>
+              <div className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#393df0]" /> Notifications</div>
+              <div className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#393df0]" /> Documents</div>
             </div>
 
             <div className="mt-8 flex items-center gap-4">
               <Link
                 to="/driver/home"
-                className="inline-flex items-center gap-2 px-6 py-3.5 bg-[#3831eb] text-white font-bold text-xs shadow-xl hover:bg-[#2d27c7] transition-all hover:scale-105"
+                className="inline-flex items-center gap-2 px-6 py-3.5 bg-studio-blue text-white font-bold text-xs shadow-xl hover:bg-[#2d27c7] transition-all hover:scale-105"
               >
                 <Download className="w-4 h-4" />
                 <span>Download Driver App</span>
@@ -874,7 +878,7 @@ export const LandingPage: React.FC = () => {
           </div>
 
           {/* Square Device Representation */}
-          <div className="w-64 aspect-square bg-[#3831eb] p-6 text-white flex flex-col justify-between shadow-2xl animate-float-slow">
+          <div className="w-64 aspect-square bg-studio-blue p-6 text-white flex flex-col justify-between shadow-2xl animate-float-slow">
             <div className="flex justify-between items-center text-xs pb-2 border-b border-white/20">
               <span className="font-bold">DRIVER APP</span>
               <img src="/logo-white.png" alt="" className="w-5 h-5 object-contain" />
@@ -884,7 +888,7 @@ export const LandingPage: React.FC = () => {
               <div className="font-mono font-bold text-white text-lg">TN 01 AB 1234</div>
               <div className="text-xs text-white/80">Odometer: 45,280 km</div>
             </div>
-            <div className="p-3 bg-white text-[#3831eb] font-bold text-center text-xs">
+            <div className="p-3 bg-white text-[#393df0] font-bold text-center text-xs">
               Roadside Breakdown Reported
             </div>
           </div>
@@ -895,7 +899,7 @@ export const LandingPage: React.FC = () => {
           VFX TRANSITION 8: Multi-Layer Wave Flow (White to Blue)
       ========================================================================= */}
       <div className="relative w-full overflow-hidden leading-none bg-white">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-16 sm:h-24 text-[#3831eb] fill-current animate-wave-flow">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-16 sm:h-24 text-[#393df0] fill-current animate-wave-flow">
           <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V0C69.24,40 148.67,69.5 229,74.5A490,490,0,0,0,321.39,56.44Z"></path>
         </svg>
       </div>
@@ -903,7 +907,7 @@ export const LandingPage: React.FC = () => {
       {/* =========================================================================
           PAGE 9 (ODD): MAINTENANCE SECTION — BLUE BACKGROUND
       ========================================================================= */}
-      <section id="about" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-left bg-[#3831eb]">
+      <section id="about" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-left bg-studio-blue">
         <div className="max-w-3xl mb-14">
           <h2 className="text-3xl sm:text-5xl font-black text-white font-['Outfit',sans-serif]">
             Stay ahead of maintenance.
@@ -949,7 +953,7 @@ export const LandingPage: React.FC = () => {
       {/* =========================================================================
           VFX TRANSITION: Wave Flow (Blue to White)
       ========================================================================= */}
-      <div className="relative w-full overflow-hidden leading-none bg-[#3831eb]">
+      <div className="relative w-full overflow-hidden leading-none bg-studio-blue">
         <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-16 sm:h-24 text-white fill-current animate-wave-flow">
           <path d="M0,0 C300,120 900,120 1200,0 L1200,120 L0,120 Z"></path>
         </svg>
@@ -990,14 +994,14 @@ export const LandingPage: React.FC = () => {
             <div className="space-y-3">
               <h4 className="font-bold text-sm text-slate-900 font-['Outfit',sans-serif]">Company</h4>
               <ul className="space-y-2 text-slate-600">
-                <li><a href="#about" className="hover:text-[#3831eb] transition-colors">About us</a></li>
-                <li><a href="#about" className="hover:text-[#3831eb] transition-colors">Newsroom</a></li>
-                <li><a href="#about" className="hover:text-[#3831eb] transition-colors">Tech Blog</a></li>
-                <li><a href="#about" className="hover:text-[#3831eb] transition-colors">Press Releases</a></li>
-                <li><a href="#about" className="hover:text-[#3831eb] transition-colors">Corporate information</a></li>
-                <li><a href="#about" className="hover:text-[#3831eb] transition-colors">Fleet Partners</a></li>
-                <li><a href="#about" className="hover:text-[#3831eb] transition-colors">Workshop Partners</a></li>
-                <li><a href="#about" className="hover:text-[#3831eb] transition-colors">Enterprise FAQ</a></li>
+                <li><a href="#about" className="hover:text-[#393df0] transition-colors">About us</a></li>
+                <li><a href="#about" className="hover:text-[#393df0] transition-colors">Newsroom</a></li>
+                <li><a href="#about" className="hover:text-[#393df0] transition-colors">Tech Blog</a></li>
+                <li><a href="#about" className="hover:text-[#393df0] transition-colors">Press Releases</a></li>
+                <li><a href="#about" className="hover:text-[#393df0] transition-colors">Corporate information</a></li>
+                <li><a href="#about" className="hover:text-[#393df0] transition-colors">Fleet Partners</a></li>
+                <li><a href="#about" className="hover:text-[#393df0] transition-colors">Workshop Partners</a></li>
+                <li><a href="#about" className="hover:text-[#393df0] transition-colors">Enterprise FAQ</a></li>
               </ul>
             </div>
 
@@ -1005,12 +1009,12 @@ export const LandingPage: React.FC = () => {
             <div className="space-y-3">
               <h4 className="font-bold text-sm text-slate-900 font-['Outfit',sans-serif]">Legal & Compliance</h4>
               <ul className="space-y-2 text-slate-600">
-                <li><a href="#contact" className="hover:text-[#3831eb] transition-colors">Terms of use</a></li>
-                <li><a href="#contact" className="hover:text-[#3831eb] transition-colors">Privacy Policy</a></li>
-                <li><a href="#contact" className="hover:text-[#3831eb] transition-colors">Grievance Policy</a></li>
-                <li><a href="#contact" className="hover:text-[#3831eb] transition-colors">Merchant Terms</a></li>
-                <li><a href="#contact" className="hover:text-[#3831eb] transition-colors">Commercial Fleet Terms</a></li>
-                <li><a href="#contact" className="hover:text-[#3831eb] transition-colors">Data Protection Standards</a></li>
+                <li><a href="#contact" className="hover:text-[#393df0] transition-colors">Terms of use</a></li>
+                <li><a href="#contact" className="hover:text-[#393df0] transition-colors">Privacy Policy</a></li>
+                <li><a href="#contact" className="hover:text-[#393df0] transition-colors">Grievance Policy</a></li>
+                <li><a href="#contact" className="hover:text-[#393df0] transition-colors">Merchant Terms</a></li>
+                <li><a href="#contact" className="hover:text-[#393df0] transition-colors">Commercial Fleet Terms</a></li>
+                <li><a href="#contact" className="hover:text-[#393df0] transition-colors">Data Protection Standards</a></li>
               </ul>
             </div>
 
@@ -1018,9 +1022,9 @@ export const LandingPage: React.FC = () => {
             <div className="space-y-3">
               <h4 className="font-bold text-sm text-slate-900 font-['Outfit',sans-serif]">Offers & Campaigns</h4>
               <ul className="space-y-2 text-slate-600">
-                <li><a href="#features" className="hover:text-[#3831eb] transition-colors">Fleet Preventive Servicing Trial</a></li>
-                <li><a href="#features" className="hover:text-[#3831eb] transition-colors">Annual Maintenance Plan</a></li>
-                <li><a href="#features" className="hover:text-[#3831eb] transition-colors">Driver Onboarding Bonus</a></li>
+                <li><a href="#features" className="hover:text-[#393df0] transition-colors">Fleet Preventive Servicing Trial</a></li>
+                <li><a href="#features" className="hover:text-[#393df0] transition-colors">Annual Maintenance Plan</a></li>
+                <li><a href="#features" className="hover:text-[#393df0] transition-colors">Driver Onboarding Bonus</a></li>
               </ul>
             </div>
 
@@ -1028,11 +1032,11 @@ export const LandingPage: React.FC = () => {
             <div className="space-y-3">
               <h4 className="font-bold text-sm text-slate-900 font-['Outfit',sans-serif]">Product</h4>
               <ul className="space-y-2 text-slate-600">
-                <li><a href="#features" className="hover:text-[#3831eb] transition-colors">Our products</a></li>
-                <li><a href="#features" className="hover:text-[#3831eb] transition-colors">Fleet Registry</a></li>
-                <li><a href="#features" className="hover:text-[#3831eb] transition-colors">Maintenance Scheduler</a></li>
-                <li><a href="#features" className="hover:text-[#3831eb] transition-colors">Breakdown Tickets</a></li>
-                <li><Link to="/driver/home" className="hover:text-[#3831eb] transition-colors font-medium">Driver Mobile App</Link></li>
+                <li><a href="#features" className="hover:text-[#393df0] transition-colors">Our products</a></li>
+                <li><a href="#features" className="hover:text-[#393df0] transition-colors">Fleet Registry</a></li>
+                <li><a href="#features" className="hover:text-[#393df0] transition-colors">Maintenance Scheduler</a></li>
+                <li><a href="#features" className="hover:text-[#393df0] transition-colors">Breakdown Tickets</a></li>
+                <li><Link to="/driver/home" className="hover:text-[#393df0] transition-colors font-medium">Driver Mobile App</Link></li>
               </ul>
             </div>
 
