@@ -1078,19 +1078,13 @@ export const LandingPage: React.FC = () => {
             </div>
           </div>
 
-          {/* 5-Column Navigation matching Image 2 */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 py-14 border-b border-slate-100 text-xs">
+          {/* 4-Column Navigation */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 py-14 border-b border-slate-100 text-xs">
             {/* Col 1: Company */}
             <div className="space-y-3">
               <h4 className="font-bold text-sm text-slate-900 font-['Outfit',sans-serif]">Company</h4>
               <ul className="space-y-2 text-slate-600">
                 <li><a href="#about" className="hover:text-[#393df0] transition-colors">About us</a></li>
-                <li><a href="#about" className="hover:text-[#393df0] transition-colors">Newsroom</a></li>
-                <li><a href="#about" className="hover:text-[#393df0] transition-colors">Tech Blog</a></li>
-                <li><a href="#about" className="hover:text-[#393df0] transition-colors">Press Releases</a></li>
-                <li><a href="#about" className="hover:text-[#393df0] transition-colors">Corporate information</a></li>
-                <li><a href="#about" className="hover:text-[#393df0] transition-colors">Fleet Partners</a></li>
-                <li><a href="#about" className="hover:text-[#393df0] transition-colors">Workshop Partners</a></li>
                 <li><a href="#about" className="hover:text-[#393df0] transition-colors">Enterprise FAQ</a></li>
               </ul>
             </div>
@@ -1103,58 +1097,41 @@ export const LandingPage: React.FC = () => {
                 <li><a href="#contact" className="hover:text-[#393df0] transition-colors">Privacy Policy</a></li>
                 <li><a href="#contact" className="hover:text-[#393df0] transition-colors">Grievance Policy</a></li>
                 <li><a href="#contact" className="hover:text-[#393df0] transition-colors">Merchant Terms</a></li>
-                <li><a href="#contact" className="hover:text-[#393df0] transition-colors">Commercial Fleet Terms</a></li>
                 <li><a href="#contact" className="hover:text-[#393df0] transition-colors">Data Protection Standards</a></li>
               </ul>
             </div>
 
-            {/* Col 3: Offers & Campaigns */}
+            {/* Col 3: Download App */}
             <div className="space-y-3">
-              <h4 className="font-bold text-sm text-slate-900 font-['Outfit',sans-serif]">Offers & Campaigns</h4>
+              <h4 className="font-bold text-sm text-slate-900 font-['Outfit',sans-serif]">Download App</h4>
               <ul className="space-y-2 text-slate-600">
-                <li><a href="#features" className="hover:text-[#393df0] transition-colors">Fleet Preventive Servicing Trial</a></li>
-                <li><a href="#features" className="hover:text-[#393df0] transition-colors">Annual Maintenance Plan</a></li>
-                <li><a href="#features" className="hover:text-[#393df0] transition-colors">Driver Onboarding Bonus</a></li>
+                <li><a href="#hero" className="hover:text-[#393df0] transition-colors">Download App</a></li>
               </ul>
             </div>
 
-            {/* Col 4: Product */}
+            {/* Col 4: Support */}
             <div className="space-y-3">
-              <h4 className="font-bold text-sm text-slate-900 font-['Outfit',sans-serif]">Product</h4>
-              <ul className="space-y-2 text-slate-600">
-                <li><a href="#features" className="hover:text-[#393df0] transition-colors">Our products</a></li>
-                <li><a href="#features" className="hover:text-[#393df0] transition-colors">Fleet Registry</a></li>
-                <li><a href="#features" className="hover:text-[#393df0] transition-colors">Maintenance Scheduler</a></li>
-                <li><a href="#features" className="hover:text-[#393df0] transition-colors">Breakdown Tickets</a></li>
-                <li><Link to="/driver/home" className="hover:text-[#393df0] transition-colors font-medium">Driver Mobile App</Link></li>
-              </ul>
-            </div>
-
-            {/* Col 5: Support (Matching image 2 verbatim) */}
-            <div className="space-y-3 lg:col-span-1">
               <h4 className="font-bold text-sm text-slate-900 font-['Outfit',sans-serif]">Support</h4>
-              <p className="text-slate-600 leading-relaxed">
+              <p className="text-slate-700 font-medium leading-relaxed">
                 Get Answers and Assistance Right Where You Need It
               </p>
               <ol className="space-y-2 text-slate-600 leading-relaxed list-decimal list-inside">
-                <li>Tap the user profile icon on your <span className="font-semibold text-slate-800">serviq.fleet</span> app <span className="font-semibold text-slate-800">home screen</span>.</li>
-                <li>Go to the <span className="font-semibold text-slate-800">Help & Feedback</span> menu option.</li>
+                <li>Click the menu</li>
+                <li>Go to the <span className="font-semibold text-slate-800">Help & Feedback</span> option.</li>
                 <li>Select the <span className="font-semibold text-slate-800">relevant category</span> matching your issue to start a live chat instantly.</li>
               </ol>
             </div>
           </div>
 
-          {/* Bottom Copyright & Address Row (Matching Image 3, with NO social icons) */}
+          {/* Bottom Copyright & Address Row */}
           <div className="py-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 text-xs text-slate-500">
             <div>
-              Copyright © 2026 SERVIQ Innovations Private Limited. All rights reserved.
+              Copyright © 2026 SERVIQ . All rights reserved.
             </div>
 
-            <div className="md:text-right space-y-0.5 leading-relaxed text-[11px] text-slate-500">
-              <div className="font-semibold text-slate-700">SERVIQ Innovations Private Limited</div>
-              <div>Buildings Alyssa, Begonia & Clover, Embassy Tech Village</div>
-              <div>Outer Ring Road, Devarabeesanahalli Village</div>
-              <div>Bengaluru - Karnataka - 560103</div>
+            <div className="md:text-right space-y-0.5 leading-relaxed text-xs text-slate-500">
+              <div className="font-semibold text-slate-700">SERVIQ By Orcescale</div>
+              <div>Location - Chennai, Tamil Nadu, India.</div>
             </div>
           </div>
 
