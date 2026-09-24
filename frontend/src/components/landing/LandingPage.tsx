@@ -188,8 +188,8 @@ export const LandingPage: React.FC = () => {
             Smarter Fleet. Smarter Maintenance
           </p>
 
-          {/* Main Headline: Serviq (Kabel Black without bold) */}
-          <h1 className="font-kabel-black text-white text-7xl sm:text-8xl md:text-[112px] lg:text-[132px] leading-none my-1 tracking-tight select-none drop-shadow-md">
+          {/* Main Headline: Serviq (Anek Latin font) */}
+          <h1 className="font-anek-latin font-bold text-white text-7xl sm:text-8xl md:text-[112px] lg:text-[132px] leading-none my-1 tracking-tight select-none drop-shadow-md">
             Serviq
           </h1>
 
