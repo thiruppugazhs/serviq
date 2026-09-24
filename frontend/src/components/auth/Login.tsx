@@ -43,7 +43,7 @@ export const Login: React.FC = () => {
           Left Showcase Panel (Dark Modern Gradient) - Fits Screen
       ========================================================================= */}
       <div className="relative hidden w-1/2 h-full p-4 lg:p-5 xl:p-6 lg:flex flex-col">
-        <div className="h-full w-full overflow-hidden rounded-[32px] xl:rounded-[40px] bg-gradient-to-b from-[#3831eb] via-indigo-900 to-black border border-white/10 p-6 xl:p-8 flex flex-col justify-between relative shadow-2xl">
+        <div className="h-full w-full overflow-hidden rounded-[32px] xl:rounded-[40px] bg-studio-blue border border-white/10 p-6 xl:p-8 flex flex-col justify-between relative shadow-2xl">
           {/* Ambient Lighting */}
           <div className="absolute top-10 left-10 w-64 h-64 bg-white/10 rounded-full blur-[80px] pointer-events-none" />
           <div className="absolute bottom-10 right-10 w-72 h-72 bg-blue-500/20 rounded-full blur-[90px] pointer-events-none" />
@@ -57,9 +57,11 @@ export const Login: React.FC = () => {
                 className="w-8 h-8 xl:w-9 xl:h-9 object-contain drop-shadow group-hover:scale-105 transition-transform"
               />
               <div>
-                <span className="text-xl xl:text-2xl font-black tracking-tight text-white font-['Outfit',sans-serif] block leading-none">
-                  serviq.
-                </span>
+                <img
+                  src="/serviq-name-logo.png"
+                  alt="Serviq"
+                  className="h-5 xl:h-6 w-auto object-contain"
+                />
                 <span className="text-[9px] xl:text-[10px] text-blue-200 font-semibold tracking-wider uppercase block mt-0.5">
                   Fleet Operating System
                 </span>
@@ -80,8 +82,8 @@ export const Login: React.FC = () => {
             <div className="w-full space-y-2.5 xl:space-y-3 text-left">
               <div className="rounded-xl xl:rounded-2xl bg-white/10 p-3 xl:p-3.5 backdrop-blur-md border border-white/15 shadow-lg">
                 <div className="flex items-center gap-3">
-                  <span className="flex h-7 w-7 xl:h-8 xl:w-8 items-center justify-center rounded-full bg-white text-[#3831eb] font-bold text-xs shadow shrink-0">
-                    <ShieldCheck className="w-4 h-4 text-[#3831eb]" />
+                  <span className="flex h-7 w-7 xl:h-8 xl:w-8 items-center justify-center rounded-full bg-white text-[#393df0] font-bold text-xs shadow shrink-0">
+                    <ShieldCheck className="w-4 h-4 text-[#393df0]" />
                   </span>
                   <div className="min-w-0">
                     <span className="text-xs xl:text-sm font-bold text-white block truncate">Multi-Role Architecture</span>
@@ -182,7 +184,7 @@ export const Login: React.FC = () => {
           <form onSubmit={handleSubmit} className="space-y-3.5">
             <div className="space-y-1.5">
               <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
-                <Mail className="w-3 h-3 text-[#3831eb]" />
+                <Mail className="w-3 h-3 text-[#393df0]" />
                 Email Address
               </label>
               <input
@@ -192,13 +194,13 @@ export const Login: React.FC = () => {
                 placeholder="name@company.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-10 xl:h-11 w-full rounded-xl border border-gray-800 bg-gray-900/90 px-3.5 text-white text-xs xl:text-sm placeholder:text-gray-500 focus:border-[#3831eb] focus:outline-none focus:ring-1 focus:ring-[#3831eb] transition-all"
+                className="h-10 xl:h-11 w-full rounded-xl border border-gray-800 bg-gray-900/90 px-3.5 text-white text-xs xl:text-sm placeholder:text-gray-500 focus:border-[#393df0] focus:outline-none focus:ring-1 focus:ring-[#393df0] transition-all"
               />
             </div>
 
             <div className="space-y-1.5">
               <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
-                <Lock className="w-3 h-3 text-[#3831eb]" />
+                <Lock className="w-3 h-3 text-[#393df0]" />
                 Password
               </label>
               <div className="relative">
@@ -208,7 +210,7 @@ export const Login: React.FC = () => {
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="h-10 xl:h-11 w-full rounded-xl border border-gray-800 bg-gray-900/90 pl-3.5 pr-10 text-white text-xs xl:text-sm placeholder:text-gray-500 focus:border-[#3831eb] focus:outline-none focus:ring-1 focus:ring-[#3831eb] transition-all"
+                  className="h-10 xl:h-11 w-full rounded-xl border border-gray-800 bg-gray-900/90 pl-3.5 pr-10 text-white text-xs xl:text-sm placeholder:text-gray-500 focus:border-[#393df0] focus:outline-none focus:ring-1 focus:ring-[#393df0] transition-all"
                 />
                 <button
                   type="button"

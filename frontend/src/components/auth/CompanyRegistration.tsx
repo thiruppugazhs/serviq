@@ -218,7 +218,7 @@ export const CompanyRegistration: React.FC = () => {
           Left Showcase Panel (Dark Modern Gradient with Step Progress) - Fits Screen
       ========================================================================= */}
       <div className="relative hidden w-1/2 h-full p-4 lg:p-5 xl:p-6 lg:flex flex-col">
-        <div className="h-full w-full overflow-hidden rounded-[32px] xl:rounded-[40px] bg-gradient-to-b from-[#3831eb] via-indigo-900 to-black border border-white/10 p-6 xl:p-8 flex flex-col justify-between relative shadow-2xl">
+        <div className="h-full w-full overflow-hidden rounded-[32px] xl:rounded-[40px] bg-studio-blue border border-white/10 p-6 xl:p-8 flex flex-col justify-between relative shadow-2xl">
           {/* Ambient Lighting Orbs */}
           <div className="absolute top-10 left-10 w-64 h-64 bg-white/10 rounded-full blur-[80px] pointer-events-none" />
           <div className="absolute bottom-10 right-10 w-72 h-72 bg-blue-500/20 rounded-full blur-[90px] pointer-events-none" />
@@ -232,9 +232,11 @@ export const CompanyRegistration: React.FC = () => {
                 className="w-8 h-8 xl:w-9 xl:h-9 object-contain drop-shadow group-hover:scale-105 transition-transform"
               />
               <div>
-                <span className="text-xl xl:text-2xl font-black tracking-tight text-white font-['Outfit',sans-serif] block leading-none">
-                  serviq.
-                </span>
+                <img
+                  src="/serviq-name-logo.png"
+                  alt="Serviq"
+                  className="h-5 xl:h-6 w-auto object-contain"
+                />
                 <span className="text-[9px] xl:text-[10px] text-blue-200 font-semibold tracking-wider uppercase block mt-0.5">
                   Fleet Operating System
                 </span>
@@ -271,7 +273,7 @@ export const CompanyRegistration: React.FC = () => {
                   ) : (
                     <span
                       className={`flex h-7 w-7 xl:h-8 xl:w-8 items-center justify-center rounded-full font-bold text-xs shadow shrink-0 ${
-                        currentStep === 1 ? 'bg-white text-[#3831eb]' : 'bg-white/20 text-white'
+                        currentStep === 1 ? 'bg-white text-[#393df0]' : 'bg-white/20 text-white'
                       }`}
                     >
                       1
@@ -302,7 +304,7 @@ export const CompanyRegistration: React.FC = () => {
                   ) : (
                     <span
                       className={`flex h-7 w-7 xl:h-8 xl:w-8 items-center justify-center rounded-full font-bold text-xs shadow shrink-0 ${
-                        currentStep === 2 ? 'bg-white text-[#3831eb]' : 'bg-white/20 text-white'
+                        currentStep === 2 ? 'bg-white text-[#393df0]' : 'bg-white/20 text-white'
                       }`}
                     >
                       2
@@ -326,7 +328,7 @@ export const CompanyRegistration: React.FC = () => {
                 <div className="flex items-center gap-3">
                   <span
                     className={`flex h-7 w-7 xl:h-8 xl:w-8 items-center justify-center rounded-full font-bold text-xs shadow shrink-0 ${
-                      currentStep === 3 ? 'bg-white text-[#3831eb]' : 'bg-white/20 text-white'
+                      currentStep === 3 ? 'bg-white text-[#393df0]' : 'bg-white/20 text-white'
                     }`}
                   >
                     3
@@ -357,7 +359,7 @@ export const CompanyRegistration: React.FC = () => {
           {/* Step Header */}
           <div className="mb-4">
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[10px] xl:text-xs font-mono font-bold uppercase tracking-wider text-[#3831eb] bg-blue-500/10 px-2.5 py-0.5 rounded-full border border-blue-500/20">
+              <span className="text-[10px] xl:text-xs font-mono font-bold uppercase tracking-wider text-[#393df0] bg-blue-500/10 px-2.5 py-0.5 rounded-full border border-blue-500/20">
                 Step {currentStep} of 3
               </span>
               <span className="text-[11px] text-gray-500">
@@ -445,7 +447,7 @@ export const CompanyRegistration: React.FC = () => {
               {/* Company Name */}
               <div className="space-y-1.5">
                 <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
-                  <Building2 className="w-3 h-3 text-[#3831eb]" />
+                  <Building2 className="w-3 h-3 text-[#393df0]" />
                   Company / Organization Name *
                 </label>
                 <input
@@ -455,7 +457,7 @@ export const CompanyRegistration: React.FC = () => {
                   placeholder="e.g. Apex Global Logistics Pvt Ltd"
                   value={companyName}
                   onChange={(e) => setCompanyName(e.target.value)}
-                  className="h-10 xl:h-11 w-full rounded-xl border border-gray-800 bg-gray-900/90 px-3.5 text-white text-xs xl:text-sm placeholder:text-gray-500 focus:border-[#3831eb] focus:outline-none focus:ring-1 focus:ring-[#3831eb] transition-all"
+                  className="h-10 xl:h-11 w-full rounded-xl border border-gray-800 bg-gray-900/90 px-3.5 text-white text-xs xl:text-sm placeholder:text-gray-500 focus:border-[#393df0] focus:outline-none focus:ring-1 focus:ring-[#393df0] transition-all"
                 />
               </div>
 
@@ -463,7 +465,7 @@ export const CompanyRegistration: React.FC = () => {
               <div className="space-y-1.5">
                 <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 flex items-center justify-between">
                   <span className="flex items-center gap-1.5">
-                    <Upload className="w-3 h-3 text-[#3831eb]" />
+                    <Upload className="w-3 h-3 text-[#393df0]" />
                     Company Logo
                   </span>
                   <span className="text-[10px] text-gray-500 font-normal">PNG, JPG, SVG up to 5MB</span>
@@ -503,7 +505,7 @@ export const CompanyRegistration: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="w-full h-16 xl:h-20 border border-dashed border-gray-800 hover:border-[#3831eb] rounded-xl flex flex-col items-center justify-center gap-1 text-xs text-gray-400 hover:text-white bg-gray-900/40 hover:bg-gray-900 transition-all group"
+                    className="w-full h-16 xl:h-20 border border-dashed border-gray-800 hover:border-[#393df0] rounded-xl flex flex-col items-center justify-center gap-1 text-xs text-gray-400 hover:text-white bg-gray-900/40 hover:bg-gray-900 transition-all group"
                   >
                     <Upload className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" />
                     <span className="text-[11px]">Click or drag image to upload logo</span>
@@ -538,7 +540,7 @@ export const CompanyRegistration: React.FC = () => {
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
                   <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 flex items-center gap-1">
-                    <UserIcon className="w-3 h-3 text-[#3831eb]" />
+                    <UserIcon className="w-3 h-3 text-[#393df0]" />
                     First Name *
                   </label>
                   <input
@@ -548,7 +550,7 @@ export const CompanyRegistration: React.FC = () => {
                     placeholder="Admin First Name"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    className="h-10 xl:h-11 w-full rounded-xl border border-gray-800 bg-gray-900/90 px-3 text-white text-xs xl:text-sm placeholder:text-gray-500 focus:border-[#3831eb] focus:outline-none focus:ring-1 focus:ring-[#3831eb] transition-all"
+                    className="h-10 xl:h-11 w-full rounded-xl border border-gray-800 bg-gray-900/90 px-3 text-white text-xs xl:text-sm placeholder:text-gray-500 focus:border-[#393df0] focus:outline-none focus:ring-1 focus:ring-[#393df0] transition-all"
                   />
                 </div>
 
@@ -562,7 +564,7 @@ export const CompanyRegistration: React.FC = () => {
                     placeholder="Admin Last Name"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    className="h-10 xl:h-11 w-full rounded-xl border border-gray-800 bg-gray-900/90 px-3 text-white text-xs xl:text-sm placeholder:text-gray-500 focus:border-[#3831eb] focus:outline-none focus:ring-1 focus:ring-[#3831eb] transition-all"
+                    className="h-10 xl:h-11 w-full rounded-xl border border-gray-800 bg-gray-900/90 px-3 text-white text-xs xl:text-sm placeholder:text-gray-500 focus:border-[#393df0] focus:outline-none focus:ring-1 focus:ring-[#393df0] transition-all"
                   />
                 </div>
               </div>
@@ -570,7 +572,7 @@ export const CompanyRegistration: React.FC = () => {
               {/* Admin Phone Number */}
               <div className="space-y-1.5">
                 <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
-                  <Phone className="w-3 h-3 text-[#3831eb]" />
+                  <Phone className="w-3 h-3 text-[#393df0]" />
                   Phone Number *
                 </label>
                 <input
@@ -579,7 +581,7 @@ export const CompanyRegistration: React.FC = () => {
                   placeholder="+91 98765 43210"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="h-10 xl:h-11 w-full rounded-xl border border-gray-800 bg-gray-900/90 px-3.5 text-white text-xs xl:text-sm placeholder:text-gray-500 focus:border-[#3831eb] focus:outline-none focus:ring-1 focus:ring-[#3831eb] transition-all"
+                  className="h-10 xl:h-11 w-full rounded-xl border border-gray-800 bg-gray-900/90 px-3.5 text-white text-xs xl:text-sm placeholder:text-gray-500 focus:border-[#393df0] focus:outline-none focus:ring-1 focus:ring-[#393df0] transition-all"
                 />
               </div>
 
@@ -587,7 +589,7 @@ export const CompanyRegistration: React.FC = () => {
               <div className="space-y-1.5">
                 <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 flex items-center justify-between">
                   <span className="flex items-center gap-1.5">
-                    <Mail className="w-3 h-3 text-[#3831eb]" />
+                    <Mail className="w-3 h-3 text-[#393df0]" />
                     Mail (OTP Verification) *
                   </span>
                   {otpVerified && (
@@ -606,7 +608,7 @@ export const CompanyRegistration: React.FC = () => {
                     placeholder="admin@company.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="h-10 xl:h-11 flex-1 rounded-xl border border-gray-800 bg-gray-900/90 px-3.5 text-white text-xs xl:text-sm placeholder:text-gray-500 focus:border-[#3831eb] focus:outline-none focus:ring-1 focus:ring-[#3831eb] disabled:opacity-60 transition-all"
+                    className="h-10 xl:h-11 flex-1 rounded-xl border border-gray-800 bg-gray-900/90 px-3.5 text-white text-xs xl:text-sm placeholder:text-gray-500 focus:border-[#393df0] focus:outline-none focus:ring-1 focus:ring-[#393df0] disabled:opacity-60 transition-all"
                   />
 
                   {!otpVerified && (
@@ -637,7 +639,7 @@ export const CompanyRegistration: React.FC = () => {
                         placeholder="e.g. 123456"
                         value={otpCode}
                         onChange={(e) => setOtpCode(e.target.value)}
-                        className="h-9 xl:h-10 flex-1 tracking-widest text-center text-base font-mono rounded-lg border border-gray-700 bg-gray-900 text-white focus:border-[#3831eb] focus:outline-none"
+                        className="h-9 xl:h-10 flex-1 tracking-widest text-center text-base font-mono rounded-lg border border-gray-700 bg-gray-900 text-white focus:border-[#393df0] focus:outline-none"
                       />
                       <button
                         type="button"
@@ -707,7 +709,7 @@ export const CompanyRegistration: React.FC = () => {
               {/* Password Setting */}
               <div className="space-y-1.5">
                 <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
-                  <Lock className="w-3 h-3 text-[#3831eb]" />
+                  <Lock className="w-3 h-3 text-[#393df0]" />
                   Set Password *
                 </label>
                 <div className="relative">
@@ -718,7 +720,7 @@ export const CompanyRegistration: React.FC = () => {
                     placeholder="Enter at least 8 characters"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="h-10 xl:h-11 w-full rounded-xl border border-gray-800 bg-gray-900/90 pl-3.5 pr-10 text-white text-xs xl:text-sm placeholder:text-gray-500 focus:border-[#3831eb] focus:outline-none focus:ring-1 focus:ring-[#3831eb] transition-all"
+                    className="h-10 xl:h-11 w-full rounded-xl border border-gray-800 bg-gray-900/90 pl-3.5 pr-10 text-white text-xs xl:text-sm placeholder:text-gray-500 focus:border-[#393df0] focus:outline-none focus:ring-1 focus:ring-[#393df0] transition-all"
                   />
                   <button
                     type="button"
@@ -743,7 +745,7 @@ export const CompanyRegistration: React.FC = () => {
                     placeholder="Re-enter password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="h-10 xl:h-11 w-full rounded-xl border border-gray-800 bg-gray-900/90 pl-3.5 pr-10 text-white text-xs xl:text-sm placeholder:text-gray-500 focus:border-[#3831eb] focus:outline-none focus:ring-1 focus:ring-[#3831eb] transition-all"
+                    className="h-10 xl:h-11 w-full rounded-xl border border-gray-800 bg-gray-900/90 pl-3.5 pr-10 text-white text-xs xl:text-sm placeholder:text-gray-500 focus:border-[#393df0] focus:outline-none focus:ring-1 focus:ring-[#393df0] transition-all"
                   />
                   <button
                     type="button"
