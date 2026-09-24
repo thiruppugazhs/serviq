@@ -229,11 +229,11 @@ export const LandingPage: React.FC = () => {
         </div>
 
         {/* 2. 3D Cube: Angled in the lower-left foreground */}
-        <div className="absolute left-0 sm:left-4 md:left-8 lg:left-12 -bottom-6 sm:-bottom-4 md:bottom-0 w-28 sm:w-36 md:w-48 lg:w-56 pointer-events-none filter drop-shadow-[0_25px_40px_rgba(0,0,0,0.4)] animate-float-delayed z-20 select-none">
+        <div className="absolute left-0 bottom-0 w-32 sm:w-44 md:w-56 lg:w-72 pointer-events-none filter drop-shadow-[0_25px_45px_rgba(0,0,0,0.4)] z-20 select-none">
           <img
             src="/cube.png"
             alt="3D Angled Cube"
-            className="w-full h-full object-contain"
+            className="w-full h-auto object-contain object-bottom"
             draggable={false}
           />
         </div>
