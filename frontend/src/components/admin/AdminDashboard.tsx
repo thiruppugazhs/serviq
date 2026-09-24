@@ -1,0 +1,203 @@
+import React, { useEffect, useState } from 'react';
+import api from '../../api/client';
+import { useAuth } from '../../context/AuthContext';
+import { StatCard } from '../common/StatCard';
+import { Badge } from '../common/Badge';
+import { EmptyState } from '../common/EmptyState';
+import { DashboardStats } from '../../types';
+import {
+  Truck,
+  UserCheck,
+  Users2,
+  Wrench,
+  AlertTriangle,
+  Receipt,
+  Plus,
+  ShieldCheck,
+  ArrowRight,
+} from 'lucide-react';
+import { Link } from 'react-router-dom';
+
+export const AdminDashboard: React.FC = () => {
+  const { user } = useAuth();
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const fetchStats = async () => {
+    try {
+      setLoading(true);
+      const res = await api.get('/reports/dashboard-stats');
+      if (res.data.success) {
+        setStats(res.data.stats);
+      }
+    } catch (err) {
+      console.error('Failed to load dashboard metrics:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  const orgName = typeof user?.organization === 'object' ? user.organization.name : 'Your Organization';
+
+  return (
+    <div className="space-y-8 animate-in fade-in duration-200">
+      {/* Welcome Banner */}
+      <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
+        <div className="z-10">
+          <div className="inline-flex items-center gap-2 text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-3">
+            <ShieldCheck className="w-3.5 h-3.5" />
+            Organization Admin Console
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-white font-['Outfit',sans-serif] tracking-tight">
+            Welcome back, {user?.name}
+          </h1>
+          <p className="text-sm text-slate-400 mt-1">
+            Managing commercial fleet operations for <span className="text-slate-200 font-semibold">{orgName}</span>.
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3 z-10">
+          <Link
+            to="/admin/fleet-managers"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 font-medium text-xs transition-colors"
+          >
+            <Users2 className="w-4 h-4 text-emerald-400" />
+            Manage Managers
+          </Link>
+          <Link
+            to="/admin/vehicles"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs transition-colors shadow-lg shadow-emerald-950/50"
+          >
+            <Plus className="w-4 h-4" />
+            Add Vehicle
+          </Link>
+        </div>
+      </div>
+
+      {/* KPI Counters */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+        <StatCard
+          title="Total Vehicles"
+          value={stats?.vehicles.total ?? 0}
+          subtitle={`${stats?.vehicles.available ?? 0} active on road`}
+          icon={Truck}
+          color="emerald"
+        />
+        <StatCard
+          title="Fleet Managers"
+          value={stats?.fleetManagers.total ?? 0}
+          subtitle="Organization controllers"
+          icon={Users2}
+          color="sky"
+        />
+        <StatCard
+          title="Drivers"
+          value={stats?.drivers.total ?? 0}
+          subtitle={`${stats?.drivers.active ?? 0} verified & active`}
+          icon={UserCheck}
+          color="indigo"
+        />
+        <StatCard
+          title="Maintenance"
+          value={stats?.maintenance.dueOrOverdue ?? 0}
+          subtitle="Due or overdue"
+          icon={Wrench}
+          color={stats?.maintenance.dueOrOverdue ? 'amber' : 'emerald'}
+        />
+        <StatCard
+          title="Active Repairs"
+          value={stats?.repairs.active ?? 0}
+          subtitle="Open breakdown tickets"
+          icon={AlertTriangle}
+          color={stats?.repairs.active ? 'rose' : 'emerald'}
+        />
+        <StatCard
+          title="Total Expenses"
+          value={`₹${(stats?.expenses.totalSpent ?? 0).toLocaleString()}`}
+          subtitle="Operating expenditure"
+          icon={Receipt}
+          color="emerald"
+        />
+      </div>
+
+      {/* Vehicles Requiring Attention */}
+      <div className="glass-panel p-6 rounded-3xl border border-slate-800">
+        <div className="flex items-center justify-between mb-5">
+          <div>
+            <h2 className="text-lg font-bold text-white font-['Outfit',sans-serif]">
+              Vehicles Requiring Attention
+            </h2>
+            <p className="text-xs text-slate-400 mt-0.5">
+              Live automated triggers for repairs, scheduled servicing, and expiring documents
+            </p>
+          </div>
+          <Link
+            to="/admin/repairs"
+            className="text-xs text-emerald-400 hover:text-emerald-300 font-medium flex items-center gap-1"
+          >
+            <span>View All Tickets</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
+        {stats?.vehiclesRequiringAttention && stats.vehiclesRequiringAttention.length > 0 ? (
+          <div className="divide-y divide-slate-800/80">
+            {stats.vehiclesRequiringAttention.map((item) => (
+              <div
+                key={item.id}
+                className="py-3.5 flex items-center justify-between gap-4 hover:bg-slate-900/40 px-3 rounded-xl transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center font-bold text-xs text-white uppercase tracking-wider">
+                    {item.vehicleNumber.slice(0, 4)}
+                  </div>
+                  <div>
+                    <div className="text-sm font-bold text-white tracking-wide">
+                      {item.vehicleNumber}
+                    </div>
+                    <div className="text-xs text-slate-400">{item.model}</div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <Badge
+                    status={item.severity === 'critical' ? 'critical' : 'due_soon'}
+                    size="sm"
+                  />
+                  <span className="text-xs font-medium text-slate-300 hidden sm:inline">
+                    {item.issue}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-8">
+            <div className="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 mx-auto flex items-center justify-center mb-2">
+              <ShieldCheck className="w-6 h-6" />
+            </div>
+            <p className="text-sm font-semibold text-white">All Fleet Assets Healthy</p>
+            <p className="text-xs text-slate-400 mt-0.5">
+              No vehicles currently have overdue servicing, active breakdowns, or expired documents.
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Zero State onboarding prompt if no vehicles exist */}
+      {stats?.vehicles.total === 0 && (
+        <EmptyState
+          icon={Truck}
+          title="No Vehicles Registered Yet"
+          description="Get started by registering your company fleet assets. Add trucks, buses, haulers, delivery vans, or commercial cars."
+          actionText="Add First Vehicle"
+          onAction={() => (window.location.href = '/admin/vehicles')}
+        />
+      )}
+    </div>
+  );
+};

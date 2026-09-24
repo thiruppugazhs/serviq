@@ -1,0 +1,17 @@
+{
+  "short_name": "SERVIQ",
+  "name": "SERVIQ Fleet Command & Driver Portal",
+  "icons": [
+    {
+      "src": "/logo-blue.png",
+      "type": "image/png",
+      "sizes": "192x192 512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "display": "standalone",
+  "orientation": "portrait"
+}
