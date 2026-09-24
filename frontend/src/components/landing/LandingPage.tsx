@@ -238,12 +238,19 @@ export const LandingPage: React.FC = () => {
             : 'py-3.5 bg-white/80 backdrop-blur-xl shadow-sm shadow-slate-900/5'
         }`}
       >
-        {/* Left: Clean Icon Logo without text */}
-        <Link to="/" className="flex items-center group">
+        {/* Left: Logo & Wordmark matching section background */}
+        <Link to="/" className="flex items-center gap-2.5 sm:gap-3 group">
           <img
             src={headerTheme === 'white' ? '/logo-blue.png' : '/logo-white.png'}
             alt="Serviq"
-            className="w-8 h-8 sm:w-9 sm:h-9 object-contain drop-shadow group-hover:scale-105 transition-transform"
+            className="w-7 h-7 sm:w-8 sm:h-8 object-contain drop-shadow"
+          />
+          <img
+            src="/serviq-name-logo.png"
+            alt="Serviq"
+            className={`h-5 sm:h-6 md:h-7 w-auto object-contain transition-all group-hover:opacity-90 ${
+              headerTheme === 'white' ? 'filter brightness-0' : 'drop-shadow-sm'
+            }`}
           />
         </Link>
 
@@ -433,10 +440,10 @@ export const LandingPage: React.FC = () => {
         className="relative min-h-screen flex flex-col justify-between overflow-hidden bg-studio-blue pt-20 sm:pt-24"
       >
         {/* Center Typography & CTA Buttons */}
-        <div className="relative z-20 max-w-5xl mx-auto flex flex-col items-center my-auto text-center px-4 py-8 animate-in fade-in zoom-in-95 duration-300">
-          {/* Main Headline: Smarter Fleet. Smarter Maintenance (Anek Latin font) */}
+        <div className="relative z-20 max-w-6xl mx-auto flex flex-col items-center my-auto text-center px-4 py-8 animate-in fade-in zoom-in-95 duration-300">
+          {/* Main Headline: Smarter Fleet. Smarter Maintenance (Single Line in Anek Latin font) */}
           <h1
-            className="font-anek-latin font-bold text-white text-5xl sm:text-6xl md:text-7xl lg:text-[84px] xl:text-[92px] leading-[1.08] tracking-tight select-none drop-shadow-md max-w-4xl mx-auto"
+            className="font-anek-latin font-bold text-white text-[22px] min-[390px]:text-[26px] sm:text-4xl md:text-5xl lg:text-[56px] xl:text-[66px] leading-tight tracking-tight select-none drop-shadow-md whitespace-nowrap"
             style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
           >
             Smarter Fleet. Smarter Maintenance
