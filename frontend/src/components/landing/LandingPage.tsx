@@ -66,37 +66,37 @@ export const LandingPage: React.FC = () => {
       <div className="fixed bottom-20 right-10 w-[500px] h-[500px] bg-indigo-400/10 rounded-full blur-[160px] pointer-events-none -z-10 animate-pulse-glow" style={{ animationDelay: '2s' }} />
 
       {/* =========================================================================
-          1. NAVIGATION — FIXED TRANSPARENT FROSTED GLASS HEADER (OVER ALL PAGES)
+          1. NAVIGATION — PURE TRANSPARENT CLEAR GLASS HEADER (OVER ALL PAGES)
       ========================================================================= */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 w-full px-6 sm:px-12 transition-all duration-300 flex items-center justify-between ${
           scrolled
-            ? 'py-3 bg-white/70 backdrop-blur-2xl border-b border-slate-200/40 shadow-lg shadow-black/5'
-            : 'py-3.5 sm:py-4 bg-white/50 backdrop-blur-xl border-b border-white/25 shadow-sm'
+            ? 'py-3.5 bg-black/40 backdrop-blur-2xl border-b border-white/15 shadow-xl shadow-black/15'
+            : 'py-4 sm:py-5 bg-white/[0.02] backdrop-blur-md border-b border-white/10'
         }`}
       >
-        {/* Left: Serviq Blue folded logo + Serviq Blue name logo */}
+        {/* Left: White Serviq Logo + White Wordmark on Pure Clear Glass */}
         <Link to="/" className="flex items-center gap-2.5 sm:gap-3 group">
           <img
-            src="/logo-blue.png"
+            src="/logo-white.png"
             alt="Serviq"
-            className="w-7 h-7 sm:w-8 sm:h-8 object-contain"
+            className="w-7 h-7 sm:w-8 sm:h-8 object-contain drop-shadow"
           />
           <img
-            src="/serviq-name-logo-blue.png"
+            src="/serviq-name-logo.png"
             alt="Serviq"
-            className="h-5 sm:h-6 md:h-7 w-auto object-contain group-hover:opacity-90 transition-opacity"
+            className="h-5 sm:h-6 md:h-7 w-auto object-contain drop-shadow-sm group-hover:opacity-90 transition-opacity"
           />
         </Link>
 
-        {/* Right: Hamburger icon (2 clean horizontal black lines matching reference) */}
+        {/* Right: Hamburger icon (2 clean horizontal white lines) */}
         <button
           onClick={() => setMobileMenuOpen(true)}
           className="w-10 h-10 flex flex-col justify-center items-end gap-1.5 p-2 focus:outline-none cursor-pointer group"
           aria-label="Navigation Menu"
         >
-          <span className="w-6 h-[2px] bg-slate-900 rounded-full transition-all group-hover:w-7"></span>
-          <span className="w-6 h-[2px] bg-slate-900 rounded-full transition-all group-hover:w-7"></span>
+          <span className="w-6 h-[2px] bg-white rounded-full transition-all group-hover:w-7"></span>
+          <span className="w-6 h-[2px] bg-white rounded-full transition-all group-hover:w-7"></span>
         </button>
       </header>
 
