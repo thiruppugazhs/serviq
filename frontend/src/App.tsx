@@ -33,8 +33,10 @@ import { ReportsView } from './components/reports/ReportsView';
 // Driver Mobile Experience
 import { DriverHome } from './components/driverApp/DriverHome';
 
-// Landing Page
+// Landing Page & Public Content
 import { LandingPage } from './components/landing/LandingPage';
+import { LegalPage } from './components/legal/LegalPage';
+import { DownloadAppPage } from './components/download/DownloadAppPage';
 
 const DashboardLayout: React.FC = () => {
   return (
@@ -82,6 +84,18 @@ export const App: React.FC = () => {
           <Routes>
             {/* Public Landing Page */}
             <Route path="/" element={<LandingPage />} />
+
+            {/* Dedicated Download App Page */}
+            <Route path="/download" element={<DownloadAppPage />} />
+            <Route path="/download-app" element={<DownloadAppPage />} />
+
+            {/* Legal & Compliance Dedicated Pages */}
+            <Route path="/terms-of-use" element={<LegalPage policyKey="terms-of-use" />} />
+            <Route path="/privacy-policy" element={<LegalPage policyKey="privacy-policy" />} />
+            <Route path="/grievance-policy" element={<LegalPage policyKey="grievance-policy" />} />
+            <Route path="/merchant-terms" element={<LegalPage policyKey="merchant-terms" />} />
+            <Route path="/data-protection-standards" element={<LegalPage policyKey="data-protection-standards" />} />
+            <Route path="/legal/:slug" element={<LegalPage />} />
 
             {/* Public Auth Routes */}
             <Route path="/register" element={<CompanyRegistration />} />

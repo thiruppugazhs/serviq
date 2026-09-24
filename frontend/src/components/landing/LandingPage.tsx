@@ -26,9 +26,12 @@ import {
   ChevronDown,
 } from 'lucide-react';
 
+import { HelpFeedbackModal } from '../support/HelpFeedbackModal';
+
 export const LandingPage: React.FC = () => {
   const { user } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [helpModalOpen, setHelpModalOpen] = useState(false);
   const [headerTheme, setHeaderTheme] = useState<'transparent' | 'blue' | 'white'>('transparent');
 
   useEffect(() => {
@@ -189,16 +192,18 @@ export const LandingPage: React.FC = () => {
           <div className="md:w-5/12 lg:w-4/12 flex flex-col justify-start pt-2 sm:pt-4">
             <p className="text-white text-base sm:text-lg">
               Reach out to us via{' '}
-              <a
-                href="#contact"
-                onClick={() => setMobileMenuOpen(false)}
-                className="underline underline-offset-4 decoration-2 font-medium hover:text-white/80 transition-colors"
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setHelpModalOpen(true);
+                }}
+                className="underline underline-offset-4 decoration-2 font-medium hover:text-white/80 transition-colors cursor-pointer text-left inline"
               >
-                App Support
-              </a>
+                Help & Feedback
+              </button>
             </p>
             <p className="text-white/80 text-xs sm:text-sm mt-3 leading-relaxed max-w-sm">
-              Need assistance with your fleet or account? Log in to your portal, explore our help center, or reach out to our 24/7 dedicated support team.
+              Need assistance with your fleet or account? Connect with our dedicated support team in Chennai.
             </p>
 
             {/* Quick Actions */}
@@ -248,6 +253,22 @@ export const LandingPage: React.FC = () => {
             >
               About Us
             </a>
+            <Link
+              to="/download"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-[72px] font-bold text-white/70 hover:text-white leading-[1.12] tracking-tight block transition-colors select-none"
+            >
+              Download App
+            </Link>
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                setHelpModalOpen(true);
+              }}
+              className="text-left text-4xl sm:text-5xl md:text-6xl lg:text-[72px] font-bold text-white/70 hover:text-white leading-[1.12] tracking-tight block transition-colors select-none cursor-pointer"
+            >
+              Help & Feedback
+            </button>
             <a
               href="#features"
               onClick={() => setMobileMenuOpen(false)}
@@ -370,15 +391,76 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* =========================================================================
-          PAGE 2 (EVEN): TRUST / VALUE STRIP — WHITE BACKGROUND
+          PAGE 2 (EVEN): ABOUT US — COMPREHENSIVE OVERVIEW OF SERVIQ APP
       ========================================================================= */}
-      <section className="py-20 bg-white text-slate-900 relative">
+      <section id="about" className="py-24 sm:py-32 bg-white text-slate-900 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-center text-xs font-extrabold uppercase tracking-widest text-[#393df0] mb-12">
-            Everything your fleet needs, in one place.
-          </h2>
+          
+          {/* Section Kicker */}
+          <div className="flex items-center gap-2 mb-4">
+            <div className="w-2.5 h-2.5 rounded-full bg-[#2335f2] animate-pulse" />
+            <span className="text-xs font-extrabold uppercase tracking-widest text-[#2335f2]">
+              About SERVIQ By Orcescale
+            </span>
+          </div>
 
-          {/* Square Cards with Hover VFX */}
+          {/* Headline & Mission Statement */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start mb-16">
+            <div className="lg:col-span-7">
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 font-['Outfit',sans-serif] tracking-tight leading-[1.08]">
+                The Operating System for Modern Fleet Maintenance.
+              </h2>
+            </div>
+            <div className="lg:col-span-5 space-y-4 text-slate-600 text-sm sm:text-base leading-relaxed">
+              <p>
+                Commercial vehicles on highway corridors shouldn't be managed with paper notebooks and guess-work. <span className="font-semibold text-slate-900">SERVIQ</span> transforms fleet maintenance into an automated, synchronized digital operation.
+              </p>
+              <p>
+                From single-vehicle owner-operators to enterprise logistics fleets across India, SERVIQ connects drivers on the road with fleet managers in the control room and verified service workshops in real time.
+              </p>
+            </div>
+          </div>
+
+          {/* Three Feature Pillars: What the App Does */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+            <div className="p-8 rounded-3xl bg-slate-50 border border-slate-200/80 space-y-4 hover:shadow-xl transition-all">
+              <div className="w-12 h-12 rounded-2xl bg-blue-100 text-[#2335f2] flex items-center justify-center font-bold">
+                <Gauge className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 font-['Outfit',sans-serif]">
+                Dual-Trigger Service Engine
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                Tracks both daily odometer increments and calendar intervals. Serviq automatically warns managers and drivers before critical oil, brake pad, or tire wear leads to unexpected engine failure.
+              </p>
+            </div>
+
+            <div className="p-8 rounded-3xl bg-slate-50 border border-slate-200/80 space-y-4 hover:shadow-xl transition-all">
+              <div className="w-12 h-12 rounded-2xl bg-blue-100 text-[#2335f2] flex items-center justify-center font-bold">
+                <Smartphone className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 font-['Outfit',sans-serif]">
+                Highway Driver Companion
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                When breakdowns happen, drivers log photo reports in under 60 seconds with GPS geotagging. Offline access to vehicle RC, national permits, and digital insurance cards keeps drivers compliant.
+              </p>
+            </div>
+
+            <div className="p-8 rounded-3xl bg-slate-50 border border-slate-200/80 space-y-4 hover:shadow-xl transition-all">
+              <div className="w-12 h-12 rounded-2xl bg-blue-100 text-[#2335f2] flex items-center justify-center font-bold">
+                <BarChart3 className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 font-['Outfit',sans-serif]">
+                Workshop & TCO Control
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                Every rupee spent on spare parts, mechanics, and lubricants is tracked. Transparent digital job cards prevent workshop billing fraud and reduce lifetime fleet maintenance costs by up to 42%.
+              </p>
+            </div>
+          </div>
+
+          {/* 4 Square Capability Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="aspect-square bg-slate-50 border-2 border-slate-100 p-8 flex flex-col justify-between square-card-white group">
               <div className="w-12 h-12 bg-studio-blue/10 text-[#393df0] flex items-center justify-center font-bold group-hover:scale-110 transition-transform">
@@ -997,7 +1079,7 @@ export const LandingPage: React.FC = () => {
       {/* =========================================================================
           PAGE 9 (ODD): MAINTENANCE SECTION — BLUE BACKGROUND
       ========================================================================= */}
-      <section id="about" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-left bg-studio-blue">
+      <section id="maintenance-overview" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-left bg-studio-blue">
         <div className="max-w-3xl mb-14">
           <h2 className="text-3xl sm:text-5xl font-black text-white font-['Outfit',sans-serif]">
             Stay ahead of maintenance.
@@ -1093,11 +1175,11 @@ export const LandingPage: React.FC = () => {
             <div className="space-y-3">
               <h4 className="font-bold text-sm text-slate-900 font-['Outfit',sans-serif]">Legal & Compliance</h4>
               <ul className="space-y-2 text-slate-600">
-                <li><a href="#contact" className="hover:text-[#393df0] transition-colors">Terms of use</a></li>
-                <li><a href="#contact" className="hover:text-[#393df0] transition-colors">Privacy Policy</a></li>
-                <li><a href="#contact" className="hover:text-[#393df0] transition-colors">Grievance Policy</a></li>
-                <li><a href="#contact" className="hover:text-[#393df0] transition-colors">Merchant Terms</a></li>
-                <li><a href="#contact" className="hover:text-[#393df0] transition-colors">Data Protection Standards</a></li>
+                <li><Link to="/terms-of-use" className="hover:text-[#393df0] transition-colors">Terms of use</Link></li>
+                <li><Link to="/privacy-policy" className="hover:text-[#393df0] transition-colors">Privacy Policy</Link></li>
+                <li><Link to="/grievance-policy" className="hover:text-[#393df0] transition-colors">Grievance Policy</Link></li>
+                <li><Link to="/merchant-terms" className="hover:text-[#393df0] transition-colors">Merchant Terms</Link></li>
+                <li><Link to="/data-protection-standards" className="hover:text-[#393df0] transition-colors">Data Protection Standards</Link></li>
               </ul>
             </div>
 
@@ -1105,7 +1187,7 @@ export const LandingPage: React.FC = () => {
             <div className="space-y-3">
               <h4 className="font-bold text-sm text-slate-900 font-['Outfit',sans-serif]">Download App</h4>
               <ul className="space-y-2 text-slate-600">
-                <li><a href="#hero" className="hover:text-[#393df0] transition-colors">Download App</a></li>
+                <li><Link to="/download" className="hover:text-[#393df0] transition-colors">Download App</Link></li>
               </ul>
             </div>
 
@@ -1117,7 +1199,16 @@ export const LandingPage: React.FC = () => {
               </p>
               <ol className="space-y-2 text-slate-600 leading-relaxed list-decimal list-inside">
                 <li>Click the menu</li>
-                <li>Go to the <span className="font-semibold text-slate-800">Help & Feedback</span> option.</li>
+                <li>
+                  Go to the{' '}
+                  <button
+                    onClick={() => setHelpModalOpen(true)}
+                    className="font-semibold text-slate-800 underline hover:text-[#2335f2] cursor-pointer inline"
+                  >
+                    Help & Feedback
+                  </button>{' '}
+                  option.
+                </li>
                 <li>Select the <span className="font-semibold text-slate-800">relevant category</span> matching your issue to start a live chat instantly.</li>
               </ol>
             </div>
@@ -1143,6 +1234,9 @@ export const LandingPage: React.FC = () => {
           </div>
         </div>
       </footer>
+
+      {/* Support / Help & Feedback Modal */}
+      <HelpFeedbackModal isOpen={helpModalOpen} onClose={() => setHelpModalOpen(false)} />
     </div>
   );
 };
