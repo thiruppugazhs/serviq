@@ -33,6 +33,7 @@ export const LandingPage: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [helpModalOpen, setHelpModalOpen] = useState(false);
   const [headerTheme, setHeaderTheme] = useState<'transparent' | 'blue' | 'white'>('transparent');
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -1132,6 +1133,106 @@ export const LandingPage: React.FC = () => {
       </div>
 
       {/* =========================================================================
+          FAQS SECTION — 10 QUESTIONS MATCHING REFERENCE IMAGE
+      ========================================================================= */}
+      <section id="faq" className="py-24 sm:py-32 bg-white text-slate-900 relative">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          {/* Centered Big Bold FAQs Title matching reference image */}
+          <h2 className="text-5xl sm:text-6xl md:text-7xl font-black text-slate-900 font-['Outfit',sans-serif] text-center mb-14 tracking-tight">
+            FAQs
+          </h2>
+
+          {/* 10 Accordion Cards */}
+          <div className="space-y-4">
+            {[
+              {
+                question: 'What is SERVIQ?',
+                answer:
+                  'SERVIQ is an all-in-one fleet operations and vehicle maintenance intelligence platform. It automates preventive service scheduling, connects highway drivers to verified repair workshops, and gives fleet managers full transparency over maintenance expenses and vehicle health.',
+              },
+              {
+                question: 'How does the dual-trigger maintenance reminder work?',
+                answer:
+                  'SERVIQ synchronizes both daily odometer mileage and calendar intervals. If a vehicle approaches its 10,000 km oil service or 90-day inspection milestone, the system automatically alerts both the fleet manager and driver before mechanical issues arise.',
+              },
+              {
+                question: 'How can drivers report roadside breakdowns using the mobile app?',
+                answer:
+                  'Drivers simply tap "Report Breakdown" on the SERVIQ Mobile App, capture a photo of the defect, and select the issue category. The app automatically geotags the vehicle\'s exact GPS location and notifies the nearest authorized workshop and fleet dispatcher in under 60 seconds.',
+              },
+              {
+                question: 'Can SERVIQ integrate with OBD-II devices and GPS trackers?',
+                answer:
+                  'Yes. SERVIQ supports direct API integrations with standard OBD-II scanners, CAN-bus telemetry hardware, and major GPS tracking providers to ingest live mileage, fault codes (DTCs), and diagnostic health data automatically.',
+              },
+              {
+                question: 'How does SERVIQ help reduce fleet maintenance costs?',
+                answer:
+                  'By enforcing scheduled preventive maintenance, fleets avoid catastrophic highway engine seizures and transmission failures. Digital job cards and itemized parts auditing eliminate unauthorized workshop billing, reducing overall fleet maintenance expenditure by up to 42%.',
+              },
+              {
+                question: 'What types of commercial vehicles are supported?',
+                answer:
+                  'SERVIQ supports all commercial vehicles including light commercial vehicles (LCVs), heavy commercial trucks (HCVs), interstate trailers, municipal buses, delivery vans, refrigerated trucks, and electric fleet vehicles.',
+              },
+              {
+                question: 'How does digital document storage work for driver compliance?',
+                answer:
+                  'Every vehicle has a digital glovebox storing its Registration Certificate (RC), Insurance Policy, Pollution Under Control (PUC), National Permits, and Fitness Certificates. Drivers can access these offline via the mobile app during RTO or traffic police inspections.',
+              },
+              {
+                question: 'Can multiple fleet managers and depot supervisors use the platform?',
+                answer:
+                  'Yes. SERVIQ features enterprise Role-Based Access Control (RBAC). You can assign distinct permissions for organization admins, regional depot managers, dispatch officers, and commercial drivers.',
+              },
+              {
+                question: 'How does workshop billing and job card verification work?',
+                answer:
+                  'When a vehicle enters an authorized workshop, mechanics create a digital job card detailing spare parts, labor charges, and diagnostic findings. Fleet managers review and approve the estimate digitally before physical repairs commence.',
+              },
+              {
+                question: 'How do I get started with SERVIQ for my fleet?',
+                answer:
+                  'Getting started is seamless. Click "Get Started Free" to create your company account, add your vehicle registration numbers, and invite your drivers to download the mobile app. You can have your fleet operational in under 10 minutes.',
+              },
+            ].map((faq, index) => {
+              const isOpen = openFaqIndex === index;
+              return (
+                <div
+                  key={index}
+                  className="border border-slate-200/90 rounded-2xl bg-white shadow-sm overflow-hidden transition-all duration-200 hover:border-slate-300"
+                >
+                  <button
+                    onClick={() => setOpenFaqIndex(isOpen ? null : index)}
+                    className="w-full py-5 px-6 sm:px-8 flex items-center justify-between text-left gap-4 cursor-pointer focus:outline-none"
+                    aria-expanded={isOpen}
+                  >
+                    <span className="font-bold text-base sm:text-lg text-slate-900 font-['Outfit',sans-serif]">
+                      {faq.question}
+                    </span>
+                    <div
+                      className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#3949f5] flex items-center justify-center shrink-0 transition-transform duration-300 shadow-sm ${
+                        isOpen ? 'rotate-180 bg-[#2535e0]' : ''
+                      }`}
+                    >
+                      <ChevronDown className="w-5 h-5 text-white stroke-[2.5]" />
+                    </div>
+                  </button>
+                  {isOpen && (
+                    <div className="px-6 sm:px-8 pb-6 pt-1 text-slate-600 text-sm sm:text-base leading-relaxed border-t border-slate-100 animate-in fade-in slide-in-from-top-2 duration-200">
+                      {faq.answer}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+        </div>
+      </section>
+
+      {/* =========================================================================
           PAGE 14 (EVEN): FOOTER — WHITE BACKGROUND (Matching Images 2 & 3)
       ========================================================================= */}
       <footer id="contact" className="bg-white text-slate-800 border-t-2 border-slate-100 pt-20 pb-10 px-4 sm:px-6 lg:px-8 relative overflow-hidden text-left">
@@ -1167,7 +1268,7 @@ export const LandingPage: React.FC = () => {
               <h4 className="font-bold text-sm text-slate-900 font-['Outfit',sans-serif]">Company</h4>
               <ul className="space-y-2 text-slate-600">
                 <li><a href="#about" className="hover:text-[#393df0] transition-colors">About us</a></li>
-                <li><a href="#about" className="hover:text-[#393df0] transition-colors">Enterprise FAQ</a></li>
+                <li><a href="#faq" className="hover:text-[#393df0] transition-colors">Enterprise FAQ</a></li>
               </ul>
             </div>
 
