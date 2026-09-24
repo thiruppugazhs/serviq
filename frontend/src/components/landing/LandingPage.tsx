@@ -214,8 +214,8 @@ export const LandingPage: React.FC = () => {
             3D ELEMENTS (Matching Reference Image: Spacing, Placement, Size & Soft Shadows)
         ========================================================================= */}
 
-        {/* 1. 3D Gear (Top-Left / Mid-Left) - Moved slightly down */}
-        <div className="absolute -left-12 sm:-left-16 md:-left-20 lg:-left-24 top-[14%] sm:top-[15%] md:top-[16%] w-28 sm:w-36 md:w-44 lg:w-52 pointer-events-none filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.12)] z-10 select-none">
+        {/* 1. 3D Gear (Top-Left / Mid-Left) - Moved a little bit down */}
+        <div className="absolute -left-12 sm:-left-16 md:-left-20 lg:-left-24 top-[18%] sm:top-[19%] md:top-[20%] w-28 sm:w-36 md:w-44 lg:w-52 pointer-events-none filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.12)] z-10 select-none">
           <img
             src="/gear.png"
             alt="3D Fleet Gear"
@@ -224,8 +224,8 @@ export const LandingPage: React.FC = () => {
           />
         </div>
 
-        {/* 2. 3D Cube (Lower-Left Foreground) - Touches the bottom of the screen */}
-        <div className="absolute left-3 sm:left-6 md:left-10 lg:left-14 bottom-0 w-22 sm:w-28 md:w-34 lg:w-42 pointer-events-none filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.12)] z-20 select-none">
+        {/* 2. 3D Cube (Lower-Left Foreground) - Slightly bigger, touches the bottom of the screen */}
+        <div className="absolute left-3 sm:left-6 md:left-10 lg:left-14 bottom-0 w-26 sm:w-32 md:w-38 lg:w-46 pointer-events-none filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.12)] z-20 select-none">
           <img
             src="/cube.png"
             alt="3D Angled Cube"
