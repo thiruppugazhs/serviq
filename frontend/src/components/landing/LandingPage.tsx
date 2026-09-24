@@ -212,8 +212,8 @@ export const LandingPage: React.FC = () => {
             3D ELEMENTS (Matching Reference Image: Spacing, Placement, Size & Soft Shadows)
         ========================================================================= */}
 
-        {/* 1. 3D Gear (Top-Left / Mid-Left) - Moved upward, partially off-screen, soft shadow */}
-        <div className="absolute -left-12 sm:-left-16 md:-left-20 lg:-left-24 top-[7%] sm:top-[8%] md:top-[9%] w-28 sm:w-36 md:w-44 lg:w-52 pointer-events-none filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.12)] z-10 select-none">
+        {/* 1. 3D Gear (Top-Left / Mid-Left) - Moved a little bit down */}
+        <div className="absolute -left-12 sm:-left-16 md:-left-20 lg:-left-24 top-[11%] sm:top-[12%] md:top-[13%] w-28 sm:w-36 md:w-44 lg:w-52 pointer-events-none filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.12)] z-10 select-none">
           <img
             src="/gear.png"
             alt="3D Fleet Gear"
@@ -232,8 +232,8 @@ export const LandingPage: React.FC = () => {
           />
         </div>
 
-        {/* 3. 3D Spanner / Wrench (Top-Right) - Pushed to right edge, soft shadow */}
-        <div className="absolute -right-8 sm:-right-12 md:-right-16 lg:-right-20 top-[4%] sm:top-[5%] md:top-[6%] w-32 sm:w-44 md:w-52 lg:w-64 pointer-events-none filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.14)] z-10 select-none">
+        {/* 3. 3D Spanner / Wrench (Top-Right) - Moved a little bit down */}
+        <div className="absolute -right-8 sm:-right-12 md:-right-16 lg:-right-20 top-[8%] sm:top-[9%] md:top-[10%] w-32 sm:w-44 md:w-52 lg:w-64 pointer-events-none filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.14)] z-10 select-none">
           <img
             src="/spanner.png"
             alt="3D Spanner Wrench"
