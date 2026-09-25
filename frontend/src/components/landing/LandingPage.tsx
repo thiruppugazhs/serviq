@@ -451,8 +451,8 @@ export const LandingPage: React.FC = () => {
           </h1>
 
           {/* Sub-headline in Neue Haas Medium */}
-          <p className="font-neue-haas-medium text-white/90 text-sm sm:text-base md:text-lg max-w-xl mx-auto leading-relaxed mt-4 sm:mt-5 px-4">
-            Everything your fleet needs to stay organized, maintained, and ready for the road.
+          <p className="font-neue-haas-medium text-white/90 text-sm sm:text-base md:text-lg max-w-2xl lg:max-w-3xl mx-auto leading-relaxed mt-4 sm:mt-5 px-4">
+            We help businesses keep their fleets moving through smarter vehicle management, timely maintenance, seamless repair tracking, and complete fleet visibility.
           </p>
 
           {/* CTA Action Button with Continuous BG Shining */}
