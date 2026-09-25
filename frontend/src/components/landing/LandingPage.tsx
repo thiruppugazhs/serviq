@@ -79,8 +79,8 @@ const ScrollWordReveal: React.FC = () => {
   }, [totalLines]);
 
   return (
-    <div ref={containerRef} className="relative min-h-[220vh] sm:min-h-[250vh]">
-      <div className="sticky top-0 h-[100dvh] flex flex-col items-center justify-center px-6 sm:px-10 max-w-4xl lg:max-w-5xl mx-auto select-none pointer-events-none">
+    <div ref={containerRef} className="relative bg-white min-h-[200vh] sm:min-h-[240vh] w-full">
+      <div className="sticky top-0 min-h-screen bg-white flex flex-col items-center justify-center px-6 sm:px-10 max-w-4xl lg:max-w-5xl mx-auto select-none w-full">
         
         {/* Section Kicker Badge */}
         <div className="flex items-center gap-2 mb-8 sm:mb-12 pointer-events-auto">
@@ -437,7 +437,7 @@ export const LandingPage: React.FC = () => {
       ========================================================================= */}
       <section
         id="hero"
-        className="relative min-h-screen flex flex-col justify-between overflow-hidden bg-studio-blue pt-20 sm:pt-24"
+        className="relative z-10 min-h-screen flex flex-col justify-between overflow-hidden bg-studio-blue pt-20 sm:pt-24"
       >
         {/* Center Typography & CTA Buttons */}
         <div className="relative z-20 max-w-5xl mx-auto flex flex-col items-center my-auto text-center px-4 py-8 animate-in fade-in zoom-in-95 duration-300">
@@ -525,7 +525,7 @@ export const LandingPage: React.FC = () => {
       {/* =========================================================================
           PAGE 2 (EVEN): ABOUT US — SCROLL-DRIVEN WORD-BY-WORD MANIFESTO & PLATFORM
       ========================================================================= */}
-      <section id="about" className="bg-white text-slate-900 relative">
+      <section id="about" className="relative z-30 bg-white text-slate-900 w-full shadow-2xl">
         {/* Sticky Word-by-Word Scroll Reveal Manifesto (matches super.money reference) */}
         <ScrollWordReveal />
 
