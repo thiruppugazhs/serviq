@@ -281,9 +281,20 @@ const FEATURES_DATA = [
 ];
 
 const RotationalFeaturesSection: React.FC = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
+  const [rotation, setRotation] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const rotationRef = useRef(0);
+  const isHoveredRef = useRef(false);
+  const isDraggingRef = useRef(false);
+  const startXRef = useRef(0);
+  const dragRotationStartRef = useRef(0);
+  const targetRotationRef = useRef<number | null>(null);
+  const rafId = useRef<number | null>(null);
+
+  useEffect(() => {
+    isHoveredRef.current = isHovered;
+  }, [isHovered]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -294,14 +305,70 @@ const RotationalFeaturesSection: React.FC = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Slowly rotate horizontally next to next (every 3.6s, pauses on hover)
+  // Continuous smooth 60fps revolving turntable animation
   useEffect(() => {
-    if (isPaused) return;
-    const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % FEATURES_DATA.length);
-    }, 3600);
-    return () => clearInterval(interval);
-  }, [isPaused]);
+    let lastTime = performance.now();
+
+    const loop = (currentTime: number) => {
+      const delta = Math.min(50, currentTime - lastTime);
+      lastTime = currentTime;
+
+      // If user clicked a card to center it, smoothly interpolate towards targetRotation
+      if (targetRotationRef.current !== null) {
+        const diff = targetRotationRef.current - rotationRef.current;
+        if (Math.abs(diff) > 0.15) {
+          rotationRef.current += diff * 0.08;
+          setRotation(rotationRef.current);
+        } else {
+          rotationRef.current = targetRotationRef.current;
+          targetRotationRef.current = null;
+          setRotation(rotationRef.current);
+        }
+      } else if (!isHoveredRef.current && !isDraggingRef.current) {
+        // Continuous slow revolving motion: ~8 degrees per second
+        const degreesPerSec = 8.0;
+        rotationRef.current -= (degreesPerSec * delta) / 1000;
+        setRotation(rotationRef.current);
+      }
+
+      rafId.current = requestAnimationFrame(loop);
+    };
+
+    rafId.current = requestAnimationFrame(loop);
+    return () => {
+      if (rafId.current) cancelAnimationFrame(rafId.current);
+    };
+  }, []);
+
+  // Pointer drag support to spin the revolving carousel
+  const handlePointerDown = (e: React.PointerEvent) => {
+    isDraggingRef.current = true;
+    startXRef.current = e.clientX;
+    dragRotationStartRef.current = rotationRef.current;
+    targetRotationRef.current = null;
+  };
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!isDraggingRef.current) return;
+    const diffX = e.clientX - startXRef.current;
+    const sensitivity = isMobile ? 0.35 : 0.24;
+    rotationRef.current = dragRotationStartRef.current + diffX * sensitivity;
+    setRotation(rotationRef.current);
+  };
+
+  const handlePointerUp = () => {
+    isDraggingRef.current = false;
+  };
+
+  const handleCardClick = (norm: number) => {
+    // If card is not centered, smoothly revolve it into the center
+    if (Math.abs(norm) > 1.5) {
+      targetRotationRef.current = rotationRef.current - norm;
+    }
+  };
+
+  const radiusX = isMobile ? 260 : 420;
+  const depthZ = isMobile ? 120 : 160;
 
   return (
     <section
@@ -311,62 +378,64 @@ const RotationalFeaturesSection: React.FC = () => {
       <div className="max-w-7xl mx-auto flex flex-col items-center px-4 sm:px-6">
         
         {/* Top Header */}
-        <div className="text-center max-w-4xl mx-auto mb-10 sm:mb-14 z-20">
+        <div className="text-center max-w-4xl mx-auto mb-10 sm:mb-14 z-20 pointer-events-auto">
           <h2
-            className="text-3xl sm:text-4xl md:text-5xl font-black text-white font-anek-latin tracking-tight leading-tight drop-shadow-sm"
+            className="text-2xl sm:text-4xl md:text-5xl font-black text-white font-anek-latin tracking-tight leading-tight drop-shadow-sm"
             style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
           >
             Everything You Need to Keep Moving.
           </h2>
         </div>
 
-        {/* 3D Rotational Carousel Stage */}
+        {/* 3D Revolving Turntable Carousel Stage */}
         <div
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
-          className="relative w-full max-w-6xl h-[420px] sm:h-[450px] md:h-[470px] flex items-center justify-center [perspective:1400px] z-10"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => {
+            setIsHovered(false);
+            isDraggingRef.current = false;
+          }}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
+          className="relative w-full max-w-6xl h-[420px] sm:h-[450px] md:h-[480px] flex items-center justify-center [perspective:1400px] z-10 cursor-grab active:cursor-grabbing"
         >
           <div className="relative w-full h-full flex items-center justify-center [transform-style:preserve-3d]">
             {FEATURES_DATA.map((feat, i) => {
-              // Calculate offset relative to activeIndex (circular wrapped)
-              let offset = i - activeIndex;
-              const half = Math.floor(FEATURES_DATA.length / 2);
-              if (offset > half) offset -= FEATURES_DATA.length;
-              if (offset < -half) offset += FEATURES_DATA.length;
+              const baseAngle = i * (360 / FEATURES_DATA.length);
+              const currentAngle = baseAngle + rotation;
+              const norm = ((currentAngle % 360) + 540) % 360 - 180;
+              const rad = (norm * Math.PI) / 180;
+              const cos = Math.cos(rad);
 
-              const absOffset = Math.abs(offset);
+              // Don't render cards that are behind the carousel
+              if (cos < -0.15) return null;
 
-              // Render active and adjacent cards for performance and clean 3D depth
-              if (absOffset > 2.5) return null;
-
-              const xSpacing = isMobile ? 270 : 390;
-              const translateX = offset * xSpacing;
-              // 3D rotation angle: cards to right face left (-Y), cards to left face right (+Y)
-              const rotateY = Math.max(-45, Math.min(45, offset * -28));
-              // 3D depth push
-              const translateZ = -Math.pow(absOffset, 1.2) * 115;
-              // Scale factor
-              const scale = Math.max(0.78, 1 - absOffset * 0.12);
-              // Opacity factor
-              const opacity = Math.max(0.2, Math.min(1, 1 - (absOffset - 0.2) * 0.45));
-              // Z-Index
-              const zIndex = Math.round(100 - absOffset * 15);
-              const isClosest = absOffset < 0.5;
+              const translateX = Math.sin(rad) * radiusX;
+              const translateZ = (cos - 1) * depthZ;
+              const rotateY = Math.max(-48, Math.min(48, norm * 0.65));
+              const scale = Math.max(0.78, 0.78 + 0.22 * ((cos + 1) / 2));
+              const opacity = Math.min(1, Math.max(0.25, (cos + 0.15) / 1.15));
+              const zIndex = Math.round((cos + 1) * 50);
+              const isClosest = Math.abs(norm) < 18;
 
               return (
                 <div
                   key={feat.number}
-                  onClick={() => setActiveIndex(i)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleCardClick(norm);
+                  }}
                   style={{
                     transform: `translate3d(${translateX}px, 0, ${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`,
                     opacity,
                     zIndex,
-                    transition: 'transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.85s ease, box-shadow 0.4s ease',
+                    transition: targetRotationRef.current !== null ? 'transform 0.4s ease, opacity 0.4s ease' : 'box-shadow 0.3s ease',
                   }}
-                  className={`absolute w-[86vw] max-w-[340px] sm:max-w-[390px] md:max-w-[430px] h-[390px] sm:h-[420px] md:h-[440px] p-6 sm:p-7 md:p-8 rounded-[24px] bg-white border-2 flex flex-col justify-between cursor-pointer select-none ${
+                  className={`absolute w-[86vw] max-w-[340px] sm:max-w-[390px] md:max-w-[430px] h-[390px] sm:h-[420px] md:h-[440px] p-6 sm:p-7 md:p-8 rounded-[24px] bg-white border-2 flex flex-col justify-between select-none ${
                     isClosest
-                      ? 'border-white shadow-[0_25px_60px_rgba(0,0,0,0.35)] ring-4 ring-white/20'
-                      : 'border-white/30 shadow-2xl opacity-90 hover:opacity-100'
+                      ? 'border-white shadow-[0_25px_60px_rgba(0,0,0,0.35)] ring-4 ring-white/20 cursor-default'
+                      : 'border-white/30 shadow-2xl opacity-90 hover:opacity-100 cursor-pointer'
                   }`}
                 >
                   {/* Card Header: Icon on left, category badge on right (Feature 01 label removed) */}
@@ -381,14 +450,14 @@ const RotationalFeaturesSection: React.FC = () => {
                       >
                         <feat.icon className="w-6 h-6 sm:w-7 sm:h-7" />
                       </div>
-                      <span className="font-semibold text-xs sm:text-sm text-slate-500 font-anek-latin bg-slate-100 px-3 py-1 rounded-full">
+                      <span className="font-semibold text-xs sm:text-sm text-slate-600 font-anek-latin bg-slate-100 px-3.5 py-1.5 rounded-full border border-slate-200/60">
                         {feat.badge}
                       </span>
                     </div>
 
                     {/* Title */}
                     <h3
-                      className="font-extrabold text-xl sm:text-2xl text-slate-900 font-anek-latin tracking-tight"
+                      className="font-black text-2xl sm:text-[26px] text-slate-900 font-anek-latin tracking-tight leading-snug"
                       style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
                     >
                       {feat.title}
@@ -396,7 +465,7 @@ const RotationalFeaturesSection: React.FC = () => {
 
                     {/* Tagline */}
                     <p
-                      className="font-bold text-sm sm:text-base mt-1.5 font-anek-latin"
+                      className="font-bold text-sm sm:text-base mt-2 font-anek-latin"
                       style={{
                         fontFamily: "'Anek Latin', 'AnekLatin', sans-serif",
                         color: feat.accentColor,
@@ -414,27 +483,32 @@ const RotationalFeaturesSection: React.FC = () => {
                     </p>
                   </div>
 
-                  {/* Highlights pills that fill the entire card nicely */}
-                  <div className="pt-3 border-t border-slate-100 flex flex-wrap gap-1.5 sm:gap-2">
-                    {feat.highlights.map((h, hIdx) => (
-                      <span
-                        key={hIdx}
-                        className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-50 text-slate-700 border border-slate-200/80 font-anek-latin"
-                      >
+                  {/* Highlights pills that fill the entire card without empty space */}
+                  <div>
+                    <div className="pt-3.5 border-t border-slate-100 flex flex-wrap gap-1.5 sm:gap-2">
+                      {feat.highlights.map((h, hIdx) => (
                         <span
-                          className="w-1.5 h-1.5 rounded-full"
-                          style={{ backgroundColor: feat.accentColor }}
-                        />
-                        {h}
-                      </span>
-                    ))}
-                  </div>
+                          key={hIdx}
+                          className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-50 text-slate-700 border border-slate-200/80 font-anek-latin"
+                        >
+                          <span
+                            className="w-1.5 h-1.5 rounded-full shrink-0"
+                            style={{ backgroundColor: feat.accentColor }}
+                          />
+                          {h}
+                        </span>
+                      ))}
+                    </div>
 
-                  {/* Card Footer: Step Indicator */}
-                  <div className="pt-2 flex items-center justify-end text-xs text-slate-400 font-mono font-bold">
-                    <span style={{ color: feat.accentColor }}>
-                      {feat.number} / 09
-                    </span>
+                    {/* Card Footer: Brand Indicator & Step Counter */}
+                    <div className="pt-3 flex items-center justify-between text-xs text-slate-400 font-mono font-bold">
+                      <span className="text-slate-400 uppercase tracking-wider text-[11px] font-sans font-semibold">
+                        Serviq Fleet Core
+                      </span>
+                      <span style={{ color: feat.accentColor }}>
+                        {feat.number} / 09
+                      </span>
+                    </div>
                   </div>
                 </div>
               );
