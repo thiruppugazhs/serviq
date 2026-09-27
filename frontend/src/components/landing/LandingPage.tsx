@@ -28,25 +28,22 @@ import {
 
 import { HelpFeedbackModal } from '../support/HelpFeedbackModal';
 
-const ABOUT_LINES_1 = [
-  "Every commercial vehicle on the road powers a business, a family, and our future.",
-  "We believe every single journey should move you forward without fear of breakdowns.",
-  "That is why we built SERVIQ."
+const ABOUT_PARAGRAPHS = [
+  "Managing a fleet means keeping track of hundreds of moving parts — vehicles, drivers, maintenance, repairs, documents, expenses, and daily operations.",
+  "SERVIQ brings them together in one connected platform.",
+  "From the moment a vehicle joins your fleet to every service, repair, and mile that follows, SERVIQ gives your team a clear view of what is happening and what needs attention.",
+  "Whether you're an organization admin, fleet manager, or driver, SERVIQ provides the right tools for the job — helping teams stay organized, respond faster, and keep vehicles ready for the road."
 ];
 
-const ABOUT_LINES_2 = [
-  "Launched by Orcescale in Chennai, SERVIQ was created with a simple belief:",
-  "Fleet maintenance should create value, not chaos.",
-  "Every vehicle should run smoothly. Every driver should be protected.",
-  "And every workshop should operate with verified pricing, total trust, and zero guesswork."
-];
+const ABOUT_HIGHLIGHT = "One platform. Every vehicle. Complete visibility.";
 
 const ScrollWordReveal: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeLines, setActiveLines] = useState(0);
   const rafId = useRef<number | null>(null);
 
-  const totalLines = ABOUT_LINES_1.length + ABOUT_LINES_2.length;
+  // Total lines: 4 content paragraphs + 1 highlight badge
+  const totalLines = ABOUT_PARAGRAPHS.length + 1;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -60,8 +57,8 @@ const ScrollWordReveal: React.FC = () => {
 
         // When container top reaches 0 (pins in viewport), scrolled starts at 0
         const scrolled = -rect.top;
-        // Each scroll step reveals the next line across 80% of track
-        const progress = Math.max(0, Math.min(1, scrolled / (totalScrollable * 0.8)));
+        // Each scroll step reveals the next line across 85% of track
+        const progress = Math.max(0, Math.min(1, scrolled / (totalScrollable * 0.85)));
         const currentLine = Math.floor(progress * (totalLines + 1));
         setActiveLines((prev) => (prev !== currentLine ? currentLine : prev));
       });
@@ -79,68 +76,74 @@ const ScrollWordReveal: React.FC = () => {
   }, [totalLines]);
 
   return (
-    <div ref={containerRef} className="relative bg-white min-h-[200vh] sm:min-h-[240vh] w-full">
-      <div className="sticky top-0 min-h-screen bg-white flex flex-col items-center justify-center px-6 sm:px-10 max-w-4xl lg:max-w-5xl mx-auto select-none w-full">
+    <div ref={containerRef} className="relative bg-white min-h-[220vh] sm:min-h-[260vh] w-full">
+      <div className="sticky top-0 min-h-screen bg-white flex flex-col items-center justify-center px-6 sm:px-10 max-w-4xl lg:max-w-5xl mx-auto select-none w-full py-12">
         
         {/* Section Kicker Badge */}
-        <div className="flex items-center gap-2 mb-8 sm:mb-12 pointer-events-auto">
+        <div className="flex items-center gap-2 mb-4 sm:mb-6 pointer-events-auto">
           <div className="w-2.5 h-2.5 rounded-full bg-[#2335f2] animate-pulse" />
           <span
             className="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-[#2335f2] font-anek-latin"
             style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
           >
-            About SERVIQ By Orcescale
+            About SERVIQ
           </span>
         </div>
 
-        {/* Manifesto Content: Line-by-Line Reveal with Anek Latin & Generous Spacing */}
-        <div
-          className="w-full text-center font-anek-latin pointer-events-auto"
+        {/* Section Heading in Anek Latin */}
+        <h2
+          className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 font-anek-latin text-center tracking-tight leading-[1.15] mb-6 sm:mb-10 max-w-3xl pointer-events-auto"
           style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
         >
-          {/* Section 1 */}
-          <div className="space-y-3 sm:space-y-4">
-            {ABOUT_LINES_1.map((line, idx) => {
-              const isRevealed = idx < activeLines;
-              return (
-                <p
-                  key={idx}
-                  className={`text-xl sm:text-2xl md:text-3xl lg:text-[34px] leading-relaxed sm:leading-[1.7] md:leading-[1.75] tracking-wide transition-all duration-300 ease-out select-none ${
-                    isRevealed
-                      ? 'text-slate-950 font-bold opacity-100 transform translate-y-0'
-                      : 'text-slate-300 font-semibold opacity-30 transform translate-y-1'
-                  }`}
-                >
-                  {line}
-                </p>
-              );
-            })}
-          </div>
+          Everything Your Fleet Needs. In One Place.
+        </h2>
 
-          {/* Section 2 with Clear Breathable Spacing */}
-          <div className="space-y-3 sm:space-y-4 mt-8 sm:mt-12">
-            {ABOUT_LINES_2.map((line, idx) => {
-              const globalIdx = ABOUT_LINES_1.length + idx;
-              const isRevealed = globalIdx < activeLines;
-              return (
-                <p
-                  key={idx}
-                  className={`text-xl sm:text-2xl md:text-3xl lg:text-[34px] leading-relaxed sm:leading-[1.7] md:leading-[1.75] tracking-wide transition-all duration-300 ease-out select-none ${
-                    isRevealed
-                      ? 'text-slate-950 font-bold opacity-100 transform translate-y-0'
-                      : 'text-slate-300 font-semibold opacity-30 transform translate-y-1'
-                  }`}
-                >
-                  {line}
-                </p>
-              );
-            })}
+        {/* Manifesto Content: Line-by-Line Reveal with Anek Latin & Generous Spacing */}
+        <div
+          className="w-full max-w-3xl text-center font-anek-latin pointer-events-auto space-y-4 sm:space-y-5"
+          style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+        >
+          {ABOUT_PARAGRAPHS.map((para, idx) => {
+            const isRevealed = idx < activeLines;
+            return (
+              <p
+                key={idx}
+                className={`text-base sm:text-lg md:text-xl lg:text-[22px] leading-relaxed sm:leading-[1.65] tracking-wide transition-all duration-300 ease-out select-none ${
+                  isRevealed
+                    ? idx === 1
+                      ? 'text-[#2335f2] font-black opacity-100 transform translate-y-0'
+                      : 'text-slate-950 font-bold opacity-100 transform translate-y-0'
+                    : 'text-slate-300 font-semibold opacity-30 transform translate-y-1'
+                }`}
+              >
+                {para}
+              </p>
+            );
+          })}
+        </div>
+
+        {/* Small Highlight Badge */}
+        <div
+          className={`mt-8 sm:mt-10 transition-all duration-500 pointer-events-auto ${
+            activeLines >= ABOUT_PARAGRAPHS.length + 1
+              ? 'opacity-100 transform translate-y-0 scale-100'
+              : 'opacity-20 transform translate-y-2 scale-95'
+          }`}
+        >
+          <div className="inline-flex items-center gap-2.5 px-5 sm:px-7 py-2.5 sm:py-3 rounded-full bg-blue-50 border-2 border-[#2335f2]/25 shadow-sm">
+            <div className="w-2 h-2 rounded-full bg-[#2335f2] animate-pulse" />
+            <span
+              className="font-anek-latin font-black text-xs sm:text-sm md:text-base text-[#2335f2] tracking-wider uppercase"
+              style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+            >
+              {ABOUT_HIGHLIGHT}
+            </span>
           </div>
         </div>
 
         {/* Scroll down indicator */}
         <div
-          className={`mt-10 sm:mt-14 transition-opacity duration-300 pointer-events-auto ${
+          className={`mt-6 sm:mt-8 transition-opacity duration-300 pointer-events-auto ${
             activeLines >= totalLines ? 'opacity-0' : 'opacity-70'
           }`}
         >
@@ -528,133 +531,6 @@ export const LandingPage: React.FC = () => {
       <section id="about" className="relative z-30 bg-white text-slate-900 w-full shadow-2xl">
         {/* Sticky Word-by-Word Scroll Reveal Manifesto (matches super.money reference) */}
         <ScrollWordReveal />
-
-        {/* Detailed App Capabilities & Mission Pillars */}
-        <div className="py-24 sm:py-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-slate-100">
-          
-          {/* Section Kicker */}
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-2.5 h-2.5 rounded-full bg-[#2335f2] animate-pulse" />
-            <span className="text-xs font-extrabold uppercase tracking-widest text-[#2335f2]">
-              The Serviq Platform
-            </span>
-          </div>
-
-          {/* Headline & Mission Statement */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start mb-16">
-            <div className="lg:col-span-7">
-              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 font-['Outfit',sans-serif] tracking-tight leading-[1.08]">
-                The Operating System for Modern Fleet Maintenance.
-              </h2>
-            </div>
-            <div className="lg:col-span-5 space-y-4 text-slate-600 text-sm sm:text-base leading-relaxed">
-              <p>
-                Commercial vehicles on highway corridors shouldn't be managed with paper notebooks and guess-work. <span className="font-semibold text-slate-900">SERVIQ</span> transforms fleet maintenance into an automated, synchronized digital operation.
-              </p>
-              <p>
-                From single-vehicle owner-operators to enterprise logistics fleets across India, SERVIQ connects drivers on the road with fleet managers in the control room and verified service workshops in real time.
-              </p>
-            </div>
-          </div>
-
-          {/* Three Feature Pillars: What the App Does */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            <div className="p-8 rounded-3xl bg-slate-50 border border-slate-200/80 space-y-4 hover:shadow-xl transition-all">
-              <div className="w-12 h-12 rounded-2xl bg-blue-100 text-[#2335f2] flex items-center justify-center font-bold">
-                <Gauge className="w-6 h-6" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 font-['Outfit',sans-serif]">
-                Dual-Trigger Service Engine
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                Tracks both daily odometer increments and calendar intervals. Serviq automatically warns managers and drivers before critical oil, brake pad, or tire wear leads to unexpected engine failure.
-              </p>
-            </div>
-
-            <div className="p-8 rounded-3xl bg-slate-50 border border-slate-200/80 space-y-4 hover:shadow-xl transition-all">
-              <div className="w-12 h-12 rounded-2xl bg-blue-100 text-[#2335f2] flex items-center justify-center font-bold">
-                <Smartphone className="w-6 h-6" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 font-['Outfit',sans-serif]">
-                Highway Driver Companion
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                When breakdowns happen, drivers log photo reports in under 60 seconds with GPS geotagging. Offline access to vehicle RC, national permits, and digital insurance cards keeps drivers compliant.
-              </p>
-            </div>
-
-            <div className="p-8 rounded-3xl bg-slate-50 border border-slate-200/80 space-y-4 hover:shadow-xl transition-all">
-              <div className="w-12 h-12 rounded-2xl bg-blue-100 text-[#2335f2] flex items-center justify-center font-bold">
-                <BarChart3 className="w-6 h-6" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 font-['Outfit',sans-serif]">
-                Workshop & TCO Control
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                Every rupee spent on spare parts, mechanics, and lubricants is tracked. Transparent digital job cards prevent workshop billing fraud and reduce lifetime fleet maintenance costs by up to 42%.
-              </p>
-            </div>
-          </div>
-
-          {/* 4 Square Capability Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="aspect-square bg-slate-50 border-2 border-slate-100 p-8 flex flex-col justify-between square-card-white group">
-              <div className="w-12 h-12 bg-studio-blue/10 text-[#393df0] flex items-center justify-center font-bold group-hover:scale-110 transition-transform">
-                <Truck className="w-6 h-6" />
-              </div>
-              <div>
-                <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#393df0] transition-colors">
-                  Fleet Management
-                </h3>
-                <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                  Know where your vehicles stand. Complete status and assignment oversight.
-                </p>
-              </div>
-            </div>
-
-            <div className="aspect-square bg-slate-50 border-2 border-slate-100 p-8 flex flex-col justify-between square-card-white group">
-              <div className="w-12 h-12 bg-studio-blue/10 text-[#393df0] flex items-center justify-center font-bold group-hover:scale-110 transition-transform">
-                <Wrench className="w-6 h-6" />
-              </div>
-              <div>
-                <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#393df0] transition-colors">
-                  Maintenance Tracking
-                </h3>
-                <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                  Never lose track of scheduled service. Calendar and odometer dual-triggers.
-                </p>
-              </div>
-            </div>
-
-            <div className="aspect-square bg-slate-50 border-2 border-slate-100 p-8 flex flex-col justify-between square-card-white group">
-              <div className="w-12 h-12 bg-studio-blue/10 text-[#393df0] flex items-center justify-center font-bold group-hover:scale-110 transition-transform">
-                <AlertTriangle className="w-6 h-6" />
-              </div>
-              <div>
-                <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#393df0] transition-colors">
-                  Repair Management
-                </h3>
-                <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                  Track issues from report to resolution. Real-time roadside breakdown logs.
-                </p>
-              </div>
-            </div>
-
-            <div className="aspect-square bg-slate-50 border-2 border-slate-100 p-8 flex flex-col justify-between square-card-white group">
-              <div className="w-12 h-12 bg-studio-blue/10 text-[#393df0] flex items-center justify-center font-bold group-hover:scale-110 transition-transform">
-                <UserCheck className="w-6 h-6" />
-              </div>
-              <div>
-                <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#393df0] transition-colors">
-                  Driver Management
-                </h3>
-                <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                  Keep driver and vehicle information organized. License compliance alerts.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
       </section>
 
       {/* =========================================================================
@@ -736,113 +612,327 @@ export const LandingPage: React.FC = () => {
           PAGE 4 (EVEN): FEATURES SECTION — WHITE BACKGROUND
       ========================================================================= */}
       <section id="features" className="w-full bg-white text-slate-900">
-        <div className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-left">
-        <div className="max-w-3xl mb-14">
-          <h2 className="text-3xl sm:text-5xl font-black text-slate-900 font-['Outfit',sans-serif]">
-            Everything you need to manage your fleet.
-          </h2>
+        <div className="py-20 sm:py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-left">
+          
+          {/* Section Kicker */}
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-2.5 h-2.5 rounded-full bg-[#2335f2] animate-pulse" />
+            <span
+              className="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-[#2335f2] font-anek-latin"
+              style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+            >
+              Features
+            </span>
+          </div>
+
+          {/* Section Heading & Subheading */}
+          <div className="max-w-3xl mb-12 sm:mb-16">
+            <h2
+              className="text-3xl sm:text-5xl font-black text-slate-900 font-anek-latin tracking-tight leading-tight"
+              style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+            >
+              Everything You Need to Keep Moving.
+            </h2>
+            <p
+              className="text-sm sm:text-base md:text-lg text-slate-600 mt-4 leading-relaxed font-anek-latin"
+              style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+            >
+              From everyday fleet operations to unexpected repairs, SERVIQ keeps your vehicles, people, and maintenance connected.
+            </p>
+          </div>
+
+          {/* 9 Feature Cards in 3x3 Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
+            {/* Feature 01 */}
+            <div className="p-7 sm:p-8 rounded-2xl sm:rounded-3xl bg-slate-50 border-2 border-slate-100 hover:border-[#393df0]/30 hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
+              <div>
+                <div className="flex items-center justify-between mb-5">
+                  <div className="w-12 h-12 rounded-2xl bg-studio-blue/10 text-[#393df0] flex items-center justify-center font-bold group-hover:scale-110 group-hover:bg-[#393df0] group-hover:text-white transition-all duration-300 shadow-sm">
+                    <Truck className="w-6 h-6" />
+                  </div>
+                  <span className="font-mono font-black text-xs sm:text-sm text-slate-400 group-hover:text-[#393df0] transition-colors">
+                    Feature 01
+                  </span>
+                </div>
+                <h3
+                  className="font-extrabold text-xl sm:text-2xl text-slate-900 font-anek-latin group-hover:text-[#393df0] transition-colors"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  Vehicle Management
+                </h3>
+                <p
+                  className="font-bold text-sm sm:text-base text-slate-800 mt-2 font-anek-latin"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  Know every vehicle, inside and out.
+                </p>
+                <p
+                  className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed font-anek-latin"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  Manage vehicle profiles, assignments, status, odometer readings, service history, and important information from one place.
+                </p>
+              </div>
+            </div>
+
+            {/* Feature 02 */}
+            <div className="p-7 sm:p-8 rounded-2xl sm:rounded-3xl bg-slate-50 border-2 border-slate-100 hover:border-[#393df0]/30 hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
+              <div>
+                <div className="flex items-center justify-between mb-5">
+                  <div className="w-12 h-12 rounded-2xl bg-studio-blue/10 text-[#393df0] flex items-center justify-center font-bold group-hover:scale-110 group-hover:bg-[#393df0] group-hover:text-white transition-all duration-300 shadow-sm">
+                    <UserCheck className="w-6 h-6" />
+                  </div>
+                  <span className="font-mono font-black text-xs sm:text-sm text-slate-400 group-hover:text-[#393df0] transition-colors">
+                    Feature 02
+                  </span>
+                </div>
+                <h3
+                  className="font-extrabold text-xl sm:text-2xl text-slate-900 font-anek-latin group-hover:text-[#393df0] transition-colors"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  Driver Management
+                </h3>
+                <p
+                  className="font-bold text-sm sm:text-base text-slate-800 mt-2 font-anek-latin"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  Keep your drivers connected to their vehicles.
+                </p>
+                <p
+                  className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed font-anek-latin"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  Create individual driver profiles, manage assignments, track details, and give drivers quick access to the information they need.
+                </p>
+              </div>
+            </div>
+
+            {/* Feature 03 */}
+            <div className="p-7 sm:p-8 rounded-2xl sm:rounded-3xl bg-slate-50 border-2 border-slate-100 hover:border-[#393df0]/30 hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
+              <div>
+                <div className="flex items-center justify-between mb-5">
+                  <div className="w-12 h-12 rounded-2xl bg-studio-blue/10 text-[#393df0] flex items-center justify-center font-bold group-hover:scale-110 group-hover:bg-[#393df0] group-hover:text-white transition-all duration-300 shadow-sm">
+                    <Wrench className="w-6 h-6" />
+                  </div>
+                  <span className="font-mono font-black text-xs sm:text-sm text-slate-400 group-hover:text-[#393df0] transition-colors">
+                    Feature 03
+                  </span>
+                </div>
+                <h3
+                  className="font-extrabold text-xl sm:text-2xl text-slate-900 font-anek-latin group-hover:text-[#393df0] transition-colors"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  Maintenance Management
+                </h3>
+                <p
+                  className="font-bold text-sm sm:text-base text-slate-800 mt-2 font-anek-latin"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  Stay ahead of what’s due.
+                </p>
+                <p
+                  className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed font-anek-latin"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  Schedule maintenance, track service history, monitor upcoming work, and make sure important servicing doesn't get overlooked.
+                </p>
+              </div>
+            </div>
+
+            {/* Feature 04 */}
+            <div className="p-7 sm:p-8 rounded-2xl sm:rounded-3xl bg-slate-50 border-2 border-slate-100 hover:border-[#393df0]/30 hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
+              <div>
+                <div className="flex items-center justify-between mb-5">
+                  <div className="w-12 h-12 rounded-2xl bg-studio-blue/10 text-[#393df0] flex items-center justify-center font-bold group-hover:scale-110 group-hover:bg-[#393df0] group-hover:text-white transition-all duration-300 shadow-sm">
+                    <AlertTriangle className="w-6 h-6" />
+                  </div>
+                  <span className="font-mono font-black text-xs sm:text-sm text-slate-400 group-hover:text-[#393df0] transition-colors">
+                    Feature 04
+                  </span>
+                </div>
+                <h3
+                  className="font-extrabold text-xl sm:text-2xl text-slate-900 font-anek-latin group-hover:text-[#393df0] transition-colors"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  Repair Tracking
+                </h3>
+                <p
+                  className="font-bold text-sm sm:text-base text-slate-800 mt-2 font-anek-latin"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  From issue reported to repair completed.
+                </p>
+                <p
+                  className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed font-anek-latin"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  Drivers can report vehicle issues while fleet managers can track, manage, and update repairs throughout the entire process.
+                </p>
+              </div>
+            </div>
+
+            {/* Feature 05 */}
+            <div className="p-7 sm:p-8 rounded-2xl sm:rounded-3xl bg-slate-50 border-2 border-slate-100 hover:border-[#393df0]/30 hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
+              <div>
+                <div className="flex items-center justify-between mb-5">
+                  <div className="w-12 h-12 rounded-2xl bg-studio-blue/10 text-[#393df0] flex items-center justify-center font-bold group-hover:scale-110 group-hover:bg-[#393df0] group-hover:text-white transition-all duration-300 shadow-sm">
+                    <Receipt className="w-6 h-6" />
+                  </div>
+                  <span className="font-mono font-black text-xs sm:text-sm text-slate-400 group-hover:text-[#393df0] transition-colors">
+                    Feature 05
+                  </span>
+                </div>
+                <h3
+                  className="font-extrabold text-xl sm:text-2xl text-slate-900 font-anek-latin group-hover:text-[#393df0] transition-colors"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  Expense Management
+                </h3>
+                <p
+                  className="font-bold text-sm sm:text-base text-slate-800 mt-2 font-anek-latin"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  Know where your fleet spending goes.
+                </p>
+                <p
+                  className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed font-anek-latin"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  Keep maintenance and repair expenses organized so your team has a clearer picture of vehicle-related costs.
+                </p>
+              </div>
+            </div>
+
+            {/* Feature 06 */}
+            <div className="p-7 sm:p-8 rounded-2xl sm:rounded-3xl bg-slate-50 border-2 border-slate-100 hover:border-[#393df0]/30 hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
+              <div>
+                <div className="flex items-center justify-between mb-5">
+                  <div className="w-12 h-12 rounded-2xl bg-studio-blue/10 text-[#393df0] flex items-center justify-center font-bold group-hover:scale-110 group-hover:bg-[#393df0] group-hover:text-white transition-all duration-300 shadow-sm">
+                    <FileText className="w-6 h-6" />
+                  </div>
+                  <span className="font-mono font-black text-xs sm:text-sm text-slate-400 group-hover:text-[#393df0] transition-colors">
+                    Feature 06
+                  </span>
+                </div>
+                <h3
+                  className="font-extrabold text-xl sm:text-2xl text-slate-900 font-anek-latin group-hover:text-[#393df0] transition-colors"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  Documents
+                </h3>
+                <p
+                  className="font-bold text-sm sm:text-base text-slate-800 mt-2 font-anek-latin"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  Keep important documents within reach.
+                </p>
+                <p
+                  className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed font-anek-latin"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  Organize vehicle and driver documents, track their details, and stay aware of upcoming expirations.
+                </p>
+              </div>
+            </div>
+
+            {/* Feature 07 */}
+            <div className="p-7 sm:p-8 rounded-2xl sm:rounded-3xl bg-slate-50 border-2 border-slate-100 hover:border-[#393df0]/30 hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
+              <div>
+                <div className="flex items-center justify-between mb-5">
+                  <div className="w-12 h-12 rounded-2xl bg-studio-blue/10 text-[#393df0] flex items-center justify-center font-bold group-hover:scale-110 group-hover:bg-[#393df0] group-hover:text-white transition-all duration-300 shadow-sm">
+                    <ShieldCheck className="w-6 h-6" />
+                  </div>
+                  <span className="font-mono font-black text-xs sm:text-sm text-slate-400 group-hover:text-[#393df0] transition-colors">
+                    Feature 07
+                  </span>
+                </div>
+                <h3
+                  className="font-extrabold text-xl sm:text-2xl text-slate-900 font-anek-latin group-hover:text-[#393df0] transition-colors"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  Vehicle Health
+                </h3>
+                <p
+                  className="font-bold text-sm sm:text-base text-slate-800 mt-2 font-anek-latin"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  Know when a vehicle needs attention.
+                </p>
+                <p
+                  className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed font-anek-latin"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  Keep track of vehicle condition, reported issues, maintenance status, and other important health indicators.
+                </p>
+              </div>
+            </div>
+
+            {/* Feature 08 */}
+            <div className="p-7 sm:p-8 rounded-2xl sm:rounded-3xl bg-slate-50 border-2 border-slate-100 hover:border-[#393df0]/30 hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
+              <div>
+                <div className="flex items-center justify-between mb-5">
+                  <div className="w-12 h-12 rounded-2xl bg-studio-blue/10 text-[#393df0] flex items-center justify-center font-bold group-hover:scale-110 group-hover:bg-[#393df0] group-hover:text-white transition-all duration-300 shadow-sm">
+                    <Bell className="w-6 h-6" />
+                  </div>
+                  <span className="font-mono font-black text-xs sm:text-sm text-slate-400 group-hover:text-[#393df0] transition-colors">
+                    Feature 08
+                  </span>
+                </div>
+                <h3
+                  className="font-extrabold text-xl sm:text-2xl text-slate-900 font-anek-latin group-hover:text-[#393df0] transition-colors"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  Notifications & Reminders
+                </h3>
+                <p
+                  className="font-bold text-sm sm:text-base text-slate-800 mt-2 font-anek-latin"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  The right information, at the right time.
+                </p>
+                <p
+                  className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed font-anek-latin"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  Stay updated about maintenance, repairs, documents, assignments, and other important fleet activities.
+                </p>
+              </div>
+            </div>
+
+            {/* Feature 09 */}
+            <div className="p-7 sm:p-8 rounded-2xl sm:rounded-3xl bg-slate-50 border-2 border-slate-100 hover:border-[#393df0]/30 hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
+              <div>
+                <div className="flex items-center justify-between mb-5">
+                  <div className="w-12 h-12 rounded-2xl bg-studio-blue/10 text-[#393df0] flex items-center justify-center font-bold group-hover:scale-110 group-hover:bg-[#393df0] group-hover:text-white transition-all duration-300 shadow-sm">
+                    <BarChart3 className="w-6 h-6" />
+                  </div>
+                  <span className="font-mono font-black text-xs sm:text-sm text-slate-400 group-hover:text-[#393df0] transition-colors">
+                    Feature 09
+                  </span>
+                </div>
+                <h3
+                  className="font-extrabold text-xl sm:text-2xl text-slate-900 font-anek-latin group-hover:text-[#393df0] transition-colors"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  Fleet Insights
+                </h3>
+                <p
+                  className="font-bold text-sm sm:text-base text-slate-800 mt-2 font-anek-latin"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  Turn fleet activity into clear visibility.
+                </p>
+                <p
+                  className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed font-anek-latin"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  Get an organized view of vehicles, maintenance, repairs, expenses, and fleet operations to make everyday decisions easier.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
-
-        {/* 8 Square Cards in White Section */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="aspect-square bg-slate-50 border-2 border-slate-100 p-7 flex flex-col justify-between square-card-white group">
-            <div className="text-3xl group-hover:scale-110 transition-transform">🚗</div>
-            <div>
-              <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#393df0] transition-colors">
-                Vehicle Management
-              </h3>
-              <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                Maintain complete vehicle profiles, assignments, status, odometer readings, and service history.
-              </p>
-            </div>
-          </div>
-
-          <div className="aspect-square bg-slate-50 border-2 border-slate-100 p-7 flex flex-col justify-between square-card-white group">
-            <div className="text-3xl group-hover:scale-110 transition-transform">👨✈️</div>
-            <div>
-              <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#393df0] transition-colors">
-                Driver Management
-              </h3>
-              <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                Manage driver profiles, assignments, documents, and individual details from one place.
-              </p>
-            </div>
-          </div>
-
-          <div className="aspect-square bg-slate-50 border-2 border-slate-100 p-7 flex flex-col justify-between square-card-white group">
-            <div className="text-3xl group-hover:scale-110 transition-transform">🔧</div>
-            <div>
-              <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#393df0] transition-colors">
-                Maintenance Management
-              </h3>
-              <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                Create maintenance schedules, track services, and stay ahead of upcoming maintenance.
-              </p>
-            </div>
-          </div>
-
-          <div className="aspect-square bg-slate-50 border-2 border-slate-100 p-7 flex flex-col justify-between square-card-white group">
-            <div className="text-3xl group-hover:scale-110 transition-transform">🛠️</div>
-            <div>
-              <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#393df0] transition-colors">
-                Repair Tracking
-              </h3>
-              <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                Report vehicle issues and follow repairs from the initial report to completion.
-              </p>
-            </div>
-          </div>
-
-          <div className="aspect-square bg-slate-50 border-2 border-slate-100 p-7 flex flex-col justify-between square-card-white group">
-            <div className="text-3xl group-hover:scale-110 transition-transform">💰</div>
-            <div>
-              <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#393df0] transition-colors">
-                Expense Management
-              </h3>
-              <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                Record and monitor maintenance and repair expenses for better cost visibility.
-              </p>
-            </div>
-          </div>
-
-          <div className="aspect-square bg-slate-50 border-2 border-slate-100 p-7 flex flex-col justify-between square-card-white group">
-            <div className="text-3xl group-hover:scale-110 transition-transform">📄</div>
-            <div>
-              <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#393df0] transition-colors">
-                Document Management
-              </h3>
-              <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                Keep vehicle and driver documents organized and monitor expiry dates.
-              </p>
-            </div>
-          </div>
-
-          <div className="aspect-square bg-slate-50 border-2 border-slate-100 p-7 flex flex-col justify-between square-card-white group">
-            <div className="text-3xl group-hover:scale-110 transition-transform">🔔</div>
-            <div>
-              <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#393df0] transition-colors">
-                Notifications & Reminders
-              </h3>
-              <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                Stay informed about maintenance, repairs, documents, and important fleet activities.
-              </p>
-            </div>
-          </div>
-
-          <div className="aspect-square bg-slate-50 border-2 border-slate-100 p-7 flex flex-col justify-between square-card-white group">
-            <div className="text-3xl group-hover:scale-110 transition-transform">📊</div>
-            <div>
-              <h3 className="font-extrabold text-lg text-slate-900 font-['Outfit',sans-serif] group-hover:text-[#393df0] transition-colors">
-                Reports & Analytics
-              </h3>
-              <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                Get a clearer view of fleet activity, maintenance, expenses, and vehicle performance.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+      </section>
 
       {/* =========================================================================
           PAGE 5 (ODD): DASHBOARD SECTION — BLUE BACKGROUND
