@@ -188,6 +188,7 @@ const FEATURES_DATA = [
     icon: Truck,
     accentColor: '#2563eb',
     badge: 'Asset Directory',
+    highlights: ['Digital RC & Docs', 'Live Odometer Sync', 'Service History'],
   },
   {
     number: '02',
@@ -198,6 +199,7 @@ const FEATURES_DATA = [
     icon: UserCheck,
     accentColor: '#3b82f6',
     badge: 'Driver Roster',
+    highlights: ['Driver Profiles & License', 'Vehicle Assignments', 'Direct Mobile Access'],
   },
   {
     number: '03',
@@ -208,6 +210,7 @@ const FEATURES_DATA = [
     icon: Wrench,
     accentColor: '#d97706',
     badge: 'Dual-Trigger Engine',
+    highlights: ['Preventive Reminders', 'Interval Alerts', 'Maintenance Log'],
   },
   {
     number: '04',
@@ -218,6 +221,7 @@ const FEATURES_DATA = [
     icon: AlertTriangle,
     accentColor: '#e11d48',
     badge: 'Real-time Resolution',
+    highlights: ['Defect Issue Reporting', 'Workshop Job Cards', 'End-to-End Status'],
   },
   {
     number: '05',
@@ -228,54 +232,58 @@ const FEATURES_DATA = [
     icon: Receipt,
     accentColor: '#059669',
     badge: 'TCO & Parts Audit',
+    highlights: ['Parts & Labor Costs', 'Categorized Receipts', 'Fleet Spend Audit'],
   },
   {
     number: '06',
     title: 'Documents',
     tagline: 'Keep important documents within reach.',
     description:
-      'Organize vehicle and driver documents, track their details, and stay aware of upcoming expirations.',
+      'Store vehicle registration, insurance, fitness certificates, and permits in one organized digital place.',
     icon: FileText,
-    accentColor: '#7c3aed',
+    accentColor: '#8b5cf6',
     badge: 'Compliance Vault',
+    highlights: ['RC, Insurance & PUC', 'Permit Storage', 'Expiry Alerts'],
   },
   {
     number: '07',
     title: 'Vehicle Health',
-    tagline: 'Know when a vehicle needs attention.',
+    tagline: 'Keep your fleet in peak condition.',
     description:
-      'Keep track of vehicle condition, reported issues, maintenance status, and other important health indicators.',
+      'Monitor vehicle readiness, track ongoing issues, and make sure every vehicle is fit for the road.',
     icon: ShieldCheck,
-    accentColor: '#0284c7',
-    badge: 'Fleet Readiness',
+    accentColor: '#10b981',
+    badge: 'Health Intelligence',
+    highlights: ['Fleet Readiness', 'Active Issue Tracking', 'Roadworthy Checks'],
   },
   {
     number: '08',
     title: 'Notifications & Reminders',
-    tagline: 'The right information, at the right time.',
+    tagline: 'Never miss what needs attention.',
     description:
-      'Stay updated about maintenance, repairs, documents, assignments, and other important fleet activities.',
+      'Get timely alerts for upcoming maintenance, pending repairs, expiring documents, and important fleet updates.',
     icon: Bell,
     accentColor: '#f59e0b',
-    badge: 'Instant Alerts',
+    badge: 'Automated Reminders',
+    highlights: ['Due Date Reminders', 'Document Expiry Alerts', 'Instant Push Notices'],
   },
   {
     number: '09',
     title: 'Fleet Insights',
-    tagline: 'Turn fleet activity into clear visibility.',
+    tagline: 'See the big picture of your fleet.',
     description:
-      'Get an organized view of vehicles, maintenance, repairs, expenses, and fleet operations to make everyday decisions easier.',
+      'View fleet activity, monitor vehicle status, track service records, and make informed operational decisions.',
     icon: BarChart3,
-    accentColor: '#4f46e5',
-    badge: 'Executive Oversight',
+    accentColor: '#6366f1',
+    badge: 'Operational Visibility',
+    highlights: ['Activity Analytics', 'Maintenance Trends', 'Fleet Transparency'],
   },
 ];
 
 const RotationalFeaturesSection: React.FC = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const rafId = useRef<number | null>(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -286,53 +294,26 @@ const RotationalFeaturesSection: React.FC = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Slowly rotate horizontally next to next (every 3.6s, pauses on hover)
   useEffect(() => {
-    const handleScroll = () => {
-      if (rafId.current) return;
-      rafId.current = requestAnimationFrame(() => {
-        rafId.current = null;
-        if (!containerRef.current) return;
-        const rect = containerRef.current.getBoundingClientRect();
-        const totalScrollable = rect.height - window.innerHeight;
-        if (totalScrollable <= 0) return;
-
-        const scrolled = -rect.top;
-        const p = Math.max(0, Math.min(1, scrolled / totalScrollable));
-        const activeFloat = p * (FEATURES_DATA.length - 1);
-        setScrollProgress(activeFloat);
-      });
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      if (rafId.current) cancelAnimationFrame(rafId.current);
-    };
-  }, []);
-
-  const scrollToCard = (index: number) => {
-    if (!containerRef.current) return;
-    const totalScrollable = containerRef.current.scrollHeight - window.innerHeight;
-    const targetScroll = (index / (FEATURES_DATA.length - 1)) * totalScrollable;
-    const rect = containerRef.current.getBoundingClientRect();
-    const containerTop = window.scrollY + rect.top;
-    window.scrollTo({
-      top: containerTop + targetScroll,
-      behavior: 'smooth',
-    });
-  };
-
-  const currentIndex = Math.round(scrollProgress);
+    if (isPaused) return;
+    const interval = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % FEATURES_DATA.length);
+    }, 3600);
+    return () => clearInterval(interval);
+  }, [isPaused]);
 
   return (
-    <section id="features" ref={containerRef} className="relative w-full bg-studio-blue text-white min-h-[260vh]">
-      <div className="sticky top-0 h-screen w-full flex flex-col justify-center items-center overflow-hidden py-6 px-4 sm:px-6 select-none bg-studio-blue">
+    <section
+      id="features"
+      className="relative w-full bg-studio-blue text-white py-16 sm:py-24 overflow-hidden select-none"
+    >
+      <div className="max-w-7xl mx-auto flex flex-col items-center px-4 sm:px-6">
         
         {/* Top Header */}
-        <div className="text-center max-w-4xl mx-auto mb-4 sm:mb-6 z-20 pointer-events-auto">
+        <div className="text-center max-w-4xl mx-auto mb-10 sm:mb-14 z-20">
           <h2
-            className="text-2xl sm:text-4xl md:text-5xl font-black text-white font-anek-latin tracking-tight leading-tight drop-shadow-sm"
+            className="text-3xl sm:text-4xl md:text-5xl font-black text-white font-anek-latin tracking-tight leading-tight drop-shadow-sm"
             style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
           >
             Everything You Need to Keep Moving.
@@ -340,25 +321,34 @@ const RotationalFeaturesSection: React.FC = () => {
         </div>
 
         {/* 3D Rotational Carousel Stage */}
-        <div className="relative w-full max-w-6xl h-[360px] sm:h-[400px] md:h-[440px] flex items-center justify-center [perspective:1400px] z-10">
+        <div
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          className="relative w-full max-w-6xl h-[420px] sm:h-[450px] md:h-[470px] flex items-center justify-center [perspective:1400px] z-10"
+        >
           <div className="relative w-full h-full flex items-center justify-center [transform-style:preserve-3d]">
             {FEATURES_DATA.map((feat, i) => {
-              const offset = i - scrollProgress;
+              // Calculate offset relative to activeIndex (circular wrapped)
+              let offset = i - activeIndex;
+              const half = Math.floor(FEATURES_DATA.length / 2);
+              if (offset > half) offset -= FEATURES_DATA.length;
+              if (offset < -half) offset += FEATURES_DATA.length;
+
               const absOffset = Math.abs(offset);
 
-              // Skip rendering cards far away for high performance
-              if (absOffset > 3.2) return null;
+              // Render active and adjacent cards for performance and clean 3D depth
+              if (absOffset > 2.5) return null;
 
-              const xSpacing = isMobile ? 260 : 380;
+              const xSpacing = isMobile ? 270 : 390;
               const translateX = offset * xSpacing;
-              // 3D rotation angle: cards to the right face left (-Y), cards to the left face right (+Y)
-              const rotateY = Math.max(-50, Math.min(50, offset * -28));
+              // 3D rotation angle: cards to right face left (-Y), cards to left face right (+Y)
+              const rotateY = Math.max(-45, Math.min(45, offset * -28));
               // 3D depth push
-              const translateZ = -Math.pow(absOffset, 1.2) * 110;
+              const translateZ = -Math.pow(absOffset, 1.2) * 115;
               // Scale factor
-              const scale = Math.max(0.72, 1 - absOffset * 0.12);
+              const scale = Math.max(0.78, 1 - absOffset * 0.12);
               // Opacity factor
-              const opacity = Math.max(0, Math.min(1, 1 - (absOffset - 0.25) * 0.55));
+              const opacity = Math.max(0.2, Math.min(1, 1 - (absOffset - 0.2) * 0.45));
               // Z-Index
               const zIndex = Math.round(100 - absOffset * 15);
               const isClosest = absOffset < 0.5;
@@ -366,22 +356,22 @@ const RotationalFeaturesSection: React.FC = () => {
               return (
                 <div
                   key={feat.number}
-                  onClick={() => scrollToCard(i)}
+                  onClick={() => setActiveIndex(i)}
                   style={{
                     transform: `translate3d(${translateX}px, 0, ${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`,
                     opacity,
                     zIndex,
-                    transition: 'transform 0.08s linear, opacity 0.08s linear, box-shadow 0.3s ease',
+                    transition: 'transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.85s ease, box-shadow 0.4s ease',
                   }}
-                  className={`absolute w-[86vw] max-w-[330px] sm:max-w-[380px] md:max-w-[420px] h-[340px] sm:h-[380px] md:h-[410px] p-6 sm:p-8 md:p-9 rounded-3xl bg-white border-2 flex flex-col justify-between cursor-pointer select-none ${
+                  className={`absolute w-[86vw] max-w-[340px] sm:max-w-[390px] md:max-w-[430px] h-[390px] sm:h-[420px] md:h-[440px] p-6 sm:p-7 md:p-8 rounded-[24px] bg-white border-2 flex flex-col justify-between cursor-pointer select-none ${
                     isClosest
-                      ? 'border-[#393df0] shadow-[0_25px_60px_rgba(57,61,240,0.18)] ring-4 ring-[#393df0]/10'
-                      : 'border-slate-200/90 shadow-xl hover:border-slate-300'
+                      ? 'border-white shadow-[0_25px_60px_rgba(0,0,0,0.35)] ring-4 ring-white/20'
+                      : 'border-white/30 shadow-2xl opacity-90 hover:opacity-100'
                   }`}
                 >
-                  {/* Card Header: Icon & Feature Number */}
+                  {/* Card Header: Icon on left, category badge on right (Feature 01 label removed) */}
                   <div>
-                    <div className="flex items-center justify-between mb-4 sm:mb-5">
+                    <div className="flex items-center justify-between mb-3.5 sm:mb-4">
                       <div
                         className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center font-bold transition-transform duration-300 shadow-sm"
                         style={{
@@ -391,8 +381,8 @@ const RotationalFeaturesSection: React.FC = () => {
                       >
                         <feat.icon className="w-6 h-6 sm:w-7 sm:h-7" />
                       </div>
-                      <span className="font-mono font-black text-xs sm:text-sm text-[#393df0] bg-[#393df0]/10 px-3 py-1 rounded-full">
-                        Feature {feat.number}
+                      <span className="font-semibold text-xs sm:text-sm text-slate-500 font-anek-latin bg-slate-100 px-3 py-1 rounded-full">
+                        {feat.badge}
                       </span>
                     </div>
 
@@ -406,7 +396,7 @@ const RotationalFeaturesSection: React.FC = () => {
 
                     {/* Tagline */}
                     <p
-                      className="font-bold text-sm sm:text-base text-slate-800 mt-2 font-anek-latin"
+                      className="font-bold text-sm sm:text-base mt-1.5 font-anek-latin"
                       style={{
                         fontFamily: "'Anek Latin', 'AnekLatin', sans-serif",
                         color: feat.accentColor,
@@ -417,17 +407,32 @@ const RotationalFeaturesSection: React.FC = () => {
 
                     {/* Description */}
                     <p
-                      className="text-xs sm:text-sm text-slate-600 mt-2.5 leading-relaxed font-anek-latin line-clamp-3 sm:line-clamp-none"
+                      className="text-xs sm:text-sm text-slate-600 mt-2.5 leading-relaxed font-anek-latin"
                       style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
                     >
                       {feat.description}
                     </p>
                   </div>
 
-                  {/* Card Footer: Category Badge & Index Indicator */}
-                  <div className="pt-3 sm:pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400 font-medium font-anek-latin">
-                    <span>{feat.badge}</span>
-                    <span className="font-mono text-[#393df0] font-bold">
+                  {/* Highlights pills that fill the entire card nicely */}
+                  <div className="pt-3 border-t border-slate-100 flex flex-wrap gap-1.5 sm:gap-2">
+                    {feat.highlights.map((h, hIdx) => (
+                      <span
+                        key={hIdx}
+                        className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-50 text-slate-700 border border-slate-200/80 font-anek-latin"
+                      >
+                        <span
+                          className="w-1.5 h-1.5 rounded-full"
+                          style={{ backgroundColor: feat.accentColor }}
+                        />
+                        {h}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Card Footer: Step Indicator */}
+                  <div className="pt-2 flex items-center justify-end text-xs text-slate-400 font-mono font-bold">
+                    <span style={{ color: feat.accentColor }}>
                       {feat.number} / 09
                     </span>
                   </div>
@@ -437,7 +442,7 @@ const RotationalFeaturesSection: React.FC = () => {
           </div>
         </div>
 
-        </div>
+      </div>
     </section>
   );
 };
@@ -823,7 +828,7 @@ export const LandingPage: React.FC = () => {
       {/* =========================================================================
           FAQS SECTION — BLUE BACKGROUND WITH 10 ACCORDION CARDS
       ========================================================================= */}
-      <section id="faq" className="relative z-20 -mt-24 sm:-mt-32 pt-6 sm:pt-8 pb-24 sm:pb-32 bg-studio-blue text-white">
+      <section id="faq" className="py-20 sm:py-28 bg-studio-blue text-white relative">
         {/* Ambient background glow orbs */}
         <div className="absolute top-10 left-10 w-96 h-96 bg-white/5 rounded-full blur-[140px] pointer-events-none" />
         <div className="absolute bottom-10 right-10 w-[500px] h-[500px] bg-indigo-400/10 rounded-full blur-[160px] pointer-events-none" />
