@@ -28,22 +28,43 @@ import {
 
 import { HelpFeedbackModal } from '../support/HelpFeedbackModal';
 
-const ABOUT_PARAGRAPHS = [
-  "Managing a fleet means keeping track of hundreds of moving parts — vehicles, drivers, maintenance, repairs, documents, expenses, and daily operations.",
-  "SERVIQ brings them together in one connected platform.",
-  "From the moment a vehicle joins your fleet to every service, repair, and mile that follows, SERVIQ gives your team a clear view of what is happening and what needs attention.",
-  "Whether you're an organization admin, fleet manager, or driver, SERVIQ provides the right tools for the job — helping teams stay organized, respond faster, and keep vehicles ready for the road."
+const ABOUT_STEPS = [
+  {
+    number: '01',
+    label: 'Fleet Operations',
+    tagline: 'Moving Parts',
+    paragraph:
+      'Managing a fleet means keeping track of hundreds of moving parts — vehicles, drivers, maintenance, repairs, documents, expenses, and daily operations.',
+  },
+  {
+    number: '02',
+    label: 'Connected Engine',
+    tagline: 'Centralized Hub',
+    paragraph: 'SERVIQ brings them together in one connected platform.',
+  },
+  {
+    number: '03',
+    label: 'Asset Lifecycle',
+    tagline: 'Every Mile & Service',
+    paragraph:
+      'From the moment a vehicle joins your fleet to every service, repair, and mile that follows, SERVIQ gives your team a clear view of what is happening and what needs attention.',
+  },
+  {
+    number: '04',
+    label: 'Role Synergy',
+    tagline: 'Road Readiness',
+    paragraph:
+      "Whether you're an organization admin, fleet manager, or driver, SERVIQ provides the right tools for the job — helping teams stay organized, respond faster, and keep vehicles ready for the road.",
+  },
 ];
 
 const ABOUT_HIGHLIGHT = "One platform. Every vehicle. Complete visibility.";
 
-const ScrollWordReveal: React.FC = () => {
+const AboutInteractiveStage: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [activeLines, setActiveLines] = useState(0);
+  const [activeStep, setActiveStep] = useState(0);
+  const [highlightUnlocked, setHighlightUnlocked] = useState(false);
   const rafId = useRef<number | null>(null);
-
-  // Total lines: 4 content paragraphs + 1 highlight badge
-  const totalLines = ABOUT_PARAGRAPHS.length + 1;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,10 +78,15 @@ const ScrollWordReveal: React.FC = () => {
 
         // When container top reaches 0 (pins in viewport), scrolled starts at 0
         const scrolled = -rect.top;
-        // Each scroll step reveals the next line across 85% of track
-        const progress = Math.max(0, Math.min(1, scrolled / (totalScrollable * 0.85)));
-        const currentLine = Math.floor(progress * (totalLines + 1));
-        setActiveLines((prev) => (prev !== currentLine ? currentLine : prev));
+        const progress = Math.max(0, Math.min(1, scrolled / totalScrollable));
+
+        // 4 active steps distributed over 0.0 to 0.85
+        const stepProgress = Math.max(0, Math.min(1, progress / 0.85));
+        const calculatedStep = Math.min(3, Math.floor(stepProgress * 4));
+        setActiveStep(calculatedStep);
+
+        // Highlight unlocks towards the bottom
+        setHighlightUnlocked(progress > 0.75);
       });
     };
 
@@ -73,65 +99,322 @@ const ScrollWordReveal: React.FC = () => {
       window.removeEventListener('resize', handleScroll);
       if (rafId.current) cancelAnimationFrame(rafId.current);
     };
-  }, [totalLines]);
+  }, []);
 
   return (
-    <div ref={containerRef} className="relative bg-white min-h-[220vh] sm:min-h-[260vh] w-full">
-      <div className="sticky top-0 min-h-screen bg-white flex flex-col items-center justify-center px-6 sm:px-10 max-w-4xl lg:max-w-5xl mx-auto select-none w-full py-12">
+    <div ref={containerRef} className="relative bg-white min-h-[280vh] sm:min-h-[320vh] w-full">
+      {/* Pinned Viewport Container */}
+      <div className="sticky top-0 min-h-screen bg-white flex flex-col justify-center px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full py-8 sm:py-12 select-none">
         
-        {/* Section Kicker Badge */}
-        <div className="flex items-center gap-2 mb-4 sm:mb-6 pointer-events-auto">
-          <div className="w-2.5 h-2.5 rounded-full bg-[#2335f2] animate-pulse" />
-          <span
-            className="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-[#2335f2] font-anek-latin"
+        {/* Top Header / Kicker */}
+        <div className="mb-6 sm:mb-8">
+          <div className="flex items-center gap-2 mb-2 sm:mb-3">
+            <div className="w-2.5 h-2.5 rounded-full bg-[#2335f2] animate-pulse" />
+            <span
+              className="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-[#2335f2] font-anek-latin"
+              style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+            >
+              About SERVIQ
+            </span>
+          </div>
+
+          <h2
+            className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 font-anek-latin tracking-tight leading-[1.12]"
             style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
           >
-            About SERVIQ
-          </span>
+            Everything Your Fleet Needs. In One Place.
+          </h2>
         </div>
 
-        {/* Section Heading in Anek Latin */}
-        <h2
-          className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 font-anek-latin text-center tracking-tight leading-[1.15] mb-6 sm:mb-10 max-w-3xl pointer-events-auto"
-          style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-        >
-          Everything Your Fleet Needs. In One Place.
-        </h2>
+        {/* Dual-Column Interactive Split Stage */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          
+          {/* LEFT COLUMN: Narrative Progress & Timeline (Col span 6) */}
+          <div className="lg:col-span-6 space-y-3 sm:space-y-4">
+            {ABOUT_STEPS.map((step, idx) => {
+              const isActive = activeStep === idx;
+              return (
+                <div
+                  key={step.number}
+                  onClick={() => setActiveStep(idx)}
+                  className={`group relative p-4 sm:p-5 rounded-2xl border-2 transition-all duration-300 cursor-pointer text-left ${
+                    isActive
+                      ? 'bg-blue-50/50 border-[#2335f2] shadow-lg shadow-blue-500/10 -translate-y-0.5'
+                      : 'bg-slate-50/50 border-slate-100 hover:border-slate-200 hover:bg-slate-50'
+                  }`}
+                >
+                  <div className="flex items-start gap-3.5 sm:gap-4">
+                    {/* Step Number Badge */}
+                    <div
+                      className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center font-mono font-black text-xs sm:text-sm shrink-0 transition-all ${
+                        isActive
+                          ? 'bg-[#2335f2] text-white shadow-md shadow-blue-500/30 scale-105'
+                          : 'bg-slate-200/80 text-slate-500 group-hover:bg-slate-300'
+                      }`}
+                    >
+                      {step.number}
+                    </div>
 
-        {/* Manifesto Content: Line-by-Line Reveal with Anek Latin & Generous Spacing */}
-        <div
-          className="w-full max-w-3xl text-center font-anek-latin pointer-events-auto space-y-4 sm:space-y-5"
-          style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-        >
-          {ABOUT_PARAGRAPHS.map((para, idx) => {
-            const isRevealed = idx < activeLines;
-            return (
-              <p
-                key={idx}
-                className={`text-base sm:text-lg md:text-xl lg:text-[22px] leading-relaxed sm:leading-[1.65] tracking-wide transition-all duration-300 ease-out select-none ${
-                  isRevealed
-                    ? idx === 1
-                      ? 'text-[#2335f2] font-black opacity-100 transform translate-y-0'
-                      : 'text-slate-950 font-bold opacity-100 transform translate-y-0'
-                    : 'text-slate-300 font-semibold opacity-30 transform translate-y-1'
-                }`}
-              >
-                {para}
-              </p>
-            );
-          })}
+                    <div className="flex-1">
+                      {/* Step Tagline / Label */}
+                      <div className="flex items-center justify-between">
+                        <span
+                          className={`text-xs font-bold uppercase tracking-wider font-anek-latin ${
+                            isActive ? 'text-[#2335f2]' : 'text-slate-400'
+                          }`}
+                          style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                        >
+                          {step.tagline}
+                        </span>
+                        {isActive && (
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#2335f2] animate-ping" />
+                        )}
+                      </div>
+
+                      {/* Content Paragraph in Anek Latin */}
+                      <p
+                        className={`mt-1 font-anek-latin leading-relaxed transition-colors ${
+                          isActive
+                            ? 'text-slate-900 font-bold text-sm sm:text-base md:text-lg'
+                            : 'text-slate-500 font-medium text-xs sm:text-sm'
+                        }`}
+                        style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                      >
+                        {step.paragraph}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* RIGHT COLUMN: Dynamic Morphing Visual Stage (Col span 6) */}
+          <div className="lg:col-span-6 w-full">
+            <div className="relative bg-gradient-to-br from-slate-50 via-white to-blue-50/30 border-2 border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xl shadow-slate-200/50 min-h-[380px] sm:min-h-[440px] flex flex-col justify-between overflow-hidden">
+              
+              {/* Background ambient lighting */}
+              <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
+
+              {/* Stage Top Bar */}
+              <div className="relative z-10 flex items-center justify-between pb-4 border-b border-slate-100 text-xs">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-[#2335f2] animate-pulse" />
+                  <span className="font-mono font-bold uppercase tracking-wider text-slate-600 text-[11px] sm:text-xs">
+                    {activeStep === 0 && 'Stage 01 • Operations Ecosystem'}
+                    {activeStep === 1 && 'Stage 02 • Central Connected Nexus'}
+                    {activeStep === 2 && 'Stage 03 • Complete Lifecycle Monitor'}
+                    {activeStep === 3 && 'Stage 04 • Multi-Role Synergy'}
+                  </span>
+                </div>
+                <div className="text-[10px] sm:text-[11px] font-mono font-bold text-[#2335f2] bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-100">
+                  Step {activeStep + 1} / 4
+                </div>
+              </div>
+
+              {/* Dynamic Canvas Area */}
+              <div className="relative z-10 py-6 sm:py-8 flex-1 flex items-center justify-center">
+                
+                {/* -------------------------------------------------------------
+                    STAGE 01: Scattered Moving Parts (Chips drifting)
+                ------------------------------------------------------------- */}
+                {activeStep === 0 && (
+                  <div className="w-full space-y-3 animate-in fade-in zoom-in-95 duration-400">
+                    <p className="text-xs text-slate-400 font-mono text-center mb-4 uppercase tracking-widest">
+                      Moving Parts in Daily Fleet Operations
+                    </p>
+                    <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5">
+                      <span className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-800 text-xs font-bold shadow-sm animate-float-slow">
+                        <Truck className="w-3.5 h-3.5 text-[#2335f2]" /> 48 Vehicles
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-800 text-xs font-bold shadow-sm animate-float-reverse">
+                        <UserCheck className="w-3.5 h-3.5 text-[#2335f2]" /> 36 Drivers
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-800 text-xs font-bold shadow-sm animate-float-delayed">
+                        <Wrench className="w-3.5 h-3.5 text-[#2335f2]" /> Maintenance Due
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-800 text-xs font-bold shadow-sm animate-float-slow">
+                        <AlertTriangle className="w-3.5 h-3.5 text-[#2335f2]" /> Active Repairs
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-800 text-xs font-bold shadow-sm animate-float-reverse">
+                        <FileText className="w-3.5 h-3.5 text-[#2335f2]" /> Permits & RC
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-800 text-xs font-bold shadow-sm animate-float-delayed">
+                        <Receipt className="w-3.5 h-3.5 text-[#2335f2]" /> Parts & Invoices
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-slate-800 text-xs font-bold shadow-sm animate-float-slow">
+                        <Layers className="w-3.5 h-3.5 text-[#2335f2]" /> Daily Dispatches
+                      </span>
+                    </div>
+
+                    <div className="mt-5 p-3 rounded-xl bg-amber-50/80 border border-amber-200/60 text-amber-900 text-xs text-center font-medium">
+                      Scattered systems make it difficult to know what needs attention.
+                    </div>
+                  </div>
+                )}
+
+                {/* -------------------------------------------------------------
+                    STAGE 02: SERVIQ Connected Core (Nexus with radiating nodes)
+                ------------------------------------------------------------- */}
+                {activeStep === 1 && (
+                  <div className="w-full flex flex-col items-center justify-center animate-in fade-in zoom-in-95 duration-400">
+                    <div className="relative flex items-center justify-center my-3">
+                      {/* Pulse rings */}
+                      <div className="absolute w-28 h-28 rounded-full border-2 border-[#2335f2]/20 animate-ping pointer-events-none" />
+                      <div className="absolute w-40 h-40 rounded-full border border-blue-200/50 pointer-events-none" />
+                      
+                      {/* Central SERVIQ Nexus Shield */}
+                      <div className="relative z-10 w-20 h-20 rounded-2xl bg-[#2335f2] text-white flex flex-col items-center justify-center shadow-xl shadow-blue-500/30 ring-4 ring-blue-100">
+                        <img src="/logo-white.png" alt="SERVIQ" className="w-8 h-8 object-contain" />
+                        <span className="text-[9px] font-black uppercase tracking-widest mt-0.5">SERVIQ</span>
+                      </div>
+                    </div>
+
+                    {/* Orbiting Channel Badges */}
+                    <div className="grid grid-cols-3 gap-2 sm:gap-2.5 w-full max-w-sm mt-4">
+                      <div className="p-2 rounded-lg bg-white border border-slate-200 text-center shadow-xs">
+                        <span className="text-[11px] font-bold text-slate-800 block font-anek-latin">Vehicles</span>
+                        <span className="text-[9px] text-[#2335f2] font-semibold">Synced</span>
+                      </div>
+                      <div className="p-2 rounded-lg bg-white border border-slate-200 text-center shadow-xs">
+                        <span className="text-[11px] font-bold text-slate-800 block font-anek-latin">Drivers</span>
+                        <span className="text-[9px] text-[#2335f2] font-semibold">Synced</span>
+                      </div>
+                      <div className="p-2 rounded-lg bg-white border border-slate-200 text-center shadow-xs">
+                        <span className="text-[11px] font-bold text-slate-800 block font-anek-latin">Service</span>
+                        <span className="text-[9px] text-[#2335f2] font-semibold">Synced</span>
+                      </div>
+                      <div className="p-2 rounded-lg bg-white border border-slate-200 text-center shadow-xs">
+                        <span className="text-[11px] font-bold text-slate-800 block font-anek-latin">Repairs</span>
+                        <span className="text-[9px] text-[#2335f2] font-semibold">Synced</span>
+                      </div>
+                      <div className="p-2 rounded-lg bg-white border border-slate-200 text-center shadow-xs">
+                        <span className="text-[11px] font-bold text-slate-800 block font-anek-latin">Documents</span>
+                        <span className="text-[9px] text-[#2335f2] font-semibold">Synced</span>
+                      </div>
+                      <div className="p-2 rounded-lg bg-white border border-slate-200 text-center shadow-xs">
+                        <span className="text-[11px] font-bold text-slate-800 block font-anek-latin">Expenses</span>
+                        <span className="text-[9px] text-[#2335f2] font-semibold">Synced</span>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 p-2.5 rounded-xl bg-blue-50 border border-blue-100 text-[#2335f2] text-xs font-bold text-center w-full">
+                      ✓ Connected into one centralized operational hub
+                    </div>
+                  </div>
+                )}
+
+                {/* -------------------------------------------------------------
+                    STAGE 03: Complete Lifecycle Monitor (Live Asset Journey)
+                ------------------------------------------------------------- */}
+                {activeStep === 2 && (
+                  <div className="w-full space-y-3.5 animate-in fade-in zoom-in-95 duration-400">
+                    {/* Asset Card */}
+                    <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#2335f2] flex items-center justify-center font-bold">
+                          <Truck className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <div className="font-mono font-black text-sm text-slate-900">TN 01 AB 1234</div>
+                          <div className="text-[11px] text-slate-500 font-medium">Fleet Asset • Active Route</div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-mono font-bold text-sm text-[#2335f2]">45,280 km</div>
+                        <div className="text-[10px] text-emerald-600 font-bold">● Operational</div>
+                      </div>
+                    </div>
+
+                    {/* Progress Health Meter */}
+                    <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
+                      <div className="flex items-center justify-between text-xs font-bold">
+                        <span className="text-slate-700">Vehicle Health Score</span>
+                        <span className="text-emerald-600">94% Optimal</span>
+                      </div>
+                      <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+                        <div className="h-full bg-gradient-to-r from-blue-500 to-emerald-500 w-[94%] rounded-full" />
+                      </div>
+                    </div>
+
+                    {/* Checkpoints */}
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center gap-2">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                        <span className="text-slate-700 font-medium">Servicing Logged</span>
+                      </div>
+                      <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-[#2335f2] shrink-0" />
+                        <span className="text-slate-700 font-medium">Next: 1,420 km</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* -------------------------------------------------------------
+                    STAGE 04: Tri-Role Synergy (Admin, Manager, Driver)
+                ------------------------------------------------------------- */}
+                {activeStep === 3 && (
+                  <div className="w-full space-y-2.5 animate-in fade-in zoom-in-95 duration-400">
+                    <div className="p-3.5 rounded-xl bg-white border border-slate-200 shadow-sm flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-lg bg-blue-100 text-[#2335f2] flex items-center justify-center font-bold shrink-0">
+                        <ShieldCheck className="w-5 h-5" />
+                      </div>
+                      <div className="text-left">
+                        <div className="text-xs font-bold text-slate-900 font-anek-latin">Organization Admin</div>
+                        <div className="text-[11px] text-slate-500">Fleet governance, budgets & compliance oversight</div>
+                      </div>
+                    </div>
+
+                    <div className="p-3.5 rounded-xl bg-white border border-slate-200 shadow-sm flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-lg bg-blue-100 text-[#2335f2] flex items-center justify-center font-bold shrink-0">
+                        <Gauge className="w-5 h-5" />
+                      </div>
+                      <div className="text-left">
+                        <div className="text-xs font-bold text-slate-900 font-anek-latin">Fleet & Maintenance Manager</div>
+                        <div className="text-[11px] text-slate-500">Service scheduling, repair approvals & vehicle readiness</div>
+                      </div>
+                    </div>
+
+                    <div className="p-3.5 rounded-xl bg-white border border-slate-200 shadow-sm flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-lg bg-blue-100 text-[#2335f2] flex items-center justify-center font-bold shrink-0">
+                        <Smartphone className="w-5 h-5" />
+                      </div>
+                      <div className="text-left">
+                        <div className="text-xs font-bold text-slate-900 font-anek-latin">Commercial Driver</div>
+                        <div className="text-[11px] text-slate-500">Mobile defect reports, digital glovebox & status alerts</div>
+                      </div>
+                    </div>
+
+                    <div className="p-2.5 rounded-xl bg-blue-50 border border-blue-100 text-[#2335f2] text-xs font-bold text-center w-full">
+                      ✓ Synchronized communication between office and road
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Stage Bottom Footer */}
+              <div className="relative z-10 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+                <span className="font-mono text-[10px]">SERVIQ OPERATIONS STAGE</span>
+                <span className="font-sans text-[11px] font-semibold text-[#2335f2]">
+                  {activeStep === 3 ? 'Ready for the Road' : 'Scroll to explore'}
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Small Highlight Badge */}
-        <div
-          className={`mt-8 sm:mt-10 transition-all duration-500 pointer-events-auto ${
-            activeLines >= ABOUT_PARAGRAPHS.length + 1
-              ? 'opacity-100 transform translate-y-0 scale-100'
-              : 'opacity-20 transform translate-y-2 scale-95'
-          }`}
-        >
-          <div className="inline-flex items-center gap-2.5 px-5 sm:px-7 py-2.5 sm:py-3 rounded-full bg-blue-50 border-2 border-[#2335f2]/25 shadow-sm">
-            <div className="w-2 h-2 rounded-full bg-[#2335f2] animate-pulse" />
+        {/* Bottom Highlight Badge: One platform. Every vehicle. Complete visibility. */}
+        <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-slate-100">
+          <div
+            className={`inline-flex items-center gap-2.5 px-6 py-3 rounded-full bg-blue-50 border-2 transition-all duration-500 ${
+              highlightUnlocked
+                ? 'border-[#2335f2] shadow-md shadow-blue-500/20 scale-105'
+                : 'border-[#2335f2]/25'
+            }`}
+          >
+            <div className="w-2.5 h-2.5 rounded-full bg-[#2335f2] animate-pulse" />
             <span
               className="font-anek-latin font-black text-xs sm:text-sm md:text-base text-[#2335f2] tracking-wider uppercase"
               style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
@@ -139,22 +422,16 @@ const ScrollWordReveal: React.FC = () => {
               {ABOUT_HIGHLIGHT}
             </span>
           </div>
-        </div>
 
-        {/* Scroll down indicator */}
-        <div
-          className={`mt-6 sm:mt-8 transition-opacity duration-300 pointer-events-auto ${
-            activeLines >= totalLines ? 'opacity-0' : 'opacity-70'
-          }`}
-        >
           <span
             className="text-xs uppercase tracking-widest text-slate-400 font-bold flex items-center gap-1.5 font-anek-latin"
             style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
           >
-            Scroll down to reveal
+            Scroll down to continue
             <ChevronDown className="w-3.5 h-3.5 animate-bounce text-[#2335f2]" />
           </span>
         </div>
+
       </div>
     </div>
   );
@@ -529,8 +806,8 @@ export const LandingPage: React.FC = () => {
           PAGE 2 (EVEN): ABOUT US — SCROLL-DRIVEN WORD-BY-WORD MANIFESTO & PLATFORM
       ========================================================================= */}
       <section id="about" className="relative z-30 bg-white text-slate-900 w-full shadow-2xl">
-        {/* Sticky Word-by-Word Scroll Reveal Manifesto (matches super.money reference) */}
-        <ScrollWordReveal />
+        {/* Sticky Interactive Split Stage */}
+        <AboutInteractiveStage />
       </section>
 
       {/* =========================================================================
