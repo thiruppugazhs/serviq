@@ -24,8 +24,6 @@ import {
   QrCode,
   Layers,
   ChevronDown,
-  ChevronLeft,
-  ChevronRight,
   Eye,
   MapPin,
   PhoneCall,
@@ -108,8 +106,7 @@ const WorkflowSection: React.FC = () => {
       {/* Main Workflow Content Area */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 pb-20 sm:pb-28">
         {/* Eyebrow Label in SERVIQ Brand Blue with Pulsing Beacon */}
-        <div className="flex items-center justify-center gap-2 mb-3 sm:mb-4">
-          <div className="w-2.5 h-2.5 rounded-full bg-[#2335f2] animate-pulse" />
+        <div className="text-center mb-3 sm:mb-4">
           <span
             className="text-xs sm:text-sm font-extrabold uppercase tracking-[0.22em] text-[#2335f2] font-anek-latin"
             style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
@@ -329,34 +326,17 @@ const RotationalFeaturesSection: React.FC = () => {
   const currentIndex = Math.round(scrollProgress);
 
   return (
-    <section id="features" ref={containerRef} className="relative w-full bg-white text-slate-900 min-h-[420vh]">
-      <div className="sticky top-0 h-screen w-full flex flex-col justify-between items-center overflow-hidden py-6 sm:py-8 md:py-10 px-4 sm:px-6 select-none bg-white">
+    <section id="features" ref={containerRef} className="relative w-full bg-studio-blue text-white min-h-[420vh]">
+      <div className="sticky top-0 h-screen w-full flex flex-col justify-between items-center overflow-hidden py-8 sm:py-10 md:py-12 px-4 sm:px-6 select-none bg-studio-blue">
         
         {/* Top Header */}
-        <div className="text-center max-w-3xl mx-auto pt-2 sm:pt-4 z-20 pointer-events-auto">
-          {/* Section Kicker */}
-          <div className="inline-flex items-center gap-2 mb-2 sm:mb-3">
-            <div className="w-2.5 h-2.5 rounded-full bg-[#2335f2] animate-pulse" />
-            <span
-              className="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-[#2335f2] font-anek-latin"
-              style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-            >
-              Features
-            </span>
-          </div>
-
+        <div className="text-center max-w-4xl mx-auto pt-4 sm:pt-6 z-20 pointer-events-auto">
           <h2
-            className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 font-anek-latin tracking-tight leading-tight"
+            className="text-2xl sm:text-4xl md:text-5xl font-black text-white font-anek-latin tracking-tight leading-tight drop-shadow-sm"
             style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
           >
             Everything You Need to Keep Moving.
           </h2>
-          <p
-            className="text-xs sm:text-sm md:text-base text-slate-600 mt-2 sm:mt-3 leading-relaxed font-anek-latin max-w-2xl mx-auto hidden sm:block"
-            style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-          >
-            From everyday fleet operations to unexpected repairs, SERVIQ keeps your vehicles, people, and maintenance connected.
-          </p>
         </div>
 
         {/* 3D Rotational Carousel Stage */}
@@ -457,58 +437,7 @@ const RotationalFeaturesSection: React.FC = () => {
           </div>
         </div>
 
-        {/* Bottom Navigation & Controls */}
-        <div className="w-full max-w-2xl mx-auto flex flex-col items-center gap-2.5 sm:gap-3.5 z-20 pointer-events-auto pb-2">
-          {/* Controls row: Prev Arrow, Dots, Next Arrow */}
-          <div className="flex items-center gap-3 sm:gap-6 bg-slate-50/95 backdrop-blur-md px-4 sm:px-6 py-2 sm:py-2.5 rounded-full border border-slate-200/80 shadow-sm">
-            <button
-              onClick={() => scrollToCard(Math.max(0, currentIndex - 1))}
-              disabled={currentIndex <= 0}
-              className="p-1.5 rounded-full hover:bg-white text-slate-700 disabled:opacity-30 disabled:hover:bg-transparent transition-all cursor-pointer"
-              aria-label="Previous Feature"
-            >
-              <ChevronLeft className="w-5 h-5 stroke-[2.5]" />
-            </button>
-
-            {/* 9 Indicator Pills */}
-            <div className="flex items-center gap-1.5">
-              {FEATURES_DATA.map((_, dotIdx) => {
-                const isActive = dotIdx === currentIndex;
-                return (
-                  <button
-                    key={dotIdx}
-                    onClick={() => scrollToCard(dotIdx)}
-                    className={`transition-all duration-300 rounded-full cursor-pointer ${
-                      isActive
-                        ? 'w-6 sm:w-7 h-2 sm:h-2.5 bg-[#393df0]'
-                        : 'w-2 sm:w-2.5 h-2 sm:h-2.5 bg-slate-300 hover:bg-slate-400'
-                    }`}
-                    aria-label={`Jump to feature ${dotIdx + 1}`}
-                  />
-                );
-              })}
-            </div>
-
-            <button
-              onClick={() => scrollToCard(Math.min(FEATURES_DATA.length - 1, currentIndex + 1))}
-              disabled={currentIndex >= FEATURES_DATA.length - 1}
-              className="p-1.5 rounded-full hover:bg-white text-slate-700 disabled:opacity-30 disabled:hover:bg-transparent transition-all cursor-pointer"
-              aria-label="Next Feature"
-            >
-              <ChevronRight className="w-5 h-5 stroke-[2.5]" />
-            </button>
-          </div>
-
-          {/* Hint text */}
-          <div className="text-center text-[11px] sm:text-xs text-slate-400 font-anek-latin font-medium flex items-center gap-2">
-            <span>Scroll down to rotate features</span>
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#393df0] animate-pulse" />
-            <span className="font-mono text-slate-500">
-              {String(currentIndex + 1).padStart(2, '0')} of 09
-            </span>
-          </div>
-        </div>
-
+        <div className="pb-4" />
       </div>
     </section>
   );
