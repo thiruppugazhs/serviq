@@ -658,100 +658,85 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* =========================================================================
-          VFX TRANSITION 2: Flowing Wave Curve with Shimmer Line (White to Blue)
-      ========================================================================= */}
-      <div className="relative w-full overflow-hidden leading-none bg-white">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-16 sm:h-24 text-[#393df0] fill-current animate-wave-flow">
-          <path d="M0,0 C300,90 800,90 1200,0 L1200,120 L0,120 Z"></path>
-        </svg>
-      </div>
-
-      {/* =========================================================================
           PAGE 3 (ODD): PROBLEM SECTION — BLUE BACKGROUND
       ========================================================================= */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-left bg-studio-blue relative">
-        <div className="max-w-3xl mb-14">
-          <h2 className="text-3xl sm:text-5xl font-black text-white font-['Outfit',sans-serif] leading-tight">
-            Fleet management shouldn't be this complicated.
-          </h2>
-          <p className="text-sm sm:text-base text-white/80 mt-4 leading-relaxed">
-            Managing vehicles through spreadsheets, paper records, phone calls, and scattered messages makes it difficult to know what needs attention.
-          </p>
-        </div>
+      <section className="w-full bg-studio-blue text-white relative">
+        <div className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-left">
+          <div className="max-w-3xl mb-14">
+            <h2 className="text-3xl sm:text-5xl font-black text-white font-['Outfit',sans-serif] leading-tight">
+              Fleet management shouldn't be this complicated.
+            </h2>
+            <p className="text-sm sm:text-base text-white/80 mt-4 leading-relaxed">
+              Managing vehicles through spreadsheets, paper records, phone calls, and scattered messages makes it difficult to know what needs attention.
+            </p>
+          </div>
 
-        {/* Square Cards with Hover Glow */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
-          <div className="aspect-square bg-white/10 border-2 border-white/20 p-6 flex flex-col justify-between square-card-blue">
-            <Clock className="w-8 h-8 text-white" />
-            <div>
-              <h3 className="font-bold text-base text-white font-['Outfit',sans-serif]">Missed maintenance schedules</h3>
-              <p className="text-xs text-white/70 mt-2 leading-relaxed">
-                Important servicing can easily be overlooked.
-              </p>
+          {/* Square Cards with Hover Glow */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+            <div className="aspect-square bg-white/10 border-2 border-white/20 p-6 flex flex-col justify-between square-card-blue">
+              <Clock className="w-8 h-8 text-white" />
+              <div>
+                <h3 className="font-bold text-base text-white font-['Outfit',sans-serif]">Missed maintenance schedules</h3>
+                <p className="text-xs text-white/70 mt-2 leading-relaxed">
+                  Important servicing can easily be overlooked.
+                </p>
+              </div>
+            </div>
+
+            <div className="aspect-square bg-white/10 border-2 border-white/20 p-6 flex flex-col justify-between square-card-blue">
+              <FileText className="w-8 h-8 text-white" />
+              <div>
+                <h3 className="font-bold text-base text-white font-['Outfit',sans-serif]">Scattered vehicle records</h3>
+                <p className="text-xs text-white/70 mt-2 leading-relaxed">
+                  Vehicle information is spread across multiple systems.
+                </p>
+              </div>
+            </div>
+
+            <div className="aspect-square bg-white/10 border-2 border-white/20 p-6 flex flex-col justify-between square-card-blue">
+              <AlertTriangle className="w-8 h-8 text-white" />
+              <div>
+                <h3 className="font-bold text-base text-white font-['Outfit',sans-serif]">Untracked repairs</h3>
+                <p className="text-xs text-white/70 mt-2 leading-relaxed">
+                  Issues can remain unresolved without proper tracking.
+                </p>
+              </div>
+            </div>
+
+            <div className="aspect-square bg-white/10 border-2 border-white/20 p-6 flex flex-col justify-between square-card-blue">
+              <Receipt className="w-8 h-8 text-white" />
+              <div>
+                <h3 className="font-bold text-base text-white font-['Outfit',sans-serif]">Rising maintenance costs</h3>
+                <p className="text-xs text-white/70 mt-2 leading-relaxed">
+                  Without centralized records, understanding expenses becomes difficult.
+                </p>
+              </div>
+            </div>
+
+            <div className="aspect-square bg-white/10 border-2 border-white/20 p-6 flex flex-col justify-between square-card-blue">
+              <ShieldCheck className="w-8 h-8 text-white" />
+              <div>
+                <h3 className="font-bold text-base text-white font-['Outfit',sans-serif]">Expired documents</h3>
+                <p className="text-xs text-white/70 mt-2 leading-relaxed">
+                  Important vehicle and driver documents can be missed.
+                </p>
+              </div>
             </div>
           </div>
 
-          <div className="aspect-square bg-white/10 border-2 border-white/20 p-6 flex flex-col justify-between square-card-blue">
-            <FileText className="w-8 h-8 text-white" />
-            <div>
-              <h3 className="font-bold text-base text-white font-['Outfit',sans-serif]">Scattered vehicle records</h3>
-              <p className="text-xs text-white/70 mt-2 leading-relaxed">
-                Vehicle information is spread across multiple systems.
-              </p>
-            </div>
+          <div className="mt-12 text-left">
+            <p className="text-lg font-extrabold text-white font-['Outfit',sans-serif]">
+              SERVIQ brings everything together.
+            </p>
           </div>
-
-          <div className="aspect-square bg-white/10 border-2 border-white/20 p-6 flex flex-col justify-between square-card-blue">
-            <AlertTriangle className="w-8 h-8 text-white" />
-            <div>
-              <h3 className="font-bold text-base text-white font-['Outfit',sans-serif]">Untracked repairs</h3>
-              <p className="text-xs text-white/70 mt-2 leading-relaxed">
-                Issues can remain unresolved without proper tracking.
-              </p>
-            </div>
-          </div>
-
-          <div className="aspect-square bg-white/10 border-2 border-white/20 p-6 flex flex-col justify-between square-card-blue">
-            <Receipt className="w-8 h-8 text-white" />
-            <div>
-              <h3 className="font-bold text-base text-white font-['Outfit',sans-serif]">Rising maintenance costs</h3>
-              <p className="text-xs text-white/70 mt-2 leading-relaxed">
-                Without centralized records, understanding expenses becomes difficult.
-              </p>
-            </div>
-          </div>
-
-          <div className="aspect-square bg-white/10 border-2 border-white/20 p-6 flex flex-col justify-between square-card-blue">
-            <ShieldCheck className="w-8 h-8 text-white" />
-            <div>
-              <h3 className="font-bold text-base text-white font-['Outfit',sans-serif]">Expired documents</h3>
-              <p className="text-xs text-white/70 mt-2 leading-relaxed">
-                Important vehicle and driver documents can be missed.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-12 text-left">
-          <p className="text-lg font-extrabold text-white font-['Outfit',sans-serif]">
-            SERVIQ brings everything together.
-          </p>
         </div>
       </section>
 
       {/* =========================================================================
-          VFX TRANSITION 3: Stepped Geometric Tooth Divider (Blue to White)
-      ========================================================================= */}
-      <div className="relative w-full overflow-hidden leading-none bg-studio-blue">
-        <svg viewBox="0 0 1200 60" preserveAspectRatio="none" className="relative block w-full h-12 sm:h-16 text-white fill-current">
-          <path d="M0,0 L480,0 L520,60 L680,60 L720,0 L1200,0 L1200,60 L0,60 Z"></path>
-        </svg>
-      </div>
-
-      {/* =========================================================================
           PAGE 4 (EVEN): FEATURES SECTION — WHITE BACKGROUND
       ========================================================================= */}
-      <section id="features" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-left bg-white text-slate-900">
+      <section id="features" className="w-full bg-white text-slate-900">
+        <div className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-left">
         <div className="max-w-3xl mb-14">
           <h2 className="text-3xl sm:text-5xl font-black text-slate-900 font-['Outfit',sans-serif]">
             Everything you need to manage your fleet.
@@ -856,22 +841,15 @@ export const LandingPage: React.FC = () => {
             </div>
           </div>
         </div>
-      </section>
-
-      {/* =========================================================================
-          VFX TRANSITION 4: Asymmetric Triangle Peak with Drop Shadow (White to Blue)
-      ========================================================================= */}
-      <div className="relative w-full overflow-hidden leading-none bg-white">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-16 sm:h-24 text-[#393df0] fill-current">
-          <path d="M0,0 L600,120 L1200,0 L1200,120 L0,120 Z"></path>
-        </svg>
       </div>
+    </section>
 
       {/* =========================================================================
           PAGE 5 (ODD): DASHBOARD SECTION — BLUE BACKGROUND
       ========================================================================= */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-left bg-studio-blue">
-        <div className="bg-white/10 border-2 border-white/20 p-8 sm:p-14 flex flex-col lg:flex-row items-center justify-between gap-12 square-card-blue">
+      <section className="w-full bg-studio-blue text-white">
+        <div className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-left">
+          <div className="bg-white/10 border-2 border-white/20 p-8 sm:p-14 flex flex-col lg:flex-row items-center justify-between gap-12 square-card-blue">
           <div className="max-w-xl">
             <h2 className="text-3xl sm:text-5xl font-black text-white font-['Outfit',sans-serif] leading-tight">
               Your entire fleet at a glance.
@@ -954,21 +932,14 @@ export const LandingPage: React.FC = () => {
             </div>
           </div>
         </div>
-      </section>
-
-      {/* =========================================================================
-          VFX TRANSITION 5: Sharp Inverted Chevron (Blue to White)
-      ========================================================================= */}
-      <div className="relative w-full overflow-hidden leading-none bg-studio-blue">
-        <svg viewBox="0 0 1200 60" preserveAspectRatio="none" className="relative block w-full h-12 sm:h-16 text-white fill-current">
-          <path d="M0,0 L600,60 L1200,0 L1200,60 L0,60 Z"></path>
-        </svg>
       </div>
+    </section>
 
       {/* =========================================================================
           PAGE 6 (EVEN): HOW IT WORKS — WHITE BACKGROUND
       ========================================================================= */}
-      <section id="how-it-works" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-left bg-white text-slate-900">
+      <section id="how-it-works" className="w-full bg-white text-slate-900">
+        <div className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-left">
         <div className="max-w-3xl mb-14">
           <h2 className="text-3xl sm:text-5xl font-black text-slate-900 font-['Outfit',sans-serif]">
             Get your fleet up and running in a few simple steps.
@@ -1037,21 +1008,14 @@ export const LandingPage: React.FC = () => {
             </div>
           </div>
         </div>
-      </section>
-
-      {/* =========================================================================
-          VFX TRANSITION 6: Convex Geometric Arch (White to Blue)
-      ========================================================================= */}
-      <div className="relative w-full overflow-hidden leading-none bg-white">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-16 sm:h-24 text-[#393df0] fill-current">
-          <path d="M0,0 Q600,120 1200,0 L1200,120 L0,120 Z"></path>
-        </svg>
       </div>
+    </section>
 
       {/* =========================================================================
           PAGE 7 (ODD): BUILT FOR EVERY ROLE — BLUE BACKGROUND
       ========================================================================= */}
-      <section id="roles" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-left bg-studio-blue">
+      <section id="roles" className="w-full bg-studio-blue text-white">
+        <div className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-left">
         <div className="max-w-3xl mb-14">
           <p className="text-xs font-bold uppercase tracking-widest text-white/70">One platform. Different experiences.</p>
           <h2 className="text-3xl sm:text-5xl font-black text-white font-['Outfit',sans-serif] mt-1">
@@ -1129,21 +1093,14 @@ export const LandingPage: React.FC = () => {
             </Link>
           </div>
         </div>
-      </section>
-
-      {/* =========================================================================
-          VFX TRANSITION 7: Reversed Diagonal Cut (Blue to White)
-      ========================================================================= */}
-      <div className="relative w-full overflow-hidden leading-none bg-studio-blue">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-16 sm:h-24 text-white fill-current">
-          <path d="M0 0L1200 120V120H0V0Z"></path>
-        </svg>
       </div>
+    </section>
 
       {/* =========================================================================
           PAGE 8 (EVEN): DRIVER APP SECTION — WHITE BACKGROUND
       ========================================================================= */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-left bg-white text-slate-900">
+      <section className="w-full bg-white text-slate-900">
+        <div className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-left">
         <div className="bg-slate-50 border-2 border-slate-200 p-8 sm:p-14 flex flex-col md:flex-row items-center justify-between gap-12 square-card-white">
           <div className="max-w-xl">
             <h2 className="text-3xl sm:text-5xl font-black text-slate-900 font-['Outfit',sans-serif]">
@@ -1201,21 +1158,14 @@ export const LandingPage: React.FC = () => {
             </div>
           </div>
         </div>
-      </section>
-
-      {/* =========================================================================
-          VFX TRANSITION 8: Multi-Layer Wave Flow (White to Blue)
-      ========================================================================= */}
-      <div className="relative w-full overflow-hidden leading-none bg-white">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-16 sm:h-24 text-[#393df0] fill-current animate-wave-flow">
-          <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V0C69.24,40 148.67,69.5 229,74.5A490,490,0,0,0,321.39,56.44Z"></path>
-        </svg>
       </div>
+    </section>
 
       {/* =========================================================================
           PAGE 9 (ODD): MAINTENANCE SECTION — BLUE BACKGROUND
       ========================================================================= */}
-      <section id="maintenance-overview" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-left bg-studio-blue">
+      <section id="maintenance-overview" className="w-full bg-studio-blue text-white">
+        <div className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-left">
         <div className="max-w-3xl mb-14">
           <h2 className="text-3xl sm:text-5xl font-black text-white font-['Outfit',sans-serif]">
             Stay ahead of maintenance.
@@ -1256,7 +1206,8 @@ export const LandingPage: React.FC = () => {
         <div className="mt-10 p-6 bg-white/10 border-2 border-white/20 text-center text-sm font-bold text-white">
           Result: Fewer missed services. Better records. Less unexpected downtime.
         </div>
-      </section>
+      </div>
+    </section>
 
       {/* =========================================================================
           FAQS SECTION — BLUE BACKGROUND WITH 10 ACCORDION CARDS
