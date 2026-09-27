@@ -26,136 +26,150 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
+  Eye,
+  MapPin,
+  PhoneCall,
+  Route,
+  Users,
 } from 'lucide-react';
 
 import { HelpFeedbackModal } from '../support/HelpFeedbackModal';
 
-const ABOUT_PARAGRAPHS = [
-  "Managing a fleet means keeping track of hundreds of moving parts — vehicles, drivers, maintenance, repairs, documents, expenses, and daily operations.",
-  "SERVIQ brings them together in one connected platform.",
-  "From the moment a vehicle joins your fleet to every service, repair, and mile that follows, SERVIQ gives your team a clear view of what is happening and what needs attention.",
-  "Whether you're an organization admin, fleet manager, or driver, SERVIQ provides the right tools for the job — helping teams stay organized, respond faster, and keep vehicles ready for the road."
+const WORKFLOW_PILLS = [
+  { label: 'Active-trip visibility', icon: Eye },
+  { label: 'Boarding & drop-off attendance', icon: Calendar },
+  { label: 'Driver SOS workflow', icon: Bell },
+  { label: 'School-scoped access', icon: ShieldCheck },
 ];
 
-const ABOUT_HIGHLIGHT = "One platform. Every vehicle. Complete visibility.";
+const WORKFLOW_STEPS = [
+  {
+    step: '01',
+    title: 'Plan and assign',
+    description: 'Set routes, vehicles, students, drivers, and stops before the trip starts.',
+    icon: Route,
+    iconBg: 'bg-[#1d63ed]',
+  },
+  {
+    step: '02',
+    title: 'Track live',
+    description: 'Watch the bus move, monitor status, and keep parents informed.',
+    icon: MapPin,
+    iconBg: 'bg-[#f59e0b]',
+  },
+  {
+    step: '03',
+    title: 'Confirm attendance',
+    description: 'Record boarding and drop-off events so no child is invisible in the workflow.',
+    icon: Users,
+    iconBg: 'bg-[#16a34a]',
+  },
+  {
+    step: '04',
+    title: 'Escalate SOS',
+    description: 'Treat emergencies as auditable command-center events with context.',
+    icon: PhoneCall,
+    iconBg: 'bg-[#dc2626]',
+  },
+];
 
-const ScrollWordReveal: React.FC = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [activeLines, setActiveLines] = useState(0);
-  const rafId = useRef<number | null>(null);
-
-  // Total lines: 4 content paragraphs + 1 highlight badge
-  const totalLines = ABOUT_PARAGRAPHS.length + 1;
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (rafId.current) return;
-      rafId.current = requestAnimationFrame(() => {
-        rafId.current = null;
-        if (!containerRef.current) return;
-        const rect = containerRef.current.getBoundingClientRect();
-        const totalScrollable = rect.height - window.innerHeight;
-        if (totalScrollable <= 0) return;
-
-        // When container top reaches 0 (pins in viewport), scrolled starts at 0
-        const scrolled = -rect.top;
-        // Each scroll step reveals the next line across 85% of track
-        const progress = Math.max(0, Math.min(1, scrolled / (totalScrollable * 0.85)));
-        const currentLine = Math.floor(progress * (totalLines + 1));
-        setActiveLines((prev) => (prev !== currentLine ? currentLine : prev));
-      });
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleScroll, { passive: true });
-    handleScroll();
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleScroll);
-      if (rafId.current) cancelAnimationFrame(rafId.current);
-    };
-  }, [totalLines]);
-
+const WorkflowSection: React.FC = () => {
   return (
-    <div ref={containerRef} className="relative bg-white min-h-[220vh] sm:min-h-[260vh] w-full">
-      <div className="sticky top-0 min-h-screen bg-white flex flex-col items-center justify-center px-6 sm:px-10 max-w-4xl lg:max-w-5xl mx-auto select-none w-full py-12">
-        
-        {/* Section Kicker Badge */}
-        <div className="flex items-center gap-2 mb-4 sm:mb-6 pointer-events-auto">
-          <div className="w-2.5 h-2.5 rounded-full bg-[#2335f2] animate-pulse" />
-          <span
-            className="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-[#2335f2] font-anek-latin"
-            style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-          >
-            About SERVIQ
-          </span>
-        </div>
-
-        {/* Section Heading in Anek Latin */}
-        <h2
-          className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 font-anek-latin text-center tracking-tight leading-[1.15] mb-6 sm:mb-10 max-w-3xl pointer-events-auto"
-          style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-        >
-          Everything Your Fleet Needs. In One Place.
-        </h2>
-
-        {/* Manifesto Content: Line-by-Line Reveal with Anek Latin & Generous Spacing */}
-        <div
-          className="w-full max-w-3xl text-center font-anek-latin pointer-events-auto space-y-4 sm:space-y-5"
-          style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-        >
-          {ABOUT_PARAGRAPHS.map((para, idx) => {
-            const isRevealed = idx < activeLines;
+    <div className="w-full bg-white select-none">
+      {/* Top Feature Badges / Status Pills Bar matching reference screenshot */}
+      <div className="w-full border-y border-slate-100 bg-[#fffdfa]/90 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
+          {WORKFLOW_PILLS.map((pill, idx) => {
+            const Icon = pill.icon;
             return (
-              <p
+              <div
                 key={idx}
-                className={`text-base sm:text-lg md:text-xl lg:text-[22px] leading-relaxed sm:leading-[1.65] tracking-wide transition-all duration-300 ease-out select-none ${
-                  isRevealed
-                    ? idx === 1
-                      ? 'text-[#2335f2] font-black opacity-100 transform translate-y-0'
-                      : 'text-slate-950 font-bold opacity-100 transform translate-y-0'
-                    : 'text-slate-300 font-semibold opacity-30 transform translate-y-1'
-                }`}
+                className="flex items-center justify-center gap-3 px-6 py-4 transition-colors hover:bg-amber-50/30"
               >
-                {para}
-              </p>
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#fef3c7] text-[#d97706] flex items-center justify-center shrink-0 shadow-xs">
+                  <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.2]" />
+                </div>
+                <span
+                  className="text-xs sm:text-sm font-semibold text-slate-800 tracking-tight font-anek-latin"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  {pill.label}
+                </span>
+              </div>
             );
           })}
         </div>
+      </div>
 
-        {/* Small Highlight Badge */}
-        <div
-          className={`mt-8 sm:mt-10 transition-all duration-500 pointer-events-auto ${
-            activeLines >= ABOUT_PARAGRAPHS.length + 1
-              ? 'opacity-100 transform translate-y-0 scale-100'
-              : 'opacity-20 transform translate-y-2 scale-95'
-          }`}
-        >
-          <div className="inline-flex items-center gap-2.5 px-5 sm:px-7 py-2.5 sm:py-3 rounded-full bg-blue-50 border-2 border-[#2335f2]/25 shadow-sm">
-            <div className="w-2 h-2 rounded-full bg-[#2335f2] animate-pulse" />
-            <span
-              className="font-anek-latin font-black text-xs sm:text-sm md:text-base text-[#2335f2] tracking-wider uppercase"
-              style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-            >
-              {ABOUT_HIGHLIGHT}
-            </span>
-          </div>
-        </div>
-
-        {/* Scroll down indicator */}
-        <div
-          className={`mt-6 sm:mt-8 transition-opacity duration-300 pointer-events-auto ${
-            activeLines >= totalLines ? 'opacity-0' : 'opacity-70'
-          }`}
-        >
+      {/* Main Workflow Content Area */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 pb-20 sm:pb-28">
+        {/* Eyebrow Label */}
+        <div className="text-center mb-3 sm:mb-4">
           <span
-            className="text-xs uppercase tracking-widest text-slate-400 font-bold flex items-center gap-1.5 font-anek-latin"
+            className="text-xs sm:text-sm font-extrabold uppercase tracking-[0.22em] text-[#eab308] font-anek-latin"
             style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
           >
-            Scroll down to reveal
-            <ChevronDown className="w-3.5 h-3.5 animate-bounce text-[#2335f2]" />
+            SAFETY WORKFLOW
           </span>
+        </div>
+
+        {/* Section Headline */}
+        <h2
+          className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 text-center tracking-tight leading-[1.18] max-w-4xl mx-auto font-anek-latin px-4"
+          style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+        >
+          Built around what happens before, during, and after a school trip
+        </h2>
+
+        {/* Subtitle / Disclaimer */}
+        <p
+          className="text-slate-500 text-xs sm:text-sm md:text-base text-center max-w-2xl mx-auto mt-4 sm:mt-5 px-4 leading-relaxed font-anek-latin"
+          style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+        >
+          This sequence reflects implemented trip, attendance, and SOS workflows. It does not promise a transport or safety outcome.
+        </p>
+
+        {/* 4 Workflow Sequential Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 mt-12 sm:mt-16">
+          {WORKFLOW_STEPS.map((card) => {
+            const CardIcon = card.icon;
+            return (
+              <div
+                key={card.step}
+                className="group relative bg-white rounded-[22px] border border-slate-200/90 p-6 sm:p-7 shadow-[0_2px_10px_rgba(0,0,0,0.04)] hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between"
+              >
+                <div>
+                  {/* Card Top Row: Colorful Squircle Icon + Step Number */}
+                  <div className="flex items-start justify-between">
+                    <div
+                      className={`w-12 h-12 rounded-xl ${card.iconBg} text-white flex items-center justify-center shadow-md shadow-slate-900/10 group-hover:scale-105 transition-transform duration-300`}
+                    >
+                      <CardIcon className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.2]" />
+                    </div>
+                    <span className="text-xs sm:text-sm font-mono font-semibold text-slate-400 tracking-wider">
+                      {card.step}
+                    </span>
+                  </div>
+
+                  {/* Card Title */}
+                  <h3
+                    className="text-lg sm:text-xl font-bold text-slate-900 mt-6 mb-2 tracking-tight font-anek-latin"
+                    style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                  >
+                    {card.title}
+                  </h3>
+
+                  {/* Card Description */}
+                  <p
+                    className="text-slate-500 text-xs sm:text-sm leading-relaxed font-anek-latin"
+                    style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                  >
+                    {card.description}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
@@ -865,11 +879,11 @@ export const LandingPage: React.FC = () => {
       ========================================================================= */}
       <section id="about" className="relative z-30 bg-white text-slate-900 w-full shadow-2xl">
         {/* Sticky Word-by-Word Scroll Reveal Manifesto (matches super.money reference) */}
-        <ScrollWordReveal />
+        <WorkflowSection />
       </section>
 
       {/* =========================================================================
-          PAGE 3 (EVEN): ROTATIONAL FEATURES SECTION � WHITE BACKGROUND
+          PAGE 3 (EVEN): ROTATIONAL FEATURES SECTION � WHITE BACKGROUND
       ========================================================================= */}
       <RotationalFeaturesSection />
 
