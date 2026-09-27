@@ -28,48 +28,82 @@ import {
 
 import { HelpFeedbackModal } from '../support/HelpFeedbackModal';
 
-const ABOUT_CHAPTERS = [
+const ABOUT_CARDS = [
   {
     step: '01',
-    tag: 'Moving Parts',
+    category: 'The Moving Parts',
     headline:
       'Managing a fleet means keeping track of hundreds of moving parts — vehicles, drivers, maintenance, repairs, documents, expenses, and daily operations.',
+    chips: [
+      { label: 'Vehicles', icon: '🚗' },
+      { label: 'Drivers', icon: '👨‍✈️' },
+      { label: 'Maintenance', icon: '🔧' },
+      { label: 'Repairs', icon: '🛠️' },
+      { label: 'Documents', icon: '📄' },
+      { label: 'Expenses', icon: '💰' },
+      { label: 'Operations', icon: '⚡' },
+    ],
+    highlightQuote: 'Hundreds of moving parts scattered across spreadsheets, paper, and phone calls.',
+    isHeroCard: false,
   },
   {
     step: '02',
-    tag: 'One Platform',
+    category: 'Unified Architecture',
     headline: 'SERVIQ brings them together in one connected platform.',
+    chips: [
+      { label: 'Central Database', icon: '🗄️' },
+      { label: 'Real-time Sync', icon: '🔄' },
+      { label: 'Automated Alerts', icon: '🔔' },
+      { label: 'Zero Disconnects', icon: '⚡' },
+    ],
+    highlightQuote: 'Every asset, driver, and maintenance schedule synchronized in real time.',
+    isHeroCard: false,
   },
   {
     step: '03',
-    tag: 'Every Mile',
+    category: 'Complete Lifecycle',
     headline:
       'From the moment a vehicle joins your fleet to every service, repair, and mile that follows, SERVIQ gives your team a clear view of what is happening and what needs attention.',
+    chips: [
+      { label: 'Onboarding & Specs', icon: '📋' },
+      { label: 'Odometer Tracking', icon: '⏱️' },
+      { label: 'Preventive Care', icon: '🛡️' },
+      { label: 'Cost Auditing', icon: '📊' },
+    ],
+    highlightQuote: 'Proactive oversight from vehicle acquisition to daily highway operations.',
+    isHeroCard: false,
   },
   {
     step: '04',
-    tag: 'Ready for Road',
+    category: 'Empowered Roles',
     headline:
       "Whether you're an organization admin, fleet manager, or driver, SERVIQ provides the right tools for the job — helping teams stay organized, respond faster, and keep vehicles ready for the road.",
+    chips: [
+      { label: 'Organization Admin', icon: '🏢' },
+      { label: 'Fleet Manager', icon: '👤' },
+      { label: 'Commercial Driver', icon: '📱' },
+    ],
+    highlightQuote: 'Custom workflows built specifically for how modern fleet teams work.',
+    isHeroCard: false,
+  },
+  {
+    step: '05',
+    category: 'The SERVIQ Standard',
+    headline: 'One platform. Every vehicle. Complete visibility.',
+    chips: [
+      { label: 'Total Visibility', icon: '👁️' },
+      { label: 'Less Downtime', icon: '⏱️' },
+      { label: 'Safe Journeys', icon: '🛡️' },
+      { label: 'Ready for the Road', icon: '🚀' },
+    ],
+    highlightQuote: 'Keep your fleet moving forward with complete confidence and transparency.',
+    isHeroCard: true,
   },
 ];
 
-const ABOUT_HIGHLIGHT = "One platform. Every vehicle. Complete visibility.";
-
-const FLEET_PARTS = [
-  { id: 'vehicles', label: 'Vehicles', icon: Truck, metric: 'Assets', x: -36, y: -26, rot: -5 },
-  { id: 'drivers', label: 'Drivers', icon: UserCheck, metric: 'Crew', x: 36, y: -28, rot: 6 },
-  { id: 'maintenance', label: 'Maintenance', icon: Wrench, metric: 'Scheduled', x: -44, y: 12, rot: -4 },
-  { id: 'repairs', label: 'Repairs', icon: AlertTriangle, metric: 'Work Orders', x: 44, y: 14, rot: 5 },
-  { id: 'documents', label: 'Documents', icon: FileText, metric: 'Compliance', x: -26, y: 34, rot: 4 },
-  { id: 'expenses', label: 'Expenses', icon: Receipt, metric: 'Audit', x: 26, y: 36, rot: -5 },
-  { id: 'operations', label: 'Operations', icon: Layers, metric: 'Daily Flow', x: 0, y: -38, rot: 0 },
-];
-
-const ScrollWordReveal: React.FC = () => {
+const AboutCardStack: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
   const rafId = useRef<number | null>(null);
 
   useEffect(() => {
@@ -82,14 +116,15 @@ const ScrollWordReveal: React.FC = () => {
         const totalScrollable = rect.height - window.innerHeight;
         if (totalScrollable <= 0) return;
 
-        const scrolled = Math.max(0, -rect.top);
-        // Scroll progress 0 to 1 across 88% of track
-        const progress = Math.min(1, Math.max(0, scrolled / (totalScrollable * 0.88)));
-        setScrollProgress(progress);
-
-        // Map progress to chapter 0..3
-        const step = Math.min(3, Math.floor(progress * 4));
-        setActiveStep(step);
+        // When container top reaches 0, scrolled starts at 0
+        const scrolled = -rect.top;
+        // Divide the scroll track evenly across the 5 cards
+        const progress = Math.max(0, Math.min(1, scrolled / (totalScrollable * 0.92)));
+        const newIndex = Math.min(
+          ABOUT_CARDS.length - 1,
+          Math.floor(progress * ABOUT_CARDS.length)
+        );
+        setActiveIndex((prev) => (prev !== newIndex ? newIndex : prev));
       });
     };
 
@@ -104,28 +139,59 @@ const ScrollWordReveal: React.FC = () => {
     };
   }, []);
 
-  // Smooth convergence curve (starts pulling at progress > 0.18, completes by 0.72)
-  const rawConvergence = Math.min(1, Math.max(0, (scrollProgress - 0.18) / 0.52));
-  // Ease in-out
-  const convergence =
-    rawConvergence < 0.5
-      ? 2 * rawConvergence * rawConvergence
-      : 1 - Math.pow(-2 * rawConvergence + 2, 2) / 2;
+  const getCardStyle = (index: number): React.CSSProperties => {
+    const diff = index - activeIndex;
 
-  const scrollToStep = (stepIdx: number) => {
-    if (!containerRef.current) return;
-    const totalScrollable = containerRef.current.offsetHeight - window.innerHeight;
-    const targetScroll = containerRef.current.offsetTop + (stepIdx / 3.5) * (totalScrollable * 0.88);
-    window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+    if (diff === 0) {
+      // Active Front Card
+      return {
+        transform: 'translate3d(0, 0, 0) scale(1)',
+        opacity: 1,
+        filter: 'blur(0px)',
+        zIndex: 20,
+        pointerEvents: 'auto',
+        boxShadow:
+          '0 25px 60px -15px rgba(35, 53, 242, 0.14), 0 10px 30px -10px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.05)',
+      };
+    }
+
+    if (diff < 0) {
+      // Already read, stacks behind at top of deck
+      const stackDepth = Math.abs(diff);
+      return {
+        transform: `translate3d(0, -${stackDepth * 15}px, -${stackDepth * 20}px) scale(${Math.max(
+          0.85,
+          1 - stackDepth * 0.04
+        )})`,
+        opacity: Math.max(0.12, 1 - stackDepth * 0.28),
+        filter: `blur(${Math.min(5, stackDepth * 1.5)}px)`,
+        zIndex: 20 - stackDepth,
+        pointerEvents: 'none',
+        boxShadow: '0 10px 25px -10px rgba(0, 0, 0, 0.06)',
+      };
+    }
+
+    // Future Card waiting below to enter
+    return {
+      transform: `translate3d(0, ${Math.min(100, diff * 55)}px, 0) scale(${Math.max(
+        0.94,
+        1 - diff * 0.025
+      )})`,
+      opacity: 0,
+      filter: 'blur(3px)',
+      zIndex: 10 - diff,
+      pointerEvents: 'none',
+    };
   };
 
   return (
-    <div ref={containerRef} className="relative bg-white min-h-[260vh] sm:min-h-[300vh] w-full">
-      <div className="sticky top-0 h-screen min-h-screen bg-white flex flex-col justify-between items-center px-4 sm:px-6 lg:px-8 py-6 sm:py-8 max-w-6xl mx-auto select-none w-full overflow-hidden">
+    <div ref={containerRef} className="relative bg-white min-h-[300vh] sm:min-h-[340vh] w-full">
+      <div className="sticky top-0 min-h-screen bg-white flex flex-col justify-between py-6 sm:py-10 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto select-none w-full">
         
-        {/* Top Header */}
-        <div className="flex flex-col items-center text-center pt-2 sm:pt-4 z-20">
-          <div className="flex items-center gap-2 mb-2 sm:mb-2.5">
+        {/* Top Header Bar: Kicker + Interactive Step Pills */}
+        <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+          {/* Section Kicker */}
+          <div className="flex items-center gap-2">
             <div className="w-2.5 h-2.5 rounded-full bg-[#2335f2] animate-pulse" />
             <span
               className="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-[#2335f2] font-anek-latin"
@@ -135,132 +201,136 @@ const ScrollWordReveal: React.FC = () => {
             </span>
           </div>
 
+          {/* Clickable Step Pills */}
+          <div className="flex items-center gap-1.5 sm:gap-2 bg-slate-100/80 p-1 rounded-full border border-slate-200">
+            {ABOUT_CARDS.map((card, idx) => {
+              const isActive = idx === activeIndex;
+              return (
+                <button
+                  key={card.step}
+                  onClick={() => setActiveIndex(idx)}
+                  className={`px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-mono font-bold transition-all duration-300 cursor-pointer ${
+                    isActive
+                      ? 'bg-[#2335f2] text-white shadow-sm scale-105'
+                      : 'text-slate-500 hover:text-slate-900 hover:bg-white/60'
+                  }`}
+                  aria-label={`Jump to step ${card.step}`}
+                >
+                  {card.step}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Section Heading */}
+        <div className="text-center my-2 sm:my-3">
           <h2
-            className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 font-anek-latin tracking-tight leading-[1.12] max-w-3xl"
+            className="text-2xl sm:text-4xl md:text-[44px] font-black text-slate-900 font-anek-latin tracking-tight leading-[1.12] max-w-3xl mx-auto"
             style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
           >
             Everything Your Fleet Needs. In One Place.
           </h2>
         </div>
 
-        {/* Middle Stage: The Convergence Engine Canvas */}
-        <div className="relative w-full max-w-4xl h-[260px] sm:h-[320px] md:h-[350px] flex items-center justify-center my-auto overflow-hidden">
-          
-          {/* Concentric Ambient Radar Pulse Rings */}
-          <div className="absolute w-44 h-44 sm:w-64 sm:h-64 rounded-full border border-blue-100/80 animate-pulse pointer-events-none" />
-          <div className="absolute w-72 h-72 sm:w-[420px] sm:h-[420px] rounded-full border border-slate-100 pointer-events-none" />
-          <div className="absolute w-96 h-96 sm:w-[560px] sm:h-[560px] rounded-full border border-slate-50 pointer-events-none" />
-
-          {/* Laser Connectivity Beams connecting Center to Badges */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" viewBox="-50 -50 100 100">
-            {FLEET_PARTS.map((part) => {
-              const curX = part.x * (1 - convergence);
-              const curY = part.y * (1 - convergence);
-              const opacity = (1 - convergence) * (scrollProgress > 0.12 ? 0.35 : 0.12);
-              return (
-                <line
-                  key={part.id}
-                  x1="0"
-                  y1="0"
-                  x2={curX}
-                  y2={curY}
-                  stroke="#393df0"
-                  strokeWidth="0.6"
-                  strokeDasharray="1.5,2.5"
-                  opacity={opacity}
-                />
-              );
-            })}
-          </svg>
-
-          {/* Central Nexus / Morphing Fleet Dock */}
-          {convergence < 0.65 ? (
-            /* Phase 1 & 2 Core: Nexus Pulse */
-            <div className="relative z-10 flex flex-col items-center justify-center transition-all duration-300">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-blue-50/90 border-2 border-blue-400/30 flex items-center justify-center shadow-lg shadow-blue-500/10 backdrop-blur-md">
-                <img src="/logo-blue.png" alt="SERVIQ" className="w-8 h-8 sm:w-10 sm:h-10 object-contain drop-shadow" />
-              </div>
-              <span className="mt-2 text-[10px] sm:text-xs font-mono font-bold text-blue-600 uppercase tracking-widest bg-blue-50/80 px-2.5 py-0.5 rounded-full border border-blue-100">
-                {convergence > 0.1 ? 'Converging Platform' : 'SERVIQ Nexus'}
-              </span>
-            </div>
-          ) : scrollProgress < 0.8 ? (
-            /* Phase 3 Dock: Live Fleet System Integration */
-            <div className="relative z-20 w-full max-w-md p-5 sm:p-6 rounded-3xl bg-white border-2 border-[#2335f2]/25 shadow-2xl shadow-blue-900/10 flex flex-col gap-3 animate-in fade-in zoom-in-95 duration-300">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
-                <div className="flex items-center gap-2.5">
-                  <img src="/logo-blue.png" alt="SERVIQ" className="w-6 h-6 object-contain" />
-                  <span className="font-extrabold text-sm sm:text-base text-slate-900 font-anek-latin">
-                    Connected Fleet Platform
-                  </span>
-                </div>
-                <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  7 Systems Synced
-                </span>
-              </div>
-              <div className="grid grid-cols-3 gap-2 text-center text-xs font-anek-latin">
-                <div className="p-2 sm:p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                  <span className="text-[10px] text-slate-400 block font-semibold">Active Asset</span>
-                  <span className="font-bold text-slate-800 text-xs sm:text-sm">TN 01 AB 1234</span>
-                </div>
-                <div className="p-2 sm:p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                  <span className="text-[10px] text-slate-400 block font-semibold">Odometer</span>
-                  <span className="font-bold text-blue-600 text-xs sm:text-sm">45,280 km</span>
-                </div>
-                <div className="p-2 sm:p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                  <span className="text-[10px] text-slate-400 block font-semibold">Status</span>
-                  <span className="font-bold text-emerald-600 text-xs sm:text-sm">Inspection OK</span>
-                </div>
-              </div>
-            </div>
-          ) : (
-            /* Phase 4 Showcase: Complete Visibility Banner */
-            <div className="relative z-20 w-full max-w-lg p-6 sm:p-7 rounded-3xl bg-gradient-to-r from-blue-50 via-white to-blue-50 border-2 border-[#2335f2]/30 shadow-2xl shadow-blue-500/15 flex flex-col items-center justify-center text-center animate-in fade-in zoom-in-95 duration-300">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-100/80 text-[#2335f2] text-xs font-bold font-anek-latin uppercase tracking-wider mb-2.5">
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                Fleet Synchronization
-              </div>
-              <div
-                className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 font-anek-latin tracking-tight leading-snug"
-                style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-              >
-                {ABOUT_HIGHLIGHT}
-              </div>
-              <div className="mt-3 flex items-center gap-3 sm:gap-4 text-xs font-bold text-slate-500 font-anek-latin">
-                <span className="flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-blue-600" /> Admin</span>
-                <span className="w-1 h-1 rounded-full bg-slate-300" />
-                <span className="flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-blue-600" /> Fleet Manager</span>
-                <span className="w-1 h-1 rounded-full bg-slate-300" />
-                <span className="flex items-center gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 text-blue-600" /> Driver</span>
-              </div>
-            </div>
-          )}
-
-          {/* 7 Floating Fleet Elements (Moving Parts) */}
-          {FLEET_PARTS.map((part) => {
-            const curX = part.x * (1 - convergence);
-            const curY = part.y * (1 - convergence);
-            const curRot = part.rot * (1 - convergence);
-            const curScale = 1 - convergence * 0.28;
-            const curOpacity = 1 - Math.max(0, (convergence - 0.72) / 0.28);
-
+        {/* 3D Stack Stage */}
+        <div className="relative w-full max-w-3xl mx-auto h-[350px] sm:h-[380px] md:h-[400px] flex items-center justify-center my-auto">
+          {ABOUT_CARDS.map((card, idx) => {
+            const isHero = card.isHeroCard;
             return (
               <div
-                key={part.id}
-                className="absolute z-10 transition-transform duration-75 pointer-events-none"
-                style={{
-                  left: '50%',
-                  top: '50%',
-                  transform: `translate(calc(-50% + ${curX * 3.4}px), calc(-50% + ${curY * 2.1}px)) rotate(${curRot}deg) scale(${curScale})`,
-                  opacity: curOpacity,
-                }}
+                key={card.step}
+                onClick={() => setActiveIndex(idx)}
+                style={getCardStyle(idx)}
+                className={`absolute inset-0 rounded-3xl p-6 sm:p-8 md:p-10 flex flex-col justify-between transition-all duration-500 ease-out cursor-pointer ${
+                  isHero
+                    ? 'bg-gradient-to-br from-[#1622aa] via-[#2335f2] to-[#3949f5] text-white border-2 border-white/20'
+                    : 'bg-white border-2 border-slate-200/90 text-slate-900'
+                }`}
               >
-                <div className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-2xl bg-white/95 border-2 border-slate-200/90 shadow-md backdrop-blur-md flex items-center gap-2 text-xs sm:text-sm font-anek-latin font-bold text-slate-800 whitespace-nowrap">
-                  <part.icon className="w-4 h-4 text-[#2335f2] shrink-0" />
-                  <span>{part.label}</span>
-                  <span className="text-[10px] font-mono font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">
-                    {part.metric}
+                {/* Continuous Shimmer on Hero Card */}
+                {isHero && (
+                  <span className="absolute inset-0 -translate-x-full animate-continuous-shimmer bg-gradient-to-r from-transparent via-white/15 to-transparent pointer-events-none rounded-3xl" />
+                )}
+
+                {/* Card Top: Step Pill + Category Label */}
+                <div className="flex items-center justify-between relative z-10">
+                  <div className="flex items-center gap-3">
+                    <span
+                      className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl font-mono font-black text-xs sm:text-sm flex items-center justify-center ${
+                        isHero
+                          ? 'bg-white text-[#2335f2] shadow-md'
+                          : 'bg-studio-blue/10 text-[#2335f2]'
+                      }`}
+                    >
+                      {card.step}
+                    </span>
+                    <span
+                      className={`text-xs sm:text-sm font-extrabold uppercase tracking-widest font-anek-latin ${
+                        isHero ? 'text-white/80' : 'text-[#2335f2]'
+                      }`}
+                      style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                    >
+                      {card.category}
+                    </span>
+                  </div>
+
+                  <span
+                    className={`text-[11px] font-semibold px-2.5 sm:px-3 py-1 rounded-full ${
+                      isHero ? 'bg-white/15 text-white' : 'bg-slate-100 text-slate-500'
+                    }`}
+                  >
+                    SERVIQ Architecture
+                  </span>
+                </div>
+
+                {/* Card Body: Main Headline + Visual Chips */}
+                <div className="my-auto py-2 sm:py-3 relative z-10">
+                  <p
+                    className={`font-anek-latin leading-snug sm:leading-[1.5] tracking-tight ${
+                      isHero
+                        ? 'text-2xl sm:text-3xl md:text-[34px] text-white font-black drop-shadow-sm'
+                        : 'text-base sm:text-xl md:text-[23px] text-slate-900 font-bold'
+                    }`}
+                    style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                  >
+                    {card.headline}
+                  </p>
+
+                  {/* Interactive Visual Chips */}
+                  <div className="flex flex-wrap gap-2 sm:gap-2.5 mt-4 sm:mt-5">
+                    {card.chips.map((chip, cIdx) => (
+                      <span
+                        key={cIdx}
+                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
+                          isHero
+                            ? 'bg-white/15 text-white border border-white/20 backdrop-blur-sm'
+                            : 'bg-slate-50 border border-slate-200 text-slate-700 shadow-xs'
+                        }`}
+                      >
+                        <span>{chip.icon}</span>
+                        <span
+                          className="font-anek-latin font-bold"
+                          style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                        >
+                          {chip.label}
+                        </span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Card Bottom: Quote & Progress */}
+                <div
+                  className={`pt-3 border-t flex items-center justify-between text-xs sm:text-sm relative z-10 ${
+                    isHero ? 'border-white/20 text-white/80' : 'border-slate-100 text-slate-500'
+                  }`}
+                >
+                  <span className="font-medium italic truncate max-w-[80%]">
+                    "{card.highlightQuote}"
+                  </span>
+                  <span className="font-mono text-[11px] font-bold opacity-75">
+                    0{idx + 1} / 05
                   </span>
                 </div>
               </div>
@@ -268,48 +338,39 @@ const ScrollWordReveal: React.FC = () => {
           })}
         </div>
 
-        {/* Bottom Stage: Narrative Controller & Progressive Chapter Reader */}
-        <div className="w-full max-w-3xl flex flex-col items-center text-center pb-2 z-20">
-          
-          {/* Chapter Step Indicators (Clickable) */}
-          <div className="flex items-center justify-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-            {ABOUT_CHAPTERS.map((chap, idx) => {
-              const isActive = activeStep === idx;
-              return (
-                <button
-                  key={chap.step}
-                  onClick={() => scrollToStep(idx)}
-                  className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-anek-latin font-bold transition-all cursor-pointer ${
-                    isActive
-                      ? 'bg-studio-blue text-white shadow-md shadow-blue-500/20 scale-105'
-                      : 'bg-slate-100 text-slate-500 hover:bg-slate-200/80 hover:text-slate-800'
-                  }`}
-                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                >
-                  <span className="font-mono text-[10px] opacity-80">{chap.step}</span>
-                  <span className="hidden sm:inline">{chap.tag}</span>
-                </button>
-              );
-            })}
+        {/* Bottom Bar: Progress Indicator & Scroll Prompt */}
+        <div className="w-full max-w-3xl mx-auto flex items-center justify-between pt-3 border-t border-slate-100">
+          {/* Progress Bar */}
+          <div className="flex items-center gap-3 w-1/2 sm:w-1/3">
+            <span className="text-[11px] font-mono font-bold text-slate-400">
+              0{activeIndex + 1}
+            </span>
+            <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-[#2335f2] rounded-full transition-all duration-300 ease-out"
+                style={{ width: `${((activeIndex + 1) / ABOUT_CARDS.length) * 100}%` }}
+              />
+            </div>
+            <span className="text-[11px] font-mono font-bold text-slate-400">
+              05
+            </span>
           </div>
 
-          {/* Active Headline Text */}
-          <div className="min-h-[75px] sm:min-h-[90px] flex items-center justify-center px-4">
-            <p
-              key={activeStep}
-              className={`text-base sm:text-xl md:text-[23px] font-bold font-anek-latin leading-relaxed sm:leading-[1.6] transition-all duration-300 animate-in fade-in slide-in-from-bottom-2 ${
-                activeStep === 1 ? 'text-[#2335f2] font-black' : 'text-slate-900'
-              }`}
+          {/* Scroll / Swipe Prompt */}
+          <div className="text-right">
+            <span
+              className="text-xs uppercase tracking-widest text-slate-400 font-bold inline-flex items-center gap-1.5 font-anek-latin"
               style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
             >
-              {ABOUT_CHAPTERS[activeStep].headline}
-            </p>
-          </div>
-
-          {/* Scroll Down Indicator */}
-          <div className="flex items-center gap-2 text-[11px] sm:text-xs font-bold text-slate-400 font-anek-latin uppercase tracking-widest pt-2">
-            <span>Scroll to converge fleet operations</span>
-            <ChevronDown className="w-3.5 h-3.5 animate-bounce text-[#2335f2]" />
+              {activeIndex === ABOUT_CARDS.length - 1 ? (
+                <span className="text-[#2335f2] font-extrabold">Complete Visibility</span>
+              ) : (
+                <>
+                  Scroll down for next card
+                  <ChevronDown className="w-3.5 h-3.5 animate-bounce text-[#2335f2]" />
+                </>
+              )}
+            </span>
           </div>
         </div>
 
@@ -687,8 +748,8 @@ export const LandingPage: React.FC = () => {
           PAGE 2 (EVEN): ABOUT US — SCROLL-DRIVEN WORD-BY-WORD MANIFESTO & PLATFORM
       ========================================================================= */}
       <section id="about" className="relative z-30 bg-white text-slate-900 w-full shadow-2xl">
-        {/* Sticky Word-by-Word Scroll Reveal Manifesto (matches super.money reference) */}
-        <ScrollWordReveal />
+        {/* 3D Sticky Card Stack */}
+        <AboutCardStack />
       </section>
 
       {/* =========================================================================
