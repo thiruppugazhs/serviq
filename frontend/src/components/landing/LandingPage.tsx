@@ -326,11 +326,11 @@ const RotationalFeaturesSection: React.FC = () => {
   const currentIndex = Math.round(scrollProgress);
 
   return (
-    <section id="features" ref={containerRef} className="relative w-full bg-studio-blue text-white min-h-[420vh]">
-      <div className="sticky top-0 h-screen w-full flex flex-col justify-between items-center overflow-hidden py-8 sm:py-10 md:py-12 px-4 sm:px-6 select-none bg-studio-blue">
+    <section id="features" ref={containerRef} className="relative w-full bg-studio-blue text-white min-h-[260vh]">
+      <div className="sticky top-0 h-screen w-full flex flex-col justify-center items-center overflow-hidden py-6 px-4 sm:px-6 select-none bg-studio-blue">
         
         {/* Top Header */}
-        <div className="text-center max-w-4xl mx-auto pt-4 sm:pt-6 z-20 pointer-events-auto">
+        <div className="text-center max-w-4xl mx-auto mb-4 sm:mb-6 z-20 pointer-events-auto">
           <h2
             className="text-2xl sm:text-4xl md:text-5xl font-black text-white font-anek-latin tracking-tight leading-tight drop-shadow-sm"
             style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
@@ -340,7 +340,7 @@ const RotationalFeaturesSection: React.FC = () => {
         </div>
 
         {/* 3D Rotational Carousel Stage */}
-        <div className="relative w-full max-w-6xl h-[360px] sm:h-[400px] md:h-[440px] flex items-center justify-center [perspective:1400px] z-10 my-auto">
+        <div className="relative w-full max-w-6xl h-[360px] sm:h-[400px] md:h-[440px] flex items-center justify-center [perspective:1400px] z-10">
           <div className="relative w-full h-full flex items-center justify-center [transform-style:preserve-3d]">
             {FEATURES_DATA.map((feat, i) => {
               const offset = i - scrollProgress;
@@ -437,8 +437,7 @@ const RotationalFeaturesSection: React.FC = () => {
           </div>
         </div>
 
-        <div className="pb-4" />
-      </div>
+        </div>
     </section>
   );
 };
@@ -824,7 +823,7 @@ export const LandingPage: React.FC = () => {
       {/* =========================================================================
           FAQS SECTION — BLUE BACKGROUND WITH 10 ACCORDION CARDS
       ========================================================================= */}
-      <section id="faq" className="py-24 sm:py-32 bg-studio-blue text-white relative">
+      <section id="faq" className="relative z-20 -mt-24 sm:-mt-32 pt-6 sm:pt-8 pb-24 sm:pb-32 bg-studio-blue text-white">
         {/* Ambient background glow orbs */}
         <div className="absolute top-10 left-10 w-96 h-96 bg-white/5 rounded-full blur-[140px] pointer-events-none" />
         <div className="absolute bottom-10 right-10 w-[500px] h-[500px] bg-indigo-400/10 rounded-full blur-[160px] pointer-events-none" />
