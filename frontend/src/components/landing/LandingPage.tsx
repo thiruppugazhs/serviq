@@ -36,39 +36,39 @@ import {
 import { HelpFeedbackModal } from '../support/HelpFeedbackModal';
 
 const WORKFLOW_PILLS = [
-  { label: 'Active-trip visibility', icon: Eye },
-  { label: 'Boarding & drop-off attendance', icon: Calendar },
-  { label: 'Driver SOS workflow', icon: Bell },
-  { label: 'School-scoped access', icon: ShieldCheck },
+  { label: 'Vehicle visibility', icon: Eye },
+  { label: 'Maintenance scheduling', icon: Calendar },
+  { label: 'Repair tracking', icon: Wrench },
+  { label: 'Fleet-wide access', icon: ShieldCheck },
 ];
 
 const WORKFLOW_STEPS = [
   {
     step: '01',
-    title: 'Plan and assign',
-    description: 'Set routes, vehicles, students, drivers, and stops before the trip starts.',
-    icon: Route,
+    title: 'Manage & Assign',
+    description: 'Add vehicles and drivers, manage fleet details, and assign vehicles before operations begin.',
+    icon: Truck,
     iconBg: 'bg-[#1d63ed]',
   },
   {
     step: '02',
-    title: 'Track live',
-    description: 'Watch the bus move, monitor status, and keep parents informed.',
-    icon: MapPin,
+    title: 'Monitor Fleet',
+    description: 'Track vehicle status, odometer readings, availability, and important fleet information in one place.',
+    icon: Gauge,
     iconBg: 'bg-[#f59e0b]',
   },
   {
     step: '03',
-    title: 'Confirm attendance',
-    description: 'Record boarding and drop-off events so no child is invisible in the workflow.',
-    icon: Users,
+    title: 'Stay Ahead of Maintenance',
+    description: 'Schedule services, monitor maintenance due dates, and maintain a complete service history for every vehicle.',
+    icon: Wrench,
     iconBg: 'bg-[#16a34a]',
   },
   {
     step: '04',
-    title: 'Escalate SOS',
-    description: 'Treat emergencies as auditable command-center events with context.',
-    icon: PhoneCall,
+    title: 'Resolve & Record',
+    description: 'Report vehicle issues, manage repairs, track expenses, and keep every service and repair record organized.',
+    icon: AlertTriangle,
     iconBg: 'bg-[#dc2626]',
   },
 ];
@@ -109,7 +109,7 @@ const WorkflowSection: React.FC = () => {
             className="text-xs sm:text-sm font-extrabold uppercase tracking-[0.22em] text-[#eab308] font-anek-latin"
             style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
           >
-            SAFETY WORKFLOW
+            FLEET MANAGEMENT WORKFLOW
           </span>
         </div>
 
@@ -118,7 +118,7 @@ const WorkflowSection: React.FC = () => {
           className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 text-center tracking-tight leading-[1.18] max-w-4xl mx-auto font-anek-latin px-4"
           style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
         >
-          Built around what happens before, during, and after a school trip
+          Built around what keeps your fleet moving
         </h2>
 
         {/* Subtitle / Disclaimer */}
@@ -126,7 +126,7 @@ const WorkflowSection: React.FC = () => {
           className="text-slate-500 text-xs sm:text-sm md:text-base text-center max-w-2xl mx-auto mt-4 sm:mt-5 px-4 leading-relaxed font-anek-latin"
           style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
         >
-          This sequence reflects implemented trip, attendance, and SOS workflows. It does not promise a transport or safety outcome.
+          From managing vehicles and drivers to tracking maintenance and repairs, SERVIQ keeps every stage of your fleet operation connected.
         </p>
 
         {/* 4 Workflow Sequential Cards */}
