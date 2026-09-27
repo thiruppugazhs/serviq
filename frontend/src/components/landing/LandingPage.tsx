@@ -24,13 +24,145 @@ import {
   QrCode,
   Layers,
   ChevronDown,
-  Eye,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 
 import { HelpFeedbackModal } from '../support/HelpFeedbackModal';
-import { FleetCommandNexus } from './FleetCommandNexus';
 
-const FEATURES_LIST = [
+const ABOUT_PARAGRAPHS = [
+  "Managing a fleet means keeping track of hundreds of moving parts — vehicles, drivers, maintenance, repairs, documents, expenses, and daily operations.",
+  "SERVIQ brings them together in one connected platform.",
+  "From the moment a vehicle joins your fleet to every service, repair, and mile that follows, SERVIQ gives your team a clear view of what is happening and what needs attention.",
+  "Whether you're an organization admin, fleet manager, or driver, SERVIQ provides the right tools for the job — helping teams stay organized, respond faster, and keep vehicles ready for the road."
+];
+
+const ABOUT_HIGHLIGHT = "One platform. Every vehicle. Complete visibility.";
+
+const ScrollWordReveal: React.FC = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [activeLines, setActiveLines] = useState(0);
+  const rafId = useRef<number | null>(null);
+
+  // Total lines: 4 content paragraphs + 1 highlight badge
+  const totalLines = ABOUT_PARAGRAPHS.length + 1;
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (rafId.current) return;
+      rafId.current = requestAnimationFrame(() => {
+        rafId.current = null;
+        if (!containerRef.current) return;
+        const rect = containerRef.current.getBoundingClientRect();
+        const totalScrollable = rect.height - window.innerHeight;
+        if (totalScrollable <= 0) return;
+
+        // When container top reaches 0 (pins in viewport), scrolled starts at 0
+        const scrolled = -rect.top;
+        // Each scroll step reveals the next line across 85% of track
+        const progress = Math.max(0, Math.min(1, scrolled / (totalScrollable * 0.85)));
+        const currentLine = Math.floor(progress * (totalLines + 1));
+        setActiveLines((prev) => (prev !== currentLine ? currentLine : prev));
+      });
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll, { passive: true });
+    handleScroll();
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+      if (rafId.current) cancelAnimationFrame(rafId.current);
+    };
+  }, [totalLines]);
+
+  return (
+    <div ref={containerRef} className="relative bg-white min-h-[220vh] sm:min-h-[260vh] w-full">
+      <div className="sticky top-0 min-h-screen bg-white flex flex-col items-center justify-center px-6 sm:px-10 max-w-4xl lg:max-w-5xl mx-auto select-none w-full py-12">
+        
+        {/* Section Kicker Badge */}
+        <div className="flex items-center gap-2 mb-4 sm:mb-6 pointer-events-auto">
+          <div className="w-2.5 h-2.5 rounded-full bg-[#2335f2] animate-pulse" />
+          <span
+            className="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-[#2335f2] font-anek-latin"
+            style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+          >
+            About SERVIQ
+          </span>
+        </div>
+
+        {/* Section Heading in Anek Latin */}
+        <h2
+          className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 font-anek-latin text-center tracking-tight leading-[1.15] mb-6 sm:mb-10 max-w-3xl pointer-events-auto"
+          style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+        >
+          Everything Your Fleet Needs. In One Place.
+        </h2>
+
+        {/* Manifesto Content: Line-by-Line Reveal with Anek Latin & Generous Spacing */}
+        <div
+          className="w-full max-w-3xl text-center font-anek-latin pointer-events-auto space-y-4 sm:space-y-5"
+          style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+        >
+          {ABOUT_PARAGRAPHS.map((para, idx) => {
+            const isRevealed = idx < activeLines;
+            return (
+              <p
+                key={idx}
+                className={`text-base sm:text-lg md:text-xl lg:text-[22px] leading-relaxed sm:leading-[1.65] tracking-wide transition-all duration-300 ease-out select-none ${
+                  isRevealed
+                    ? idx === 1
+                      ? 'text-[#2335f2] font-black opacity-100 transform translate-y-0'
+                      : 'text-slate-950 font-bold opacity-100 transform translate-y-0'
+                    : 'text-slate-300 font-semibold opacity-30 transform translate-y-1'
+                }`}
+              >
+                {para}
+              </p>
+            );
+          })}
+        </div>
+
+        {/* Small Highlight Badge */}
+        <div
+          className={`mt-8 sm:mt-10 transition-all duration-500 pointer-events-auto ${
+            activeLines >= ABOUT_PARAGRAPHS.length + 1
+              ? 'opacity-100 transform translate-y-0 scale-100'
+              : 'opacity-20 transform translate-y-2 scale-95'
+          }`}
+        >
+          <div className="inline-flex items-center gap-2.5 px-5 sm:px-7 py-2.5 sm:py-3 rounded-full bg-blue-50 border-2 border-[#2335f2]/25 shadow-sm">
+            <div className="w-2 h-2 rounded-full bg-[#2335f2] animate-pulse" />
+            <span
+              className="font-anek-latin font-black text-xs sm:text-sm md:text-base text-[#2335f2] tracking-wider uppercase"
+              style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+            >
+              {ABOUT_HIGHLIGHT}
+            </span>
+          </div>
+        </div>
+
+        {/* Scroll down indicator */}
+        <div
+          className={`mt-6 sm:mt-8 transition-opacity duration-300 pointer-events-auto ${
+            activeLines >= totalLines ? 'opacity-0' : 'opacity-70'
+          }`}
+        >
+          <span
+            className="text-xs uppercase tracking-widest text-slate-400 font-bold flex items-center gap-1.5 font-anek-latin"
+            style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+          >
+            Scroll down to reveal
+            <ChevronDown className="w-3.5 h-3.5 animate-bounce text-[#2335f2]" />
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const FEATURES_DATA = [
   {
     number: '01',
     title: 'Vehicle Management',
@@ -38,6 +170,8 @@ const FEATURES_LIST = [
     description:
       'Manage vehicle profiles, assignments, status, odometer readings, service history, and important information from one place.',
     icon: Truck,
+    accentColor: '#2563eb',
+    badge: 'Asset Directory',
   },
   {
     number: '02',
@@ -46,14 +180,18 @@ const FEATURES_LIST = [
     description:
       'Create individual driver profiles, manage assignments, track details, and give drivers quick access to the information they need.',
     icon: UserCheck,
+    accentColor: '#3b82f6',
+    badge: 'Driver Roster',
   },
   {
     number: '03',
     title: 'Maintenance Management',
     tagline: 'Stay ahead of what’s due.',
     description:
-      'Schedule maintenance, track service history, monitor upcoming work, and make sure important servicing doesn\'t get overlooked.',
+      'Schedule maintenance, track service history, monitor upcoming work, and make sure important servicing doesn’t get overlooked.',
     icon: Wrench,
+    accentColor: '#d97706',
+    badge: 'Dual-Trigger Engine',
   },
   {
     number: '04',
@@ -62,6 +200,8 @@ const FEATURES_LIST = [
     description:
       'Drivers can report vehicle issues while fleet managers can track, manage, and update repairs throughout the entire process.',
     icon: AlertTriangle,
+    accentColor: '#e11d48',
+    badge: 'Real-time Resolution',
   },
   {
     number: '05',
@@ -70,6 +210,8 @@ const FEATURES_LIST = [
     description:
       'Keep maintenance and repair expenses organized so your team has a clearer picture of vehicle-related costs.',
     icon: Receipt,
+    accentColor: '#059669',
+    badge: 'TCO & Parts Audit',
   },
   {
     number: '06',
@@ -78,6 +220,8 @@ const FEATURES_LIST = [
     description:
       'Organize vehicle and driver documents, track their details, and stay aware of upcoming expirations.',
     icon: FileText,
+    accentColor: '#7c3aed',
+    badge: 'Compliance Vault',
   },
   {
     number: '07',
@@ -86,6 +230,8 @@ const FEATURES_LIST = [
     description:
       'Keep track of vehicle condition, reported issues, maintenance status, and other important health indicators.',
     icon: ShieldCheck,
+    accentColor: '#0284c7',
+    badge: 'Fleet Readiness',
   },
   {
     number: '08',
@@ -94,6 +240,8 @@ const FEATURES_LIST = [
     description:
       'Stay updated about maintenance, repairs, documents, assignments, and other important fleet activities.',
     icon: Bell,
+    accentColor: '#f59e0b',
+    badge: 'Instant Alerts',
   },
   {
     number: '09',
@@ -102,190 +250,248 @@ const FEATURES_LIST = [
     description:
       'Get an organized view of vehicles, maintenance, repairs, expenses, and fleet operations to make everyday decisions easier.',
     icon: BarChart3,
+    accentColor: '#4f46e5',
+    badge: 'Executive Oversight',
   },
 ];
 
-const FisheyeFeatureGrid: React.FC = () => {
+const RotationalFeaturesSection: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [focalPoint, setFocalPoint] = useState<{ x: number; y: number } | null>(null);
-  const [activeTouchIndex, setActiveTouchIndex] = useState<number | null>(null);
-  const animFrameRef = useRef<number | null>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const rafId = useRef<number | null>(null);
 
-  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (rafId.current) return;
+      rafId.current = requestAnimationFrame(() => {
+        rafId.current = null;
+        if (!containerRef.current) return;
+        const rect = containerRef.current.getBoundingClientRect();
+        const totalScrollable = rect.height - window.innerHeight;
+        if (totalScrollable <= 0) return;
+
+        const scrolled = -rect.top;
+        const p = Math.max(0, Math.min(1, scrolled / totalScrollable));
+        const activeFloat = p * (FEATURES_DATA.length - 1);
+        setScrollProgress(activeFloat);
+      });
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafId.current) cancelAnimationFrame(rafId.current);
+    };
+  }, []);
+
+  const scrollToCard = (index: number) => {
     if (!containerRef.current) return;
+    const totalScrollable = containerRef.current.scrollHeight - window.innerHeight;
+    const targetScroll = (index / (FEATURES_DATA.length - 1)) * totalScrollable;
     const rect = containerRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
-    animFrameRef.current = requestAnimationFrame(() => {
-      setFocalPoint({ x, y });
+    const containerTop = window.scrollY + rect.top;
+    window.scrollTo({
+      top: containerTop + targetScroll,
+      behavior: 'smooth',
     });
   };
 
-  const handlePointerLeave = () => {
-    if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
-    setFocalPoint(null);
-    setActiveTouchIndex(null);
-  };
+  const currentIndex = Math.round(scrollProgress);
 
   return (
-    <div
-      ref={containerRef}
-      onPointerMove={handlePointerMove}
-      onPointerLeave={handlePointerLeave}
-      className="relative w-full [perspective:1400px] select-none py-4"
-    >
-      {/* Subtle Fisheye Radial Aura (follows cursor) */}
-      {focalPoint && (
-        <div
-          className="absolute w-80 h-80 rounded-full pointer-events-none -translate-x-1/2 -translate-y-1/2 blur-3xl transition-opacity duration-300 opacity-20 bg-gradient-to-r from-blue-500 via-[#393df0] to-indigo-600 z-0"
-          style={{
-            left: `${focalPoint.x}px`,
-            top: `${focalPoint.y}px`,
-          }}
-        />
-      )}
-
-      {/* 9 Feature Cards in Fisheye Convex Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 relative z-10 [transform-style:preserve-3d]">
-        {FEATURES_LIST.map((feat, index) => {
-          const row = Math.floor(index / 3);
-          const col = index % 3;
-
-          let scale = 1;
-          let translateZ = 0;
-          let rotateX = 0;
-          let rotateY = 0;
-          let zIndex = 1;
-          let isFocal = false;
-          let intensity = 0;
-
-          if (focalPoint && cardRefs.current[index]) {
-            const cardEl = cardRefs.current[index];
-            if (cardEl) {
-              const cardCx = cardEl.offsetLeft + cardEl.offsetWidth / 2;
-              const cardCy = cardEl.offsetTop + cardEl.offsetHeight / 2;
-              const dist = Math.hypot(focalPoint.x - cardCx, focalPoint.y - cardCy);
-              const maxDist = 380; // Lens radius
-              
-              if (dist < maxDist) {
-                intensity = Math.cos((dist / maxDist) * (Math.PI / 2));
-                scale = 1 + intensity * 0.12; // Magnify up to 1.12x
-                translateZ = intensity * 35; // 35px 3D lift
-                rotateX = ((focalPoint.y - cardCy) / maxDist) * -7;
-                rotateY = ((focalPoint.x - cardCx) / maxDist) * 7;
-                zIndex = Math.round(intensity * 40) + 10;
-                isFocal = intensity > 0.45;
-              }
-            }
-          } else if (activeTouchIndex === index) {
-            scale = 1.08;
-            translateZ = 25;
-            zIndex = 20;
-            isFocal = true;
-            intensity = 0.8;
-          } else {
-            // Natural resting fisheye convex dome curvature
-            if (index === 4) {
-              // Center card
-              scale = 1.04;
-              translateZ = 16;
-              zIndex = 5;
-            } else if (index % 2 === 1) {
-              // Edge centers
-              scale = 1.01;
-              translateZ = 8;
-              zIndex = 3;
-            } else {
-              // Corners
-              scale = 0.98;
-              translateZ = 0;
-              zIndex = 2;
-            }
-            rotateX = (row - 1) * -3;
-            rotateY = (col - 1) * 3;
-          }
-
-          return (
-            <div
-              key={feat.number}
-              ref={(el) => { cardRefs.current[index] = el; }}
-              onClick={() => setActiveTouchIndex(activeTouchIndex === index ? null : index)}
-              style={{
-                transform: `perspective(1000px) translate3d(0, 0, ${translateZ}px) scale(${scale}) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
-                zIndex,
-                transition: 'transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease',
-                willChange: 'transform',
-              }}
-              className={`p-7 sm:p-8 rounded-2xl sm:rounded-3xl border-2 flex flex-col justify-between cursor-pointer group backdrop-blur-sm ${
-                isFocal
-                  ? 'bg-white border-[#393df0]/60 shadow-[0_25px_50px_-12px_rgba(57,61,240,0.25)]'
-                  : intensity > 0.2
-                  ? 'bg-white border-blue-200/80 shadow-lg'
-                  : 'bg-slate-50/90 border-slate-200/70 hover:border-[#393df0]/40 shadow-sm'
-              }`}
+    <section id="features" ref={containerRef} className="relative w-full bg-white text-slate-900 min-h-[420vh]">
+      <div className="sticky top-0 h-screen w-full flex flex-col justify-between items-center overflow-hidden py-6 sm:py-8 md:py-10 px-4 sm:px-6 select-none bg-white">
+        
+        {/* Top Header */}
+        <div className="text-center max-w-3xl mx-auto pt-2 sm:pt-4 z-20 pointer-events-auto">
+          {/* Section Kicker */}
+          <div className="inline-flex items-center gap-2 mb-2 sm:mb-3">
+            <div className="w-2.5 h-2.5 rounded-full bg-[#2335f2] animate-pulse" />
+            <span
+              className="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-[#2335f2] font-anek-latin"
+              style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
             >
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <div
-                    className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold transition-all duration-300 shadow-sm ${
-                      isFocal
-                        ? 'bg-[#393df0] text-white scale-110 shadow-blue-500/30'
-                        : 'bg-studio-blue/10 text-[#393df0] group-hover:scale-110 group-hover:bg-[#393df0] group-hover:text-white'
-                    }`}
-                  >
-                    <feat.icon className="w-6 h-6" />
+              Features
+            </span>
+          </div>
+
+          <h2
+            className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 font-anek-latin tracking-tight leading-tight"
+            style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+          >
+            Everything You Need to Keep Moving.
+          </h2>
+          <p
+            className="text-xs sm:text-sm md:text-base text-slate-600 mt-2 sm:mt-3 leading-relaxed font-anek-latin max-w-2xl mx-auto hidden sm:block"
+            style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+          >
+            From everyday fleet operations to unexpected repairs, SERVIQ keeps your vehicles, people, and maintenance connected.
+          </p>
+        </div>
+
+        {/* 3D Rotational Carousel Stage */}
+        <div className="relative w-full max-w-6xl h-[360px] sm:h-[400px] md:h-[440px] flex items-center justify-center [perspective:1400px] z-10 my-auto">
+          <div className="relative w-full h-full flex items-center justify-center [transform-style:preserve-3d]">
+            {FEATURES_DATA.map((feat, i) => {
+              const offset = i - scrollProgress;
+              const absOffset = Math.abs(offset);
+
+              // Skip rendering cards far away for high performance
+              if (absOffset > 3.2) return null;
+
+              const xSpacing = isMobile ? 260 : 380;
+              const translateX = offset * xSpacing;
+              // 3D rotation angle: cards to the right face left (-Y), cards to the left face right (+Y)
+              const rotateY = Math.max(-50, Math.min(50, offset * -28));
+              // 3D depth push
+              const translateZ = -Math.pow(absOffset, 1.2) * 110;
+              // Scale factor
+              const scale = Math.max(0.72, 1 - absOffset * 0.12);
+              // Opacity factor
+              const opacity = Math.max(0, Math.min(1, 1 - (absOffset - 0.25) * 0.55));
+              // Z-Index
+              const zIndex = Math.round(100 - absOffset * 15);
+              const isClosest = absOffset < 0.5;
+
+              return (
+                <div
+                  key={feat.number}
+                  onClick={() => scrollToCard(i)}
+                  style={{
+                    transform: `translate3d(${translateX}px, 0, ${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`,
+                    opacity,
+                    zIndex,
+                    transition: 'transform 0.08s linear, opacity 0.08s linear, box-shadow 0.3s ease',
+                  }}
+                  className={`absolute w-[86vw] max-w-[330px] sm:max-w-[380px] md:max-w-[420px] h-[340px] sm:h-[380px] md:h-[410px] p-6 sm:p-8 md:p-9 rounded-3xl bg-white border-2 flex flex-col justify-between cursor-pointer select-none ${
+                    isClosest
+                      ? 'border-[#393df0] shadow-[0_25px_60px_rgba(57,61,240,0.18)] ring-4 ring-[#393df0]/10'
+                      : 'border-slate-200/90 shadow-xl hover:border-slate-300'
+                  }`}
+                >
+                  {/* Card Header: Icon & Feature Number */}
+                  <div>
+                    <div className="flex items-center justify-between mb-4 sm:mb-5">
+                      <div
+                        className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center font-bold transition-transform duration-300 shadow-sm"
+                        style={{
+                          backgroundColor: `${feat.accentColor}18`,
+                          color: feat.accentColor,
+                        }}
+                      >
+                        <feat.icon className="w-6 h-6 sm:w-7 sm:h-7" />
+                      </div>
+                      <span className="font-mono font-black text-xs sm:text-sm text-[#393df0] bg-[#393df0]/10 px-3 py-1 rounded-full">
+                        Feature {feat.number}
+                      </span>
+                    </div>
+
+                    {/* Title */}
+                    <h3
+                      className="font-extrabold text-xl sm:text-2xl text-slate-900 font-anek-latin tracking-tight"
+                      style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                    >
+                      {feat.title}
+                    </h3>
+
+                    {/* Tagline */}
+                    <p
+                      className="font-bold text-sm sm:text-base text-slate-800 mt-2 font-anek-latin"
+                      style={{
+                        fontFamily: "'Anek Latin', 'AnekLatin', sans-serif",
+                        color: feat.accentColor,
+                      }}
+                    >
+                      {feat.tagline}
+                    </p>
+
+                    {/* Description */}
+                    <p
+                      className="text-xs sm:text-sm text-slate-600 mt-2.5 leading-relaxed font-anek-latin line-clamp-3 sm:line-clamp-none"
+                      style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                    >
+                      {feat.description}
+                    </p>
                   </div>
-                  <span
-                    className={`font-mono font-black text-xs sm:text-sm transition-colors ${
-                      isFocal ? 'text-[#393df0] font-bold' : 'text-slate-400 group-hover:text-[#393df0]'
-                    }`}
-                  >
-                    Feature {feat.number}
-                  </span>
+
+                  {/* Card Footer: Category Badge & Index Indicator */}
+                  <div className="pt-3 sm:pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400 font-medium font-anek-latin">
+                    <span>{feat.badge}</span>
+                    <span className="font-mono text-[#393df0] font-bold">
+                      {feat.number} / 09
+                    </span>
+                  </div>
                 </div>
+              );
+            })}
+          </div>
+        </div>
 
-                <h3
-                  className={`font-extrabold text-xl sm:text-2xl font-anek-latin transition-colors ${
-                    isFocal ? 'text-[#393df0]' : 'text-slate-900 group-hover:text-[#393df0]'
-                  }`}
-                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                >
-                  {feat.title}
-                </h3>
+        {/* Bottom Navigation & Controls */}
+        <div className="w-full max-w-2xl mx-auto flex flex-col items-center gap-2.5 sm:gap-3.5 z-20 pointer-events-auto pb-2">
+          {/* Controls row: Prev Arrow, Dots, Next Arrow */}
+          <div className="flex items-center gap-3 sm:gap-6 bg-slate-50/95 backdrop-blur-md px-4 sm:px-6 py-2 sm:py-2.5 rounded-full border border-slate-200/80 shadow-sm">
+            <button
+              onClick={() => scrollToCard(Math.max(0, currentIndex - 1))}
+              disabled={currentIndex <= 0}
+              className="p-1.5 rounded-full hover:bg-white text-slate-700 disabled:opacity-30 disabled:hover:bg-transparent transition-all cursor-pointer"
+              aria-label="Previous Feature"
+            >
+              <ChevronLeft className="w-5 h-5 stroke-[2.5]" />
+            </button>
 
-                <p
-                  className="font-bold text-sm sm:text-base text-slate-800 mt-2 font-anek-latin"
-                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                >
-                  {feat.tagline}
-                </p>
-
-                <p
-                  className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed font-anek-latin"
-                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                >
-                  {feat.description}
-                </p>
-              </div>
-
-              <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] font-bold text-slate-400">
-                <span className="group-hover:text-[#393df0] transition-colors font-anek-latin">
-                  SERVIQ Core System
-                </span>
-                <span
-                  className={`w-2 h-2 rounded-full transition-all ${
-                    isFocal ? 'bg-[#393df0] animate-ping' : 'bg-slate-300'
-                  }`}
-                />
-              </div>
+            {/* 9 Indicator Pills */}
+            <div className="flex items-center gap-1.5">
+              {FEATURES_DATA.map((_, dotIdx) => {
+                const isActive = dotIdx === currentIndex;
+                return (
+                  <button
+                    key={dotIdx}
+                    onClick={() => scrollToCard(dotIdx)}
+                    className={`transition-all duration-300 rounded-full cursor-pointer ${
+                      isActive
+                        ? 'w-6 sm:w-7 h-2 sm:h-2.5 bg-[#393df0]'
+                        : 'w-2 sm:w-2.5 h-2 sm:h-2.5 bg-slate-300 hover:bg-slate-400'
+                    }`}
+                    aria-label={`Jump to feature ${dotIdx + 1}`}
+                  />
+                );
+              })}
             </div>
-          );
-        })}
+
+            <button
+              onClick={() => scrollToCard(Math.min(FEATURES_DATA.length - 1, currentIndex + 1))}
+              disabled={currentIndex >= FEATURES_DATA.length - 1}
+              className="p-1.5 rounded-full hover:bg-white text-slate-700 disabled:opacity-30 disabled:hover:bg-transparent transition-all cursor-pointer"
+              aria-label="Next Feature"
+            >
+              <ChevronRight className="w-5 h-5 stroke-[2.5]" />
+            </button>
+          </div>
+
+          {/* Hint text */}
+          <div className="text-center text-[11px] sm:text-xs text-slate-400 font-anek-latin font-medium flex items-center gap-2">
+            <span>Scroll down to rotate features</span>
+            <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#393df0] animate-pulse" />
+            <span className="font-mono text-slate-500">
+              {String(currentIndex + 1).padStart(2, '0')} of 09
+            </span>
+          </div>
+        </div>
+
       </div>
-    </div>
+    </section>
   );
 };
 
@@ -659,52 +865,13 @@ export const LandingPage: React.FC = () => {
       ========================================================================= */}
       <section id="about" className="relative z-30 bg-white text-slate-900 w-full shadow-2xl">
         {/* Sticky Word-by-Word Scroll Reveal Manifesto (matches super.money reference) */}
-        <FleetCommandNexus />
+        <ScrollWordReveal />
       </section>
 
       {/* =========================================================================
-          PAGE 3 (EVEN): FEATURES SECTION — WHITE BACKGROUND
+          PAGE 3 (EVEN): ROTATIONAL FEATURES SECTION � WHITE BACKGROUND
       ========================================================================= */}
-      <section id="features" className="w-full bg-white text-slate-900">
-        <div className="py-20 sm:py-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-left">
-          
-          {/* Section Kicker */}
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-2.5 h-2.5 rounded-full bg-[#2335f2] animate-pulse" />
-            <span
-              className="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-[#2335f2] font-anek-latin"
-              style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-            >
-              Features
-            </span>
-          </div>
-
-          {/* Section Heading & Subheading */}
-          <div className="max-w-3xl mb-12 sm:mb-16">
-            <h2
-              className="text-3xl sm:text-5xl font-black text-slate-900 font-anek-latin tracking-tight leading-tight"
-              style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-            >
-              Everything You Need to Keep Moving.
-            </h2>
-            <p
-              className="text-sm sm:text-base md:text-lg text-slate-600 mt-4 leading-relaxed font-anek-latin"
-              style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-            >
-              From everyday fleet operations to unexpected repairs, SERVIQ keeps your vehicles, people, and maintenance connected.
-            </p>
-          </div>
-
-          {/* Fisheye Lens Mode Badge */}
-          <div className="mb-8 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-[#393df0]/20 text-[#2335f2] text-xs font-anek-latin font-bold">
-            <Eye className="w-3.5 h-3.5 animate-pulse text-[#2335f2]" />
-            <span>Fisheye Lens View • Hover & glide across cards to magnify</span>
-          </div>
-
-          {/* 9 Feature Cards in Dynamic Fisheye Lens */}
-          <FisheyeFeatureGrid />
-        </div>
-      </section>
+      <RotationalFeaturesSection />
 
       {/* =========================================================================
           FAQS SECTION — BLUE BACKGROUND WITH 10 ACCORDION CARDS
