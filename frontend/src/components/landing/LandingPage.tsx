@@ -24,87 +24,27 @@ import {
   QrCode,
   Layers,
   ChevronDown,
+  Eye,
 } from 'lucide-react';
 
 import { HelpFeedbackModal } from '../support/HelpFeedbackModal';
 
-const ABOUT_CARDS = [
-  {
-    step: '01',
-    category: 'The Moving Parts',
-    headline:
-      'Managing a fleet means keeping track of hundreds of moving parts — vehicles, drivers, maintenance, repairs, documents, expenses, and daily operations.',
-    chips: [
-      { label: 'Vehicles', icon: '🚗' },
-      { label: 'Drivers', icon: '👨‍✈️' },
-      { label: 'Maintenance', icon: '🔧' },
-      { label: 'Repairs', icon: '🛠️' },
-      { label: 'Documents', icon: '📄' },
-      { label: 'Expenses', icon: '💰' },
-      { label: 'Operations', icon: '⚡' },
-    ],
-    highlightQuote: 'Hundreds of moving parts scattered across spreadsheets, paper, and phone calls.',
-    isHeroCard: false,
-  },
-  {
-    step: '02',
-    category: 'Unified Architecture',
-    headline: 'SERVIQ brings them together in one connected platform.',
-    chips: [
-      { label: 'Central Database', icon: '🗄️' },
-      { label: 'Real-time Sync', icon: '🔄' },
-      { label: 'Automated Alerts', icon: '🔔' },
-      { label: 'Zero Disconnects', icon: '⚡' },
-    ],
-    highlightQuote: 'Every asset, driver, and maintenance schedule synchronized in real time.',
-    isHeroCard: false,
-  },
-  {
-    step: '03',
-    category: 'Complete Lifecycle',
-    headline:
-      'From the moment a vehicle joins your fleet to every service, repair, and mile that follows, SERVIQ gives your team a clear view of what is happening and what needs attention.',
-    chips: [
-      { label: 'Onboarding & Specs', icon: '📋' },
-      { label: 'Odometer Tracking', icon: '⏱️' },
-      { label: 'Preventive Care', icon: '🛡️' },
-      { label: 'Cost Auditing', icon: '📊' },
-    ],
-    highlightQuote: 'Proactive oversight from vehicle acquisition to daily highway operations.',
-    isHeroCard: false,
-  },
-  {
-    step: '04',
-    category: 'Empowered Roles',
-    headline:
-      "Whether you're an organization admin, fleet manager, or driver, SERVIQ provides the right tools for the job — helping teams stay organized, respond faster, and keep vehicles ready for the road.",
-    chips: [
-      { label: 'Organization Admin', icon: '🏢' },
-      { label: 'Fleet Manager', icon: '👤' },
-      { label: 'Commercial Driver', icon: '📱' },
-    ],
-    highlightQuote: 'Custom workflows built specifically for how modern fleet teams work.',
-    isHeroCard: false,
-  },
-  {
-    step: '05',
-    category: 'The SERVIQ Standard',
-    headline: 'One platform. Every vehicle. Complete visibility.',
-    chips: [
-      { label: 'Total Visibility', icon: '👁️' },
-      { label: 'Less Downtime', icon: '⏱️' },
-      { label: 'Safe Journeys', icon: '🛡️' },
-      { label: 'Ready for the Road', icon: '🚀' },
-    ],
-    highlightQuote: 'Keep your fleet moving forward with complete confidence and transparency.',
-    isHeroCard: true,
-  },
+const ABOUT_PARAGRAPHS = [
+  "Managing a fleet means keeping track of hundreds of moving parts — vehicles, drivers, maintenance, repairs, documents, expenses, and daily operations.",
+  "SERVIQ brings them together in one connected platform.",
+  "From the moment a vehicle joins your fleet to every service, repair, and mile that follows, SERVIQ gives your team a clear view of what is happening and what needs attention.",
+  "Whether you're an organization admin, fleet manager, or driver, SERVIQ provides the right tools for the job — helping teams stay organized, respond faster, and keep vehicles ready for the road."
 ];
 
-const AboutCardStack: React.FC = () => {
+const ABOUT_HIGHLIGHT = "One platform. Every vehicle. Complete visibility.";
+
+const ScrollWordReveal: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeLines, setActiveLines] = useState(0);
   const rafId = useRef<number | null>(null);
+
+  // Total lines: 4 content paragraphs + 1 highlight badge
+  const totalLines = ABOUT_PARAGRAPHS.length + 1;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -116,15 +56,12 @@ const AboutCardStack: React.FC = () => {
         const totalScrollable = rect.height - window.innerHeight;
         if (totalScrollable <= 0) return;
 
-        // When container top reaches 0, scrolled starts at 0
+        // When container top reaches 0 (pins in viewport), scrolled starts at 0
         const scrolled = -rect.top;
-        // Divide the scroll track evenly across the 5 cards
-        const progress = Math.max(0, Math.min(1, scrolled / (totalScrollable * 0.92)));
-        const newIndex = Math.min(
-          ABOUT_CARDS.length - 1,
-          Math.floor(progress * ABOUT_CARDS.length)
-        );
-        setActiveIndex((prev) => (prev !== newIndex ? newIndex : prev));
+        // Each scroll step reveals the next line across 85% of track
+        const progress = Math.max(0, Math.min(1, scrolled / (totalScrollable * 0.85)));
+        const currentLine = Math.floor(progress * (totalLines + 1));
+        setActiveLines((prev) => (prev !== currentLine ? currentLine : prev));
       });
     };
 
@@ -137,243 +74,347 @@ const AboutCardStack: React.FC = () => {
       window.removeEventListener('resize', handleScroll);
       if (rafId.current) cancelAnimationFrame(rafId.current);
     };
-  }, []);
-
-  const getCardStyle = (index: number): React.CSSProperties => {
-    const diff = index - activeIndex;
-
-    if (diff === 0) {
-      // Active Front Card
-      return {
-        transform: 'translate3d(0, 0, 0) scale(1)',
-        opacity: 1,
-        filter: 'blur(0px)',
-        zIndex: 20,
-        pointerEvents: 'auto',
-        boxShadow:
-          '0 25px 60px -15px rgba(35, 53, 242, 0.14), 0 10px 30px -10px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.05)',
-      };
-    }
-
-    if (diff < 0) {
-      // Already read, stacks behind at top of deck
-      const stackDepth = Math.abs(diff);
-      return {
-        transform: `translate3d(0, -${stackDepth * 15}px, -${stackDepth * 20}px) scale(${Math.max(
-          0.85,
-          1 - stackDepth * 0.04
-        )})`,
-        opacity: Math.max(0.12, 1 - stackDepth * 0.28),
-        filter: `blur(${Math.min(5, stackDepth * 1.5)}px)`,
-        zIndex: 20 - stackDepth,
-        pointerEvents: 'none',
-        boxShadow: '0 10px 25px -10px rgba(0, 0, 0, 0.06)',
-      };
-    }
-
-    // Future Card waiting below to enter
-    return {
-      transform: `translate3d(0, ${Math.min(100, diff * 55)}px, 0) scale(${Math.max(
-        0.94,
-        1 - diff * 0.025
-      )})`,
-      opacity: 0,
-      filter: 'blur(3px)',
-      zIndex: 10 - diff,
-      pointerEvents: 'none',
-    };
-  };
+  }, [totalLines]);
 
   return (
-    <div ref={containerRef} className="relative bg-white min-h-[300vh] sm:min-h-[340vh] w-full">
-      <div className="sticky top-0 min-h-screen bg-white flex flex-col justify-between py-6 sm:py-10 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto select-none w-full">
+    <div ref={containerRef} className="relative bg-white min-h-[220vh] sm:min-h-[260vh] w-full">
+      <div className="sticky top-0 min-h-screen bg-white flex flex-col items-center justify-center px-6 sm:px-10 max-w-4xl lg:max-w-5xl mx-auto select-none w-full py-12">
         
-        {/* Top Header Bar: Kicker + Interactive Step Pills */}
-        <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
-          {/* Section Kicker */}
-          <div className="flex items-center gap-2">
-            <div className="w-2.5 h-2.5 rounded-full bg-[#2335f2] animate-pulse" />
-            <span
-              className="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-[#2335f2] font-anek-latin"
-              style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-            >
-              About SERVIQ
-            </span>
-          </div>
-
-          {/* Clickable Step Pills */}
-          <div className="flex items-center gap-1.5 sm:gap-2 bg-slate-100/80 p-1 rounded-full border border-slate-200">
-            {ABOUT_CARDS.map((card, idx) => {
-              const isActive = idx === activeIndex;
-              return (
-                <button
-                  key={card.step}
-                  onClick={() => setActiveIndex(idx)}
-                  className={`px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-mono font-bold transition-all duration-300 cursor-pointer ${
-                    isActive
-                      ? 'bg-[#2335f2] text-white shadow-sm scale-105'
-                      : 'text-slate-500 hover:text-slate-900 hover:bg-white/60'
-                  }`}
-                  aria-label={`Jump to step ${card.step}`}
-                >
-                  {card.step}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Section Heading */}
-        <div className="text-center my-2 sm:my-3">
-          <h2
-            className="text-2xl sm:text-4xl md:text-[44px] font-black text-slate-900 font-anek-latin tracking-tight leading-[1.12] max-w-3xl mx-auto"
+        {/* Section Kicker Badge */}
+        <div className="flex items-center gap-2 mb-4 sm:mb-6 pointer-events-auto">
+          <div className="w-2.5 h-2.5 rounded-full bg-[#2335f2] animate-pulse" />
+          <span
+            className="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-[#2335f2] font-anek-latin"
             style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
           >
-            Everything Your Fleet Needs. In One Place.
-          </h2>
+            About SERVIQ
+          </span>
         </div>
 
-        {/* 3D Stack Stage */}
-        <div className="relative w-full max-w-3xl mx-auto h-[350px] sm:h-[380px] md:h-[400px] flex items-center justify-center my-auto">
-          {ABOUT_CARDS.map((card, idx) => {
-            const isHero = card.isHeroCard;
+        {/* Section Heading in Anek Latin */}
+        <h2
+          className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 font-anek-latin text-center tracking-tight leading-[1.15] mb-6 sm:mb-10 max-w-3xl pointer-events-auto"
+          style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+        >
+          Everything Your Fleet Needs. In One Place.
+        </h2>
+
+        {/* Manifesto Content: Line-by-Line Reveal with Anek Latin & Generous Spacing */}
+        <div
+          className="w-full max-w-3xl text-center font-anek-latin pointer-events-auto space-y-4 sm:space-y-5"
+          style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+        >
+          {ABOUT_PARAGRAPHS.map((para, idx) => {
+            const isRevealed = idx < activeLines;
             return (
-              <div
-                key={card.step}
-                onClick={() => setActiveIndex(idx)}
-                style={getCardStyle(idx)}
-                className={`absolute inset-0 rounded-3xl p-6 sm:p-8 md:p-10 flex flex-col justify-between transition-all duration-500 ease-out cursor-pointer ${
-                  isHero
-                    ? 'bg-gradient-to-br from-[#1622aa] via-[#2335f2] to-[#3949f5] text-white border-2 border-white/20'
-                    : 'bg-white border-2 border-slate-200/90 text-slate-900'
+              <p
+                key={idx}
+                className={`text-base sm:text-lg md:text-xl lg:text-[22px] leading-relaxed sm:leading-[1.65] tracking-wide transition-all duration-300 ease-out select-none ${
+                  isRevealed
+                    ? idx === 1
+                      ? 'text-[#2335f2] font-black opacity-100 transform translate-y-0'
+                      : 'text-slate-950 font-bold opacity-100 transform translate-y-0'
+                    : 'text-slate-300 font-semibold opacity-30 transform translate-y-1'
                 }`}
               >
-                {/* Continuous Shimmer on Hero Card */}
-                {isHero && (
-                  <span className="absolute inset-0 -translate-x-full animate-continuous-shimmer bg-gradient-to-r from-transparent via-white/15 to-transparent pointer-events-none rounded-3xl" />
-                )}
-
-                {/* Card Top: Step Pill + Category Label */}
-                <div className="flex items-center justify-between relative z-10">
-                  <div className="flex items-center gap-3">
-                    <span
-                      className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl font-mono font-black text-xs sm:text-sm flex items-center justify-center ${
-                        isHero
-                          ? 'bg-white text-[#2335f2] shadow-md'
-                          : 'bg-studio-blue/10 text-[#2335f2]'
-                      }`}
-                    >
-                      {card.step}
-                    </span>
-                    <span
-                      className={`text-xs sm:text-sm font-extrabold uppercase tracking-widest font-anek-latin ${
-                        isHero ? 'text-white/80' : 'text-[#2335f2]'
-                      }`}
-                      style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                    >
-                      {card.category}
-                    </span>
-                  </div>
-
-                  <span
-                    className={`text-[11px] font-semibold px-2.5 sm:px-3 py-1 rounded-full ${
-                      isHero ? 'bg-white/15 text-white' : 'bg-slate-100 text-slate-500'
-                    }`}
-                  >
-                    SERVIQ Architecture
-                  </span>
-                </div>
-
-                {/* Card Body: Main Headline + Visual Chips */}
-                <div className="my-auto py-2 sm:py-3 relative z-10">
-                  <p
-                    className={`font-anek-latin leading-snug sm:leading-[1.5] tracking-tight ${
-                      isHero
-                        ? 'text-2xl sm:text-3xl md:text-[34px] text-white font-black drop-shadow-sm'
-                        : 'text-base sm:text-xl md:text-[23px] text-slate-900 font-bold'
-                    }`}
-                    style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                  >
-                    {card.headline}
-                  </p>
-
-                  {/* Interactive Visual Chips */}
-                  <div className="flex flex-wrap gap-2 sm:gap-2.5 mt-4 sm:mt-5">
-                    {card.chips.map((chip, cIdx) => (
-                      <span
-                        key={cIdx}
-                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
-                          isHero
-                            ? 'bg-white/15 text-white border border-white/20 backdrop-blur-sm'
-                            : 'bg-slate-50 border border-slate-200 text-slate-700 shadow-xs'
-                        }`}
-                      >
-                        <span>{chip.icon}</span>
-                        <span
-                          className="font-anek-latin font-bold"
-                          style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                        >
-                          {chip.label}
-                        </span>
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Card Bottom: Quote & Progress */}
-                <div
-                  className={`pt-3 border-t flex items-center justify-between text-xs sm:text-sm relative z-10 ${
-                    isHero ? 'border-white/20 text-white/80' : 'border-slate-100 text-slate-500'
-                  }`}
-                >
-                  <span className="font-medium italic truncate max-w-[80%]">
-                    "{card.highlightQuote}"
-                  </span>
-                  <span className="font-mono text-[11px] font-bold opacity-75">
-                    0{idx + 1} / 05
-                  </span>
-                </div>
-              </div>
+                {para}
+              </p>
             );
           })}
         </div>
 
-        {/* Bottom Bar: Progress Indicator & Scroll Prompt */}
-        <div className="w-full max-w-3xl mx-auto flex items-center justify-between pt-3 border-t border-slate-100">
-          {/* Progress Bar */}
-          <div className="flex items-center gap-3 w-1/2 sm:w-1/3">
-            <span className="text-[11px] font-mono font-bold text-slate-400">
-              0{activeIndex + 1}
-            </span>
-            <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-[#2335f2] rounded-full transition-all duration-300 ease-out"
-                style={{ width: `${((activeIndex + 1) / ABOUT_CARDS.length) * 100}%` }}
-              />
-            </div>
-            <span className="text-[11px] font-mono font-bold text-slate-400">
-              05
-            </span>
-          </div>
-
-          {/* Scroll / Swipe Prompt */}
-          <div className="text-right">
+        {/* Small Highlight Badge */}
+        <div
+          className={`mt-8 sm:mt-10 transition-all duration-500 pointer-events-auto ${
+            activeLines >= ABOUT_PARAGRAPHS.length + 1
+              ? 'opacity-100 transform translate-y-0 scale-100'
+              : 'opacity-20 transform translate-y-2 scale-95'
+          }`}
+        >
+          <div className="inline-flex items-center gap-2.5 px-5 sm:px-7 py-2.5 sm:py-3 rounded-full bg-blue-50 border-2 border-[#2335f2]/25 shadow-sm">
+            <div className="w-2 h-2 rounded-full bg-[#2335f2] animate-pulse" />
             <span
-              className="text-xs uppercase tracking-widest text-slate-400 font-bold inline-flex items-center gap-1.5 font-anek-latin"
+              className="font-anek-latin font-black text-xs sm:text-sm md:text-base text-[#2335f2] tracking-wider uppercase"
               style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
             >
-              {activeIndex === ABOUT_CARDS.length - 1 ? (
-                <span className="text-[#2335f2] font-extrabold">Complete Visibility</span>
-              ) : (
-                <>
-                  Scroll down for next card
-                  <ChevronDown className="w-3.5 h-3.5 animate-bounce text-[#2335f2]" />
-                </>
-              )}
+              {ABOUT_HIGHLIGHT}
             </span>
           </div>
         </div>
 
+        {/* Scroll down indicator */}
+        <div
+          className={`mt-6 sm:mt-8 transition-opacity duration-300 pointer-events-auto ${
+            activeLines >= totalLines ? 'opacity-0' : 'opacity-70'
+          }`}
+        >
+          <span
+            className="text-xs uppercase tracking-widest text-slate-400 font-bold flex items-center gap-1.5 font-anek-latin"
+            style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+          >
+            Scroll down to reveal
+            <ChevronDown className="w-3.5 h-3.5 animate-bounce text-[#2335f2]" />
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const FEATURES_LIST = [
+  {
+    number: '01',
+    title: 'Vehicle Management',
+    tagline: 'Know every vehicle, inside and out.',
+    description:
+      'Manage vehicle profiles, assignments, status, odometer readings, service history, and important information from one place.',
+    icon: Truck,
+  },
+  {
+    number: '02',
+    title: 'Driver Management',
+    tagline: 'Keep your drivers connected to their vehicles.',
+    description:
+      'Create individual driver profiles, manage assignments, track details, and give drivers quick access to the information they need.',
+    icon: UserCheck,
+  },
+  {
+    number: '03',
+    title: 'Maintenance Management',
+    tagline: 'Stay ahead of what’s due.',
+    description:
+      'Schedule maintenance, track service history, monitor upcoming work, and make sure important servicing doesn\'t get overlooked.',
+    icon: Wrench,
+  },
+  {
+    number: '04',
+    title: 'Repair Tracking',
+    tagline: 'From issue reported to repair completed.',
+    description:
+      'Drivers can report vehicle issues while fleet managers can track, manage, and update repairs throughout the entire process.',
+    icon: AlertTriangle,
+  },
+  {
+    number: '05',
+    title: 'Expense Management',
+    tagline: 'Know where your fleet spending goes.',
+    description:
+      'Keep maintenance and repair expenses organized so your team has a clearer picture of vehicle-related costs.',
+    icon: Receipt,
+  },
+  {
+    number: '06',
+    title: 'Documents',
+    tagline: 'Keep important documents within reach.',
+    description:
+      'Organize vehicle and driver documents, track their details, and stay aware of upcoming expirations.',
+    icon: FileText,
+  },
+  {
+    number: '07',
+    title: 'Vehicle Health',
+    tagline: 'Know when a vehicle needs attention.',
+    description:
+      'Keep track of vehicle condition, reported issues, maintenance status, and other important health indicators.',
+    icon: ShieldCheck,
+  },
+  {
+    number: '08',
+    title: 'Notifications & Reminders',
+    tagline: 'The right information, at the right time.',
+    description:
+      'Stay updated about maintenance, repairs, documents, assignments, and other important fleet activities.',
+    icon: Bell,
+  },
+  {
+    number: '09',
+    title: 'Fleet Insights',
+    tagline: 'Turn fleet activity into clear visibility.',
+    description:
+      'Get an organized view of vehicles, maintenance, repairs, expenses, and fleet operations to make everyday decisions easier.',
+    icon: BarChart3,
+  },
+];
+
+const FisheyeFeatureGrid: React.FC = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [focalPoint, setFocalPoint] = useState<{ x: number; y: number } | null>(null);
+  const [activeTouchIndex, setActiveTouchIndex] = useState<number | null>(null);
+  const animFrameRef = useRef<number | null>(null);
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+    animFrameRef.current = requestAnimationFrame(() => {
+      setFocalPoint({ x, y });
+    });
+  };
+
+  const handlePointerLeave = () => {
+    if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+    setFocalPoint(null);
+    setActiveTouchIndex(null);
+  };
+
+  return (
+    <div
+      ref={containerRef}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
+      className="relative w-full [perspective:1400px] select-none py-4"
+    >
+      {/* Subtle Fisheye Radial Aura (follows cursor) */}
+      {focalPoint && (
+        <div
+          className="absolute w-80 h-80 rounded-full pointer-events-none -translate-x-1/2 -translate-y-1/2 blur-3xl transition-opacity duration-300 opacity-20 bg-gradient-to-r from-blue-500 via-[#393df0] to-indigo-600 z-0"
+          style={{
+            left: `${focalPoint.x}px`,
+            top: `${focalPoint.y}px`,
+          }}
+        />
+      )}
+
+      {/* 9 Feature Cards in Fisheye Convex Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 relative z-10 [transform-style:preserve-3d]">
+        {FEATURES_LIST.map((feat, index) => {
+          const row = Math.floor(index / 3);
+          const col = index % 3;
+
+          let scale = 1;
+          let translateZ = 0;
+          let rotateX = 0;
+          let rotateY = 0;
+          let zIndex = 1;
+          let isFocal = false;
+          let intensity = 0;
+
+          if (focalPoint && cardRefs.current[index]) {
+            const cardEl = cardRefs.current[index];
+            if (cardEl) {
+              const cardCx = cardEl.offsetLeft + cardEl.offsetWidth / 2;
+              const cardCy = cardEl.offsetTop + cardEl.offsetHeight / 2;
+              const dist = Math.hypot(focalPoint.x - cardCx, focalPoint.y - cardCy);
+              const maxDist = 380; // Lens radius
+              
+              if (dist < maxDist) {
+                intensity = Math.cos((dist / maxDist) * (Math.PI / 2));
+                scale = 1 + intensity * 0.12; // Magnify up to 1.12x
+                translateZ = intensity * 35; // 35px 3D lift
+                rotateX = ((focalPoint.y - cardCy) / maxDist) * -7;
+                rotateY = ((focalPoint.x - cardCx) / maxDist) * 7;
+                zIndex = Math.round(intensity * 40) + 10;
+                isFocal = intensity > 0.45;
+              }
+            }
+          } else if (activeTouchIndex === index) {
+            scale = 1.08;
+            translateZ = 25;
+            zIndex = 20;
+            isFocal = true;
+            intensity = 0.8;
+          } else {
+            // Natural resting fisheye convex dome curvature
+            if (index === 4) {
+              // Center card
+              scale = 1.04;
+              translateZ = 16;
+              zIndex = 5;
+            } else if (index % 2 === 1) {
+              // Edge centers
+              scale = 1.01;
+              translateZ = 8;
+              zIndex = 3;
+            } else {
+              // Corners
+              scale = 0.98;
+              translateZ = 0;
+              zIndex = 2;
+            }
+            rotateX = (row - 1) * -3;
+            rotateY = (col - 1) * 3;
+          }
+
+          return (
+            <div
+              key={feat.number}
+              ref={(el) => { cardRefs.current[index] = el; }}
+              onClick={() => setActiveTouchIndex(activeTouchIndex === index ? null : index)}
+              style={{
+                transform: `perspective(1000px) translate3d(0, 0, ${translateZ}px) scale(${scale}) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
+                zIndex,
+                transition: 'transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease',
+                willChange: 'transform',
+              }}
+              className={`p-7 sm:p-8 rounded-2xl sm:rounded-3xl border-2 flex flex-col justify-between cursor-pointer group backdrop-blur-sm ${
+                isFocal
+                  ? 'bg-white border-[#393df0]/60 shadow-[0_25px_50px_-12px_rgba(57,61,240,0.25)]'
+                  : intensity > 0.2
+                  ? 'bg-white border-blue-200/80 shadow-lg'
+                  : 'bg-slate-50/90 border-slate-200/70 hover:border-[#393df0]/40 shadow-sm'
+              }`}
+            >
+              <div>
+                <div className="flex items-center justify-between mb-5">
+                  <div
+                    className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold transition-all duration-300 shadow-sm ${
+                      isFocal
+                        ? 'bg-[#393df0] text-white scale-110 shadow-blue-500/30'
+                        : 'bg-studio-blue/10 text-[#393df0] group-hover:scale-110 group-hover:bg-[#393df0] group-hover:text-white'
+                    }`}
+                  >
+                    <feat.icon className="w-6 h-6" />
+                  </div>
+                  <span
+                    className={`font-mono font-black text-xs sm:text-sm transition-colors ${
+                      isFocal ? 'text-[#393df0] font-bold' : 'text-slate-400 group-hover:text-[#393df0]'
+                    }`}
+                  >
+                    Feature {feat.number}
+                  </span>
+                </div>
+
+                <h3
+                  className={`font-extrabold text-xl sm:text-2xl font-anek-latin transition-colors ${
+                    isFocal ? 'text-[#393df0]' : 'text-slate-900 group-hover:text-[#393df0]'
+                  }`}
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  {feat.title}
+                </h3>
+
+                <p
+                  className="font-bold text-sm sm:text-base text-slate-800 mt-2 font-anek-latin"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  {feat.tagline}
+                </p>
+
+                <p
+                  className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed font-anek-latin"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  {feat.description}
+                </p>
+              </div>
+
+              <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] font-bold text-slate-400">
+                <span className="group-hover:text-[#393df0] transition-colors font-anek-latin">
+                  SERVIQ Core System
+                </span>
+                <span
+                  className={`w-2 h-2 rounded-full transition-all ${
+                    isFocal ? 'bg-[#393df0] animate-ping' : 'bg-slate-300'
+                  }`}
+                />
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -748,8 +789,8 @@ export const LandingPage: React.FC = () => {
           PAGE 2 (EVEN): ABOUT US — SCROLL-DRIVEN WORD-BY-WORD MANIFESTO & PLATFORM
       ========================================================================= */}
       <section id="about" className="relative z-30 bg-white text-slate-900 w-full shadow-2xl">
-        {/* 3D Sticky Card Stack */}
-        <AboutCardStack />
+        {/* Sticky Word-by-Word Scroll Reveal Manifesto (matches super.money reference) */}
+        <ScrollWordReveal />
       </section>
 
       {/* =========================================================================
@@ -785,296 +826,14 @@ export const LandingPage: React.FC = () => {
             </p>
           </div>
 
-          {/* 9 Feature Cards in 3x3 Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
-            {/* Feature 01 */}
-            <div className="p-7 sm:p-8 rounded-2xl sm:rounded-3xl bg-slate-50 border-2 border-slate-100 hover:border-[#393df0]/30 hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <div className="w-12 h-12 rounded-2xl bg-studio-blue/10 text-[#393df0] flex items-center justify-center font-bold group-hover:scale-110 group-hover:bg-[#393df0] group-hover:text-white transition-all duration-300 shadow-sm">
-                    <Truck className="w-6 h-6" />
-                  </div>
-                  <span className="font-mono font-black text-xs sm:text-sm text-slate-400 group-hover:text-[#393df0] transition-colors">
-                    Feature 01
-                  </span>
-                </div>
-                <h3
-                  className="font-extrabold text-xl sm:text-2xl text-slate-900 font-anek-latin group-hover:text-[#393df0] transition-colors"
-                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                >
-                  Vehicle Management
-                </h3>
-                <p
-                  className="font-bold text-sm sm:text-base text-slate-800 mt-2 font-anek-latin"
-                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                >
-                  Know every vehicle, inside and out.
-                </p>
-                <p
-                  className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed font-anek-latin"
-                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                >
-                  Manage vehicle profiles, assignments, status, odometer readings, service history, and important information from one place.
-                </p>
-              </div>
-            </div>
-
-            {/* Feature 02 */}
-            <div className="p-7 sm:p-8 rounded-2xl sm:rounded-3xl bg-slate-50 border-2 border-slate-100 hover:border-[#393df0]/30 hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <div className="w-12 h-12 rounded-2xl bg-studio-blue/10 text-[#393df0] flex items-center justify-center font-bold group-hover:scale-110 group-hover:bg-[#393df0] group-hover:text-white transition-all duration-300 shadow-sm">
-                    <UserCheck className="w-6 h-6" />
-                  </div>
-                  <span className="font-mono font-black text-xs sm:text-sm text-slate-400 group-hover:text-[#393df0] transition-colors">
-                    Feature 02
-                  </span>
-                </div>
-                <h3
-                  className="font-extrabold text-xl sm:text-2xl text-slate-900 font-anek-latin group-hover:text-[#393df0] transition-colors"
-                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                >
-                  Driver Management
-                </h3>
-                <p
-                  className="font-bold text-sm sm:text-base text-slate-800 mt-2 font-anek-latin"
-                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                >
-                  Keep your drivers connected to their vehicles.
-                </p>
-                <p
-                  className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed font-anek-latin"
-                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                >
-                  Create individual driver profiles, manage assignments, track details, and give drivers quick access to the information they need.
-                </p>
-              </div>
-            </div>
-
-            {/* Feature 03 */}
-            <div className="p-7 sm:p-8 rounded-2xl sm:rounded-3xl bg-slate-50 border-2 border-slate-100 hover:border-[#393df0]/30 hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <div className="w-12 h-12 rounded-2xl bg-studio-blue/10 text-[#393df0] flex items-center justify-center font-bold group-hover:scale-110 group-hover:bg-[#393df0] group-hover:text-white transition-all duration-300 shadow-sm">
-                    <Wrench className="w-6 h-6" />
-                  </div>
-                  <span className="font-mono font-black text-xs sm:text-sm text-slate-400 group-hover:text-[#393df0] transition-colors">
-                    Feature 03
-                  </span>
-                </div>
-                <h3
-                  className="font-extrabold text-xl sm:text-2xl text-slate-900 font-anek-latin group-hover:text-[#393df0] transition-colors"
-                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                >
-                  Maintenance Management
-                </h3>
-                <p
-                  className="font-bold text-sm sm:text-base text-slate-800 mt-2 font-anek-latin"
-                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                >
-                  Stay ahead of what’s due.
-                </p>
-                <p
-                  className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed font-anek-latin"
-                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                >
-                  Schedule maintenance, track service history, monitor upcoming work, and make sure important servicing doesn't get overlooked.
-                </p>
-              </div>
-            </div>
-
-            {/* Feature 04 */}
-            <div className="p-7 sm:p-8 rounded-2xl sm:rounded-3xl bg-slate-50 border-2 border-slate-100 hover:border-[#393df0]/30 hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <div className="w-12 h-12 rounded-2xl bg-studio-blue/10 text-[#393df0] flex items-center justify-center font-bold group-hover:scale-110 group-hover:bg-[#393df0] group-hover:text-white transition-all duration-300 shadow-sm">
-                    <AlertTriangle className="w-6 h-6" />
-                  </div>
-                  <span className="font-mono font-black text-xs sm:text-sm text-slate-400 group-hover:text-[#393df0] transition-colors">
-                    Feature 04
-                  </span>
-                </div>
-                <h3
-                  className="font-extrabold text-xl sm:text-2xl text-slate-900 font-anek-latin group-hover:text-[#393df0] transition-colors"
-                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                >
-                  Repair Tracking
-                </h3>
-                <p
-                  className="font-bold text-sm sm:text-base text-slate-800 mt-2 font-anek-latin"
-                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                >
-                  From issue reported to repair completed.
-                </p>
-                <p
-                  className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed font-anek-latin"
-                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                >
-                  Drivers can report vehicle issues while fleet managers can track, manage, and update repairs throughout the entire process.
-                </p>
-              </div>
-            </div>
-
-            {/* Feature 05 */}
-            <div className="p-7 sm:p-8 rounded-2xl sm:rounded-3xl bg-slate-50 border-2 border-slate-100 hover:border-[#393df0]/30 hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <div className="w-12 h-12 rounded-2xl bg-studio-blue/10 text-[#393df0] flex items-center justify-center font-bold group-hover:scale-110 group-hover:bg-[#393df0] group-hover:text-white transition-all duration-300 shadow-sm">
-                    <Receipt className="w-6 h-6" />
-                  </div>
-                  <span className="font-mono font-black text-xs sm:text-sm text-slate-400 group-hover:text-[#393df0] transition-colors">
-                    Feature 05
-                  </span>
-                </div>
-                <h3
-                  className="font-extrabold text-xl sm:text-2xl text-slate-900 font-anek-latin group-hover:text-[#393df0] transition-colors"
-                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                >
-                  Expense Management
-                </h3>
-                <p
-                  className="font-bold text-sm sm:text-base text-slate-800 mt-2 font-anek-latin"
-                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                >
-                  Know where your fleet spending goes.
-                </p>
-                <p
-                  className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed font-anek-latin"
-                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                >
-                  Keep maintenance and repair expenses organized so your team has a clearer picture of vehicle-related costs.
-                </p>
-              </div>
-            </div>
-
-            {/* Feature 06 */}
-            <div className="p-7 sm:p-8 rounded-2xl sm:rounded-3xl bg-slate-50 border-2 border-slate-100 hover:border-[#393df0]/30 hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <div className="w-12 h-12 rounded-2xl bg-studio-blue/10 text-[#393df0] flex items-center justify-center font-bold group-hover:scale-110 group-hover:bg-[#393df0] group-hover:text-white transition-all duration-300 shadow-sm">
-                    <FileText className="w-6 h-6" />
-                  </div>
-                  <span className="font-mono font-black text-xs sm:text-sm text-slate-400 group-hover:text-[#393df0] transition-colors">
-                    Feature 06
-                  </span>
-                </div>
-                <h3
-                  className="font-extrabold text-xl sm:text-2xl text-slate-900 font-anek-latin group-hover:text-[#393df0] transition-colors"
-                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                >
-                  Documents
-                </h3>
-                <p
-                  className="font-bold text-sm sm:text-base text-slate-800 mt-2 font-anek-latin"
-                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                >
-                  Keep important documents within reach.
-                </p>
-                <p
-                  className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed font-anek-latin"
-                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                >
-                  Organize vehicle and driver documents, track their details, and stay aware of upcoming expirations.
-                </p>
-              </div>
-            </div>
-
-            {/* Feature 07 */}
-            <div className="p-7 sm:p-8 rounded-2xl sm:rounded-3xl bg-slate-50 border-2 border-slate-100 hover:border-[#393df0]/30 hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <div className="w-12 h-12 rounded-2xl bg-studio-blue/10 text-[#393df0] flex items-center justify-center font-bold group-hover:scale-110 group-hover:bg-[#393df0] group-hover:text-white transition-all duration-300 shadow-sm">
-                    <ShieldCheck className="w-6 h-6" />
-                  </div>
-                  <span className="font-mono font-black text-xs sm:text-sm text-slate-400 group-hover:text-[#393df0] transition-colors">
-                    Feature 07
-                  </span>
-                </div>
-                <h3
-                  className="font-extrabold text-xl sm:text-2xl text-slate-900 font-anek-latin group-hover:text-[#393df0] transition-colors"
-                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                >
-                  Vehicle Health
-                </h3>
-                <p
-                  className="font-bold text-sm sm:text-base text-slate-800 mt-2 font-anek-latin"
-                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                >
-                  Know when a vehicle needs attention.
-                </p>
-                <p
-                  className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed font-anek-latin"
-                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                >
-                  Keep track of vehicle condition, reported issues, maintenance status, and other important health indicators.
-                </p>
-              </div>
-            </div>
-
-            {/* Feature 08 */}
-            <div className="p-7 sm:p-8 rounded-2xl sm:rounded-3xl bg-slate-50 border-2 border-slate-100 hover:border-[#393df0]/30 hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <div className="w-12 h-12 rounded-2xl bg-studio-blue/10 text-[#393df0] flex items-center justify-center font-bold group-hover:scale-110 group-hover:bg-[#393df0] group-hover:text-white transition-all duration-300 shadow-sm">
-                    <Bell className="w-6 h-6" />
-                  </div>
-                  <span className="font-mono font-black text-xs sm:text-sm text-slate-400 group-hover:text-[#393df0] transition-colors">
-                    Feature 08
-                  </span>
-                </div>
-                <h3
-                  className="font-extrabold text-xl sm:text-2xl text-slate-900 font-anek-latin group-hover:text-[#393df0] transition-colors"
-                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                >
-                  Notifications & Reminders
-                </h3>
-                <p
-                  className="font-bold text-sm sm:text-base text-slate-800 mt-2 font-anek-latin"
-                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                >
-                  The right information, at the right time.
-                </p>
-                <p
-                  className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed font-anek-latin"
-                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                >
-                  Stay updated about maintenance, repairs, documents, assignments, and other important fleet activities.
-                </p>
-              </div>
-            </div>
-
-            {/* Feature 09 */}
-            <div className="p-7 sm:p-8 rounded-2xl sm:rounded-3xl bg-slate-50 border-2 border-slate-100 hover:border-[#393df0]/30 hover:bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <div className="w-12 h-12 rounded-2xl bg-studio-blue/10 text-[#393df0] flex items-center justify-center font-bold group-hover:scale-110 group-hover:bg-[#393df0] group-hover:text-white transition-all duration-300 shadow-sm">
-                    <BarChart3 className="w-6 h-6" />
-                  </div>
-                  <span className="font-mono font-black text-xs sm:text-sm text-slate-400 group-hover:text-[#393df0] transition-colors">
-                    Feature 09
-                  </span>
-                </div>
-                <h3
-                  className="font-extrabold text-xl sm:text-2xl text-slate-900 font-anek-latin group-hover:text-[#393df0] transition-colors"
-                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                >
-                  Fleet Insights
-                </h3>
-                <p
-                  className="font-bold text-sm sm:text-base text-slate-800 mt-2 font-anek-latin"
-                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                >
-                  Turn fleet activity into clear visibility.
-                </p>
-                <p
-                  className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed font-anek-latin"
-                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                >
-                  Get an organized view of vehicles, maintenance, repairs, expenses, and fleet operations to make everyday decisions easier.
-                </p>
-              </div>
-            </div>
+          {/* Fisheye Lens Mode Badge */}
+          <div className="mb-8 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-[#393df0]/20 text-[#2335f2] text-xs font-anek-latin font-bold">
+            <Eye className="w-3.5 h-3.5 animate-pulse text-[#2335f2]" />
+            <span>Fisheye Lens View • Hover & glide across cards to magnify</span>
           </div>
+
+          {/* 9 Feature Cards in Dynamic Fisheye Lens */}
+          <FisheyeFeatureGrid />
         </div>
       </section>
 
