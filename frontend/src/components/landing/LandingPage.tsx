@@ -48,49 +48,53 @@ const WORKFLOW_STEPS = [
     title: 'Manage & Assign',
     description: 'Add vehicles and drivers, manage fleet details, and assign vehicles before operations begin.',
     icon: Truck,
-    iconBg: 'bg-[#1d63ed]',
+    iconBg: 'bg-[#2335f2]',
+    shadowGlow: 'shadow-blue-600/25',
   },
   {
     step: '02',
     title: 'Monitor Fleet',
     description: 'Track vehicle status, odometer readings, availability, and important fleet information in one place.',
     icon: Gauge,
-    iconBg: 'bg-[#f59e0b]',
+    iconBg: 'bg-[#393df0]',
+    shadowGlow: 'shadow-indigo-600/25',
   },
   {
     step: '03',
     title: 'Stay Ahead of Maintenance',
     description: 'Schedule services, monitor maintenance due dates, and maintain a complete service history for every vehicle.',
     icon: Wrench,
-    iconBg: 'bg-[#16a34a]',
+    iconBg: 'bg-[#2563eb]',
+    shadowGlow: 'shadow-blue-500/25',
   },
   {
     step: '04',
     title: 'Resolve & Record',
     description: 'Report vehicle issues, manage repairs, track expenses, and keep every service and repair record organized.',
     icon: AlertTriangle,
-    iconBg: 'bg-[#dc2626]',
+    iconBg: 'bg-[#1826d0]',
+    shadowGlow: 'shadow-blue-950/25',
   },
 ];
 
 const WorkflowSection: React.FC = () => {
   return (
     <div className="w-full bg-white select-none">
-      {/* Top Feature Badges / Status Pills Bar matching reference screenshot */}
-      <div className="w-full border-y border-slate-100 bg-[#fffdfa]/90 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
+      {/* Top Feature Badges / Status Pills Bar in SERVIQ Color Palette */}
+      <div className="w-full border-y border-blue-100/70 bg-[#f8faff]/95 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-blue-100/70">
           {WORKFLOW_PILLS.map((pill, idx) => {
             const Icon = pill.icon;
             return (
               <div
                 key={idx}
-                className="flex items-center justify-center gap-3 px-6 py-4 transition-colors hover:bg-amber-50/30"
+                className="group flex items-center justify-center gap-3 px-6 py-4 transition-colors hover:bg-blue-50/60"
               >
-                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#fef3c7] text-[#d97706] flex items-center justify-center shrink-0 shadow-xs">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-blue-50 border border-blue-100 text-[#2335f2] flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 group-hover:bg-[#2335f2] group-hover:text-white transition-all duration-200">
                   <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[2.2]" />
                 </div>
                 <span
-                  className="text-xs sm:text-sm font-semibold text-slate-800 tracking-tight font-anek-latin"
+                  className="text-xs sm:text-sm font-semibold text-slate-800 tracking-tight font-anek-latin group-hover:text-[#2335f2] transition-colors"
                   style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
                 >
                   {pill.label}
@@ -103,10 +107,11 @@ const WorkflowSection: React.FC = () => {
 
       {/* Main Workflow Content Area */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 pb-20 sm:pb-28">
-        {/* Eyebrow Label */}
-        <div className="text-center mb-3 sm:mb-4">
+        {/* Eyebrow Label in SERVIQ Brand Blue with Pulsing Beacon */}
+        <div className="flex items-center justify-center gap-2 mb-3 sm:mb-4">
+          <div className="w-2.5 h-2.5 rounded-full bg-[#2335f2] animate-pulse" />
           <span
-            className="text-xs sm:text-sm font-extrabold uppercase tracking-[0.22em] text-[#eab308] font-anek-latin"
+            className="text-xs sm:text-sm font-extrabold uppercase tracking-[0.22em] text-[#2335f2] font-anek-latin"
             style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
           >
             FLEET MANAGEMENT WORKFLOW
@@ -121,7 +126,7 @@ const WorkflowSection: React.FC = () => {
           Built around what keeps your fleet moving
         </h2>
 
-        {/* Subtitle / Disclaimer */}
+        {/* Subtitle / Description */}
         <p
           className="text-slate-500 text-xs sm:text-sm md:text-base text-center max-w-2xl mx-auto mt-4 sm:mt-5 px-4 leading-relaxed font-anek-latin"
           style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
@@ -129,31 +134,31 @@ const WorkflowSection: React.FC = () => {
           From managing vehicles and drivers to tracking maintenance and repairs, SERVIQ keeps every stage of your fleet operation connected.
         </p>
 
-        {/* 4 Workflow Sequential Cards */}
+        {/* 4 Workflow Sequential Cards in SERVIQ Colors */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 mt-12 sm:mt-16">
           {WORKFLOW_STEPS.map((card) => {
             const CardIcon = card.icon;
             return (
               <div
                 key={card.step}
-                className="group relative bg-white rounded-[22px] border border-slate-200/90 p-6 sm:p-7 shadow-[0_2px_10px_rgba(0,0,0,0.04)] hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between"
+                className="group relative bg-white rounded-[22px] border border-slate-200/90 hover:border-[#2335f2]/40 p-6 sm:p-7 shadow-[0_2px_12px_rgba(35,53,242,0.04)] hover:shadow-2xl hover:shadow-[#2335f2]/10 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
-                  {/* Card Top Row: Colorful Squircle Icon + Step Number */}
+                  {/* Card Top Row: SERVIQ Brand Squircle Icon + Step Number */}
                   <div className="flex items-start justify-between">
                     <div
-                      className={`w-12 h-12 rounded-xl ${card.iconBg} text-white flex items-center justify-center shadow-md shadow-slate-900/10 group-hover:scale-105 transition-transform duration-300`}
+                      className={`w-12 h-12 rounded-xl ${card.iconBg} text-white flex items-center justify-center shadow-lg ${card.shadowGlow} group-hover:scale-105 transition-transform duration-300`}
                     >
                       <CardIcon className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.2]" />
                     </div>
-                    <span className="text-xs sm:text-sm font-mono font-semibold text-slate-400 tracking-wider">
+                    <span className="text-xs sm:text-sm font-mono font-semibold text-slate-400 group-hover:text-[#2335f2] transition-colors tracking-wider">
                       {card.step}
                     </span>
                   </div>
 
                   {/* Card Title */}
                   <h3
-                    className="text-lg sm:text-xl font-bold text-slate-900 mt-6 mb-2 tracking-tight font-anek-latin"
+                    className="text-lg sm:text-xl font-bold text-slate-900 group-hover:text-[#2335f2] transition-colors mt-6 mb-2 tracking-tight font-anek-latin"
                     style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
                   >
                     {card.title}
