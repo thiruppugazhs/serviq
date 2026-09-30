@@ -9,7 +9,6 @@ import {
   ShieldCheck,
   Bell,
   BarChart3,
-  Radio,
 } from 'lucide-react';
 
 export interface FeatureItem {
@@ -18,7 +17,6 @@ export interface FeatureItem {
   tagline: string;
   description: string;
   icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
-  accentColor: string;
   badge: string;
   highlights: string[];
   stationType: 'odd' | 'even';
@@ -32,7 +30,6 @@ export const FEATURES_DATA: FeatureItem[] = [
     description:
       'Manage profiles, assignments, status, odometer readings, and service history from one place.',
     icon: Truck,
-    accentColor: '#2563eb',
     badge: 'Asset Directory',
     highlights: ['Digital RC & Docs', 'Odometer Sync'],
     stationType: 'odd',
@@ -44,7 +41,6 @@ export const FEATURES_DATA: FeatureItem[] = [
     description:
       'Create driver profiles, manage assignments, track licenses, and give drivers mobile access.',
     icon: UserCheck,
-    accentColor: '#0284c7',
     badge: 'Driver Roster',
     highlights: ['Driver Profiles', 'Mobile App'],
     stationType: 'even',
@@ -56,7 +52,6 @@ export const FEATURES_DATA: FeatureItem[] = [
     description:
       'Schedule maintenance, track service history, monitor upcoming work, and prevent breakdowns.',
     icon: Wrench,
-    accentColor: '#d97706',
     badge: 'Dual-Trigger',
     highlights: ['Preventive Plan', 'Interval Alerts'],
     stationType: 'odd',
@@ -68,7 +63,6 @@ export const FEATURES_DATA: FeatureItem[] = [
     description:
       'Drivers report issues while fleet managers track job cards and repair status end-to-end.',
     icon: AlertTriangle,
-    accentColor: '#e11d48',
     badge: 'Resolution',
     highlights: ['Defect Reports', 'Job Cards'],
     stationType: 'even',
@@ -80,7 +74,6 @@ export const FEATURES_DATA: FeatureItem[] = [
     description:
       'Keep parts and maintenance expenses organized so your team has full visibility on costs.',
     icon: Receipt,
-    accentColor: '#059669',
     badge: 'TCO Audit',
     highlights: ['Parts & Labor', 'Spend Audit'],
     stationType: 'odd',
@@ -92,7 +85,6 @@ export const FEATURES_DATA: FeatureItem[] = [
     description:
       'Store registration, insurance, fitness certificates, and permits in one secure digital vault.',
     icon: FileText,
-    accentColor: '#8b5cf6',
     badge: 'Compliance',
     highlights: ['RC & Insurance', 'Expiry Alerts'],
     stationType: 'even',
@@ -104,7 +96,6 @@ export const FEATURES_DATA: FeatureItem[] = [
     description:
       'Monitor vehicle readiness, track ongoing issues, and make sure every asset is roadworthy.',
     icon: ShieldCheck,
-    accentColor: '#10b981',
     badge: 'Intelligence',
     highlights: ['Fleet Readiness', 'Diagnostics'],
     stationType: 'odd',
@@ -116,7 +107,6 @@ export const FEATURES_DATA: FeatureItem[] = [
     description:
       'Get timely alerts for upcoming service, pending repairs, expiring documents, and fleet notices.',
     icon: Bell,
-    accentColor: '#f59e0b',
     badge: 'Auto Alerts',
     highlights: ['Due Reminders', 'Push Notices'],
     stationType: 'even',
@@ -128,7 +118,6 @@ export const FEATURES_DATA: FeatureItem[] = [
     description:
       'View fleet activity, monitor vehicle status, track service records, and make informed decisions.',
     icon: BarChart3,
-    accentColor: '#6366f1',
     badge: 'Visibility',
     highlights: ['Analytics', 'Fleet Trends'],
     stationType: 'odd',
@@ -183,15 +172,9 @@ export const RoadFeaturesSection: React.FC = () => {
       {/* Main Container - Fits Screen Viewport (100% width max-w-7xl) */}
       <div className="w-full max-w-7xl mx-auto flex flex-col items-center px-2 sm:px-4 lg:px-6">
         {/* =========================================================================
-            1. SECTION HEADER
+            1. SECTION HEADER (Header pill removed as requested)
         ========================================================================= */}
-        <div className="text-center max-w-3xl mx-auto mb-6 sm:mb-8 z-20">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold text-white/90 mb-2.5 shadow-sm">
-            <Radio className="w-3.5 h-3.5 text-blue-300 animate-pulse" />
-            <span>Fleet Operations Roadmap</span>
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping ml-0.5" />
-          </div>
-
+        <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10 z-20">
           <h2
             className="text-2xl sm:text-3xl md:text-4xl font-black text-white font-anek-latin tracking-tight leading-tight drop-shadow-sm"
             style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
@@ -199,7 +182,7 @@ export const RoadFeaturesSection: React.FC = () => {
             Everything You Need to Keep Moving.
           </h2>
 
-          <p className="font-neue-haas-medium text-white/80 text-xs sm:text-sm md:text-base max-w-2xl mx-auto mt-1.5 leading-relaxed">
+          <p className="font-neue-haas-medium text-white/80 text-xs sm:text-sm md:text-base max-w-2xl mx-auto mt-2 leading-relaxed">
             All 9 core operational capabilities at a glance — Odd features on top, Even features on the bottom.
           </p>
         </div>
@@ -214,7 +197,7 @@ export const RoadFeaturesSection: React.FC = () => {
         >
           <div className="relative w-full min-w-[920px] flex flex-col justify-between">
             {/* ---------------------------------------------------------------------
-                A. TOP ROW: ODD STATIONS (01, 03, 05, 07, 09) - ALL WHITE CARDS
+                A. TOP ROW: ODD STATIONS (01, 03, 05, 07, 09) - ALL WHITE SERVIQ CARDS
             --------------------------------------------------------------------- */}
             <div className="relative w-full h-[190px] sm:h-[200px]">
               {FEATURES_DATA.map((feat, idx) => {
@@ -235,9 +218,9 @@ export const RoadFeaturesSection: React.FC = () => {
                       maxWidth: '220px',
                     }}
                   >
-                    {/* Top Feature Card: Pure White Container */}
+                    {/* Top Feature Card: Crisp White with Serviq Brand Colors */}
                     <div
-                      className={`relative rounded-2xl p-3 sm:p-3.5 transition-all duration-300 flex flex-col justify-between select-none bg-white text-slate-900 border border-slate-100 shadow-[0_10px_25px_rgba(0,0,0,0.12)] hover:shadow-[0_16px_36px_rgba(0,0,0,0.2)] hover:scale-102 ${
+                      className={`relative rounded-2xl p-3 sm:p-3.5 transition-all duration-300 flex flex-col justify-between select-none bg-white text-slate-900 border border-slate-100 shadow-[0_8px_20px_rgba(0,0,0,0.12)] hover:shadow-[0_16px_32px_rgba(0,0,0,0.18)] hover:scale-102 ${
                         isActive
                           ? 'ring-2 ring-white shadow-[0_18px_40px_rgba(0,0,0,0.3)] scale-105 z-30'
                           : 'opacity-95 hover:opacity-100 z-10'
@@ -245,23 +228,14 @@ export const RoadFeaturesSection: React.FC = () => {
                       style={{ minHeight: '175px' }}
                     >
                       <div>
-                        {/* Header: Number Badge (no 'STOP' word) & Category Icon */}
+                        {/* Header: Number Badge in Serviq Blue & Category Icon in Serviq Blue */}
                         <div className="flex items-center justify-between mb-1.5">
-                          <span
-                            className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold text-white shadow-xs"
-                            style={{ backgroundColor: feat.accentColor }}
-                          >
+                          <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold text-white bg-[#2335f2] shadow-xs">
                             {feat.number}
                           </span>
 
-                          <div
-                            className="w-7 h-7 rounded-lg flex items-center justify-center font-bold"
-                            style={{
-                              backgroundColor: `${feat.accentColor}18`,
-                              color: feat.accentColor,
-                            }}
-                          >
-                            <feat.icon className="w-3.5 h-3.5" />
+                          <div className="w-7 h-7 rounded-lg bg-blue-50 text-[#2335f2] border border-blue-100/60 flex items-center justify-center font-bold">
+                            <feat.icon className="w-3.5 h-3.5 stroke-[2.2]" />
                           </div>
                         </div>
 
@@ -270,11 +244,8 @@ export const RoadFeaturesSection: React.FC = () => {
                           {feat.title}
                         </h3>
 
-                        {/* Tagline */}
-                        <p
-                          className="font-bold text-[10px] sm:text-[11px] font-anek-latin mt-0.5 line-clamp-1"
-                          style={{ color: feat.accentColor }}
-                        >
+                        {/* Tagline in Serviq Blue */}
+                        <p className="font-bold text-[10px] sm:text-[11px] font-anek-latin text-[#2335f2] mt-0.5 line-clamp-1">
                           {feat.tagline}
                         </p>
 
@@ -284,15 +255,12 @@ export const RoadFeaturesSection: React.FC = () => {
                         </p>
                       </div>
 
-                      {/* Clean Footer: Badge Pill & Accent Dot (NO '01 / 09' counter) */}
+                      {/* Clean Footer in Serviq Styling (No '01 / 09' counter) */}
                       <div className="mt-2 pt-1.5 border-t border-slate-100 flex items-center justify-between">
                         <span className="text-[10px] font-semibold text-slate-500 font-anek-latin truncate">
                           {feat.badge}
                         </span>
-                        <span
-                          className="w-1.5 h-1.5 rounded-full"
-                          style={{ backgroundColor: feat.accentColor }}
-                        />
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#2335f2]" />
                       </div>
 
                       {/* Downward Pointer Triangle connecting to Thin Line */}
@@ -304,7 +272,7 @@ export const RoadFeaturesSection: React.FC = () => {
             </div>
 
             {/* ---------------------------------------------------------------------
-                B. CENTER THIN LINE WITH 9 MILESTONE NODES (NO CAR, NO ROAD)
+                B. CENTER THIN LINE WITH 9 MILESTONE NODES (SERVIQ BLUE PALETTE)
             --------------------------------------------------------------------- */}
             <div className="relative w-full h-[32px] my-1 flex items-center select-none">
               {/* The Thin Horizontal Line */}
@@ -322,17 +290,13 @@ export const RoadFeaturesSection: React.FC = () => {
                     className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center cursor-pointer group z-20"
                     style={{ left: `${stopPct}%` }}
                   >
-                    {/* Node Dot / Badge on the Line */}
+                    {/* Node Dot / Badge on the Line in Serviq Blue */}
                     <div
                       className={`rounded-full flex items-center justify-center font-mono font-bold transition-all duration-300 ${
                         isActive
-                          ? 'w-7 h-7 bg-white text-slate-900 shadow-[0_0_18px_rgba(255,255,255,0.9)] ring-4 ring-white/40 scale-110'
-                          : 'w-5 h-5 bg-slate-900 text-white/80 border border-white/40 group-hover:scale-110 group-hover:bg-white/20'
+                          ? 'w-7 h-7 bg-white text-[#2335f2] shadow-[0_0_18px_rgba(255,255,255,0.9)] ring-4 ring-white/50 scale-110'
+                          : 'w-5 h-5 bg-[#0f172a] text-white/80 border border-white/40 group-hover:scale-110 group-hover:bg-[#2335f2] group-hover:text-white'
                       }`}
-                      style={{
-                        backgroundColor: isActive ? '#ffffff' : undefined,
-                        color: isActive ? feat.accentColor : undefined,
-                      }}
                     >
                       <span className={isActive ? 'text-[11px] font-black' : 'text-[9px]'}>
                         {feat.number}
@@ -341,10 +305,7 @@ export const RoadFeaturesSection: React.FC = () => {
 
                     {/* Active Pulse Ring */}
                     {isActive && (
-                      <span
-                        className="absolute w-8 h-8 rounded-full animate-ping pointer-events-none opacity-40"
-                        style={{ backgroundColor: feat.accentColor }}
-                      />
+                      <span className="absolute w-8 h-8 rounded-full bg-white animate-ping pointer-events-none opacity-40" />
                     )}
                   </div>
                 );
@@ -352,7 +313,7 @@ export const RoadFeaturesSection: React.FC = () => {
             </div>
 
             {/* ---------------------------------------------------------------------
-                C. BOTTOM ROW: EVEN STATIONS (02, 04, 06, 08) - ALL WHITE CARDS
+                C. BOTTOM ROW: EVEN STATIONS (02, 04, 06, 08) - ALL WHITE SERVIQ CARDS
             --------------------------------------------------------------------- */}
             <div className="relative w-full h-[190px] sm:h-[200px]">
               {FEATURES_DATA.map((feat, idx) => {
@@ -376,9 +337,9 @@ export const RoadFeaturesSection: React.FC = () => {
                     {/* Upward Pointer Triangle connecting to Thin Line */}
                     <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[8px] border-b-white drop-shadow-xs z-10" />
 
-                    {/* Bottom Feature Card: Pure White Container */}
+                    {/* Bottom Feature Card: Crisp White with Serviq Brand Colors */}
                     <div
-                      className={`relative rounded-2xl p-3 sm:p-3.5 transition-all duration-300 flex flex-col justify-between select-none bg-white text-slate-900 border border-slate-100 shadow-[0_10px_25px_rgba(0,0,0,0.12)] hover:shadow-[0_16px_36px_rgba(0,0,0,0.2)] hover:scale-102 ${
+                      className={`relative rounded-2xl p-3 sm:p-3.5 transition-all duration-300 flex flex-col justify-between select-none bg-white text-slate-900 border border-slate-100 shadow-[0_8px_20px_rgba(0,0,0,0.12)] hover:shadow-[0_16px_32px_rgba(0,0,0,0.18)] hover:scale-102 ${
                         isActive
                           ? 'ring-2 ring-white shadow-[0_18px_40px_rgba(0,0,0,0.3)] scale-105 z-30'
                           : 'opacity-95 hover:opacity-100 z-10'
@@ -386,23 +347,14 @@ export const RoadFeaturesSection: React.FC = () => {
                       style={{ minHeight: '175px' }}
                     >
                       <div>
-                        {/* Header: Number Badge (no 'STOP' word) & Category Icon */}
+                        {/* Header: Number Badge in Serviq Blue & Category Icon in Serviq Blue */}
                         <div className="flex items-center justify-between mb-1.5">
-                          <span
-                            className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold text-white shadow-xs"
-                            style={{ backgroundColor: feat.accentColor }}
-                          >
+                          <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold text-white bg-[#2335f2] shadow-xs">
                             {feat.number}
                           </span>
 
-                          <div
-                            className="w-7 h-7 rounded-lg flex items-center justify-center font-bold"
-                            style={{
-                              backgroundColor: `${feat.accentColor}18`,
-                              color: feat.accentColor,
-                            }}
-                          >
-                            <feat.icon className="w-3.5 h-3.5" />
+                          <div className="w-7 h-7 rounded-lg bg-blue-50 text-[#2335f2] border border-blue-100/60 flex items-center justify-center font-bold">
+                            <feat.icon className="w-3.5 h-3.5 stroke-[2.2]" />
                           </div>
                         </div>
 
@@ -411,11 +363,8 @@ export const RoadFeaturesSection: React.FC = () => {
                           {feat.title}
                         </h3>
 
-                        {/* Tagline */}
-                        <p
-                          className="font-bold text-[10px] sm:text-[11px] font-anek-latin mt-0.5 line-clamp-1"
-                          style={{ color: feat.accentColor }}
-                        >
+                        {/* Tagline in Serviq Blue */}
+                        <p className="font-bold text-[10px] sm:text-[11px] font-anek-latin text-[#2335f2] mt-0.5 line-clamp-1">
                           {feat.tagline}
                         </p>
 
@@ -425,15 +374,12 @@ export const RoadFeaturesSection: React.FC = () => {
                         </p>
                       </div>
 
-                      {/* Clean Footer: Badge Pill & Accent Dot (NO '01 / 09' counter) */}
+                      {/* Clean Footer in Serviq Styling (No '01 / 09' counter) */}
                       <div className="mt-2 pt-1.5 border-t border-slate-100 flex items-center justify-between">
                         <span className="text-[10px] font-semibold text-slate-500 font-anek-latin truncate">
                           {feat.badge}
                         </span>
-                        <span
-                          className="w-1.5 h-1.5 rounded-full"
-                          style={{ backgroundColor: feat.accentColor }}
-                        />
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#2335f2]" />
                       </div>
                     </div>
                   </div>
