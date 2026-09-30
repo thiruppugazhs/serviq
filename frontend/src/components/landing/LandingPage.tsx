@@ -33,6 +33,7 @@ import {
 
 import { HelpFeedbackModal } from '../support/HelpFeedbackModal';
 import { RoadFeaturesSection } from './RoadFeaturesSection';
+import { PlatformEcosystemSection } from './PlatformEcosystemSection';
 
 const WORKFLOW_PILLS = [
   { label: 'Vehicle visibility', icon: Eye },
@@ -438,6 +439,13 @@ export const LandingPage: React.FC = () => {
               Features
             </a>
             <a
+              href="#platform"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-[72px] font-bold text-white/70 hover:text-white leading-[1.12] tracking-tight block transition-colors select-none"
+            >
+              Apps & Platform
+            </a>
+            <a
               href="#faq"
               onClick={() => setMobileMenuOpen(false)}
               className="text-4xl sm:text-5xl md:text-6xl lg:text-[72px] font-bold text-white/70 hover:text-white leading-[1.12] tracking-tight block transition-colors select-none"
@@ -558,6 +566,11 @@ export const LandingPage: React.FC = () => {
           PAGE 3 (EVEN): ROTATIONAL FEATURES SECTION � WHITE BACKGROUND
       ========================================================================= */}
       <RoadFeaturesSection />
+
+      {/* =========================================================================
+          PAGE 4: PURPOSE-BUILT ECOSYSTEM (WEB APP FOR ADMIN & MOBILE FOR DRIVER)
+      ========================================================================= */}
+      <PlatformEcosystemSection />
 
       {/* =========================================================================
           FAQS SECTION — BLUE BACKGROUND WITH 10 ACCORDION CARDS
