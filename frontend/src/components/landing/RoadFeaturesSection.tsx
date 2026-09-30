@@ -157,12 +157,11 @@ export const RoadFeaturesSection: React.FC = () => {
             {carouselItems.map((feat, idx) => (
               <div
                 key={`${feat.number}-${idx}`}
-                className="w-[300px] sm:w-[340px] shrink-0 bg-white text-slate-900 rounded-[24px] p-6 sm:p-7 shadow-[0_12px_32px_rgba(0,0,0,0.12)] hover:shadow-2xl hover:-translate-y-2 border border-slate-100/90 transition-all duration-300 flex flex-col justify-between select-none group"
-                style={{ minHeight: '300px' }}
+                className="w-[280px] sm:w-[320px] shrink-0 bg-white text-slate-900 rounded-[22px] p-5 sm:p-6 shadow-[0_12px_32px_rgba(0,0,0,0.12)] hover:shadow-2xl hover:-translate-y-2 border border-slate-100/90 transition-all duration-300 flex flex-col justify-between select-none group"
               >
                 <div>
                   {/* Card Header: Number Badge & Category Icon in Serviq Brand Blue */}
-                  <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center justify-between mb-3.5">
                     <span className="px-2.5 py-1 rounded-lg text-xs font-mono font-bold text-white bg-[#2335f2] shadow-xs">
                       {feat.number}
                     </span>
@@ -173,7 +172,7 @@ export const RoadFeaturesSection: React.FC = () => {
                   </div>
 
                   {/* Title */}
-                  <h3 className="font-black text-xl sm:text-2xl text-slate-900 font-anek-latin tracking-tight leading-snug">
+                  <h3 className="font-black text-lg sm:text-xl text-slate-900 font-anek-latin tracking-tight leading-snug">
                     {feat.title}
                   </h3>
 
@@ -186,27 +185,6 @@ export const RoadFeaturesSection: React.FC = () => {
                   <p className="text-xs sm:text-sm text-slate-600 mt-2.5 leading-relaxed font-anek-latin">
                     {feat.description}
                   </p>
-                </div>
-
-                <div>
-                  {/* Highlights Pills in Clean Serviq Palette */}
-                  <div className="pt-4 border-t border-slate-100 flex flex-wrap gap-1.5">
-                    {feat.highlights.map((h, hIdx) => (
-                      <span
-                        key={hIdx}
-                        className="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-50 text-slate-700 border border-slate-200/80 font-anek-latin"
-                      >
-                        {h}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Footer Row: Badge */}
-                  <div className="pt-3.5 mt-1 flex items-center justify-between">
-                    <span className="text-xs font-semibold text-slate-500 font-anek-latin truncate">
-                      {feat.badge}
-                    </span>
-                  </div>
                 </div>
               </div>
             ))}
