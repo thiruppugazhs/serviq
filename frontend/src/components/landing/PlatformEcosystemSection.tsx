@@ -3,19 +3,18 @@ import { Link } from 'react-router-dom';
 import {
   Monitor,
   Smartphone,
-  ShieldCheck,
+  Building2,
+  Sliders,
+  Truck,
+  Wrench,
   CheckCircle2,
   ArrowRight,
   Download,
-  Truck,
-  Wrench,
   AlertTriangle,
-  FileText,
-  Users,
-  Gauge,
   Camera,
   MapPin,
-  Check,
+  FileText,
+  ShieldCheck,
 } from 'lucide-react';
 
 export const PlatformEcosystemSection: React.FC = () => {
@@ -25,292 +24,345 @@ export const PlatformEcosystemSection: React.FC = () => {
       className="relative z-30 bg-white text-slate-900 py-20 sm:py-28 overflow-hidden select-none border-t border-slate-100"
     >
       {/* Background ambient lighting */}
-      <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-blue-50/70 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-blue-50/60 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* =========================================================================
-            1. SECTION HEADER
+            1. SECTION HEADER (Matching Exact Phrasing & Hierarchy of Reference Image)
         ========================================================================= */}
-        <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-[#2335f2] text-xs font-bold uppercase tracking-widest mb-4">
-            <span className="w-2 h-2 rounded-full bg-[#2335f2]" />
-            Purpose-Built Ecosystem
-          </div>
-
+        <div className="text-center max-w-4xl mx-auto mb-16 sm:mb-20">
           <h2
-            className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 font-anek-latin tracking-tight leading-tight"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-[54px] font-black text-slate-900 font-anek-latin tracking-tight leading-[1.15]"
             style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
           >
-            Web App for Management.{' '}
-            <span className="text-[#2335f2] block sm:inline">Mobile App for Drivers.</span>
+            One fleet workflow for every person responsible for the vehicle
           </h2>
 
-          <p className="font-neue-haas-medium text-slate-600 text-sm sm:text-base md:text-lg mt-4 leading-relaxed max-w-2xl mx-auto">
-            SERVIQ connects headquarters to highway routes. Organization Admins and Fleet Managers get
-            full desktop control, while drivers stay connected with a simple on-road mobile app.
+          <p className="font-neue-haas-medium text-slate-500 text-sm sm:text-base md:text-lg mt-4 max-w-2xl mx-auto leading-relaxed">
+            Each audience sees the part of the system they need, while the organization keeps the full
+            accountability picture.
           </p>
         </div>
 
         {/* =========================================================================
-            2. TWO-COLUMN INTERFACE SHOWCASE
+            2. TWO-COLUMN LAYOUT:
+               - LEFT: MONITOR SCREEN (Web App for Org Admin & Fleet Manager) + CARDS
+               - RIGHT: MOBILE SCREEN (Mobile App for Drivers) + CARDS
         ========================================================================= */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-stretch">
-          {/* -------------------------------------------------------------------
-              CARD 1: WEB APP (ORGANIZATION ADMIN & FLEET MANAGER)
-          ------------------------------------------------------------------- */}
-          <div className="rounded-[28px] bg-slate-50/90 border border-slate-200/80 p-6 sm:p-9 flex flex-col justify-between shadow-sm hover:shadow-xl transition-all duration-300 group">
-            <div>
-              {/* Header Badges */}
-              <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-                <span className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-blue-50 text-[#2335f2] border border-blue-100 text-xs font-bold uppercase tracking-wider font-mono">
-                  <Monitor className="w-4 h-4" />
-                  Web Application
-                </span>
-
-                <span className="px-3 py-1 rounded-xl bg-white text-slate-700 border border-slate-200 text-xs font-semibold shadow-2xs">
-                  For Org Admin & Fleet Manager
-                </span>
-              </div>
-
-              {/* Title & Description */}
-              <h3 className="text-2xl sm:text-3xl font-black text-slate-900 font-anek-latin tracking-tight">
-                Central Operations Console
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-600 mt-2.5 leading-relaxed font-anek-latin">
-                Comprehensive web platform engineered for deep operational control, multi-vehicle monitoring,
-                maintenance scheduling, and maintenance expenditure auditing.
-              </p>
-
-              {/* Web App Interactive Preview Card */}
-              <div className="mt-6 rounded-2xl bg-white border border-slate-200/90 shadow-sm p-4 sm:p-5 overflow-hidden">
-                {/* Browser Top Bar */}
-                <div className="flex items-center justify-between pb-3.5 mb-4 border-b border-slate-100 text-xs text-slate-400">
-                  <div className="flex items-center gap-1.5">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+          {/* =====================================================================
+              LEFT COLUMN: MONITOR SCREEN (WEB CONSOLE) + MANAGEMENT ROLE CARDS
+          ===================================================================== */}
+          <div className="space-y-6">
+            {/* Monitor Screen Frame */}
+            <div className="rounded-[32px] border-4 border-slate-200/90 bg-white p-5 sm:p-6 shadow-[0_16px_40px_rgba(0,0,0,0.06)] hover:shadow-xl transition-all">
+              {/* Product Preview Pill & Top Bar */}
+              <div className="flex items-center justify-between pb-3.5 mb-4 border-b border-slate-100">
+                <div className="flex items-center gap-2">
+                  <span className="inline-block px-2.5 py-0.5 rounded-full border border-slate-200 bg-slate-50 text-[10px] text-slate-600 font-bold uppercase tracking-wider">
+                    Web Console Preview
+                  </span>
+                  <div className="hidden sm:flex items-center gap-1.5 ml-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-slate-300" />
                     <span className="w-2.5 h-2.5 rounded-full bg-slate-300" />
                     <span className="w-2.5 h-2.5 rounded-full bg-slate-300" />
                   </div>
-                  <div className="px-3 py-0.5 rounded-md bg-slate-100 text-slate-600 font-mono text-[11px]">
-                    serviq.in/console
-                  </div>
-                  <div className="w-10" />
                 </div>
 
-                {/* Dashboard Snapshot */}
-                <div className="space-y-3">
-                  {/* Top Stats Row */}
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="p-2.5 rounded-xl bg-blue-50/60 border border-blue-100/70">
-                      <div className="text-[10px] text-slate-500 font-semibold uppercase">Active Fleet</div>
-                      <div className="text-base sm:text-lg font-black text-[#2335f2] mt-0.5">28 Units</div>
+                <div className="px-3 py-0.5 rounded-md bg-slate-100 text-slate-600 font-mono text-[11px] truncate max-w-[160px] sm:max-w-none">
+                  serviq.in/console
+                </div>
+              </div>
+
+              {/* Monitor Screen Content */}
+              <div className="space-y-4">
+                {/* Console Header */}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-[10px] uppercase tracking-wider text-slate-400 font-bold font-mono">
+                      Management Console
                     </div>
-                    <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                      <div className="text-[10px] text-slate-500 font-semibold uppercase">Due Service</div>
-                      <div className="text-base sm:text-lg font-black text-slate-900 mt-0.5">3 Due</div>
-                    </div>
-                    <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-                      <div className="text-[10px] text-slate-500 font-semibold uppercase">Open Repairs</div>
-                      <div className="text-base sm:text-lg font-black text-slate-900 mt-0.5">2 Open</div>
+                    <div className="text-base sm:text-lg font-black text-slate-900 font-anek-latin">
+                      Live Fleet Operations
                     </div>
                   </div>
 
-                  {/* Sample Vehicle Row */}
-                  <div className="p-3 rounded-xl bg-slate-50/80 border border-slate-100 flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-7 h-7 rounded-lg bg-blue-100 text-[#2335f2] flex items-center justify-center shrink-0">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50 text-[#2335f2] border border-blue-100 text-xs font-bold font-anek-latin">
+                    <span className="w-2 h-2 rounded-full bg-[#2335f2] animate-pulse" />
+                    Live Sync
+                  </span>
+                </div>
+
+                {/* 3 Metric Stat Tiles */}
+                <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                  <div className="p-3 rounded-2xl bg-blue-50/70 border border-blue-100/80">
+                    <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Active Units</div>
+                    <div className="text-lg sm:text-xl font-black text-[#2335f2] mt-0.5">28 Trucks</div>
+                  </div>
+
+                  <div className="p-3 rounded-2xl bg-slate-50 border border-slate-100">
+                    <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Due Service</div>
+                    <div className="text-lg sm:text-xl font-black text-slate-900 mt-0.5">3 Due</div>
+                  </div>
+
+                  <div className="p-3 rounded-2xl bg-slate-50 border border-slate-100">
+                    <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Repairs Open</div>
+                    <div className="text-lg sm:text-xl font-black text-slate-900 mt-0.5">2 Jobs</div>
+                  </div>
+                </div>
+
+                {/* Live Vehicle Roster Rows */}
+                <div className="space-y-2">
+                  <div className="p-3 rounded-2xl bg-slate-50/80 border border-slate-100 flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-xl bg-blue-50 text-[#2335f2] flex items-center justify-center font-bold shrink-0">
                         <Truck className="w-4 h-4" />
                       </div>
                       <div>
-                        <div className="font-bold text-slate-900">TN-09-CB-4820</div>
+                        <div className="font-bold text-slate-900 font-mono">TN-09-CB-4820</div>
                         <div className="text-[11px] text-slate-500">Driver: Karthik M. · Eicher Pro</div>
                       </div>
                     </div>
-                    <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold">
+                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold">
                       Roadworthy
                     </span>
                   </div>
-                </div>
-              </div>
 
-              {/* Key Features List */}
-              <div className="mt-6 space-y-3">
-                <div className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700">
-                  <Check className="w-4 h-4 text-[#2335f2] shrink-0 mt-0.5 stroke-[3]" />
-                  <span>
-                    <strong>Fleet Directory & Assignment:</strong> Complete vehicle profiles, RC documents, and driver rosters.
-                  </span>
-                </div>
-                <div className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700">
-                  <Check className="w-4 h-4 text-[#2335f2] shrink-0 mt-0.5 stroke-[3]" />
-                  <span>
-                    <strong>Dual-Trigger Maintenance Engine:</strong> Odometer mileage & calendar interval alert triggers.
-                  </span>
-                </div>
-                <div className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700">
-                  <Check className="w-4 h-4 text-[#2335f2] shrink-0 mt-0.5 stroke-[3]" />
-                  <span>
-                    <strong>Job Cards & Cost Auditing:</strong> Review breakdown reports, issue work orders, and audit parts bills.
-                  </span>
-                </div>
-                <div className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700">
-                  <Check className="w-4 h-4 text-[#2335f2] shrink-0 mt-0.5 stroke-[3]" />
-                  <span>
-                    <strong>Role-Based Permissions:</strong> Clear separation between executive Organization Admins and Fleet Managers.
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Bottom Actions */}
-            <div className="mt-8 pt-6 border-t border-slate-200/80 flex flex-wrap items-center justify-between gap-4">
-              <Link
-                to="/login"
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#2335f2] text-white font-bold text-xs sm:text-sm hover:bg-[#1c2bc4] transition-colors shadow-xs group-hover:scale-[1.02]"
-              >
-                <span>Open Web Console</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-              <span className="text-xs text-slate-500 font-medium">Desktop & Tablet Optimized</span>
-            </div>
-          </div>
-
-          {/* -------------------------------------------------------------------
-              CARD 2: MOBILE APP (DEDICATED FOR DRIVERS)
-          ------------------------------------------------------------------- */}
-          <div className="rounded-[28px] bg-slate-50/90 border border-slate-200/80 p-6 sm:p-9 flex flex-col justify-between shadow-sm hover:shadow-xl transition-all duration-300 group">
-            <div>
-              {/* Header Badges */}
-              <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-                <span className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-blue-50 text-[#2335f2] border border-blue-100 text-xs font-bold uppercase tracking-wider font-mono">
-                  <Smartphone className="w-4 h-4" />
-                  Mobile Application
-                </span>
-
-                <span className="px-3 py-1 rounded-xl bg-white text-slate-700 border border-slate-200 text-xs font-semibold shadow-2xs">
-                  Dedicated for Drivers
-                </span>
-              </div>
-
-              {/* Title & Description */}
-              <h3 className="text-2xl sm:text-3xl font-black text-slate-900 font-anek-latin tracking-tight">
-                Highway Driver Companion
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-600 mt-2.5 leading-relaxed font-anek-latin">
-                Fast, simple, and distraction-free mobile tool designed for drivers on highway trips.
-                Zero training needed to log mileage and report roadside issues.
-              </p>
-
-              {/* Mobile App Interactive Preview Card */}
-              <div className="mt-6 rounded-2xl bg-white border border-slate-200/90 shadow-sm p-4 sm:p-5 overflow-hidden">
-                {/* Phone Top Notch / Header */}
-                <div className="flex items-center justify-between pb-3.5 mb-4 border-b border-slate-100 text-xs text-slate-400">
-                  <span className="font-mono text-[11px] text-slate-500">09:41 AM</span>
-                  <div className="w-16 h-3 rounded-full bg-slate-100" />
-                  <span className="text-[11px] text-slate-500">4G LTE</span>
-                </div>
-
-                {/* Mobile UI Snippet */}
-                <div className="space-y-3">
-                  {/* Current Vehicle Banner */}
-                  <div className="p-3 rounded-xl bg-slate-900 text-white flex items-center justify-between">
-                    <div>
-                      <div className="text-[10px] text-blue-300 font-semibold uppercase">Assigned Truck</div>
-                      <div className="text-sm font-bold font-mono">TN-09-CB-4820</div>
+                  <div className="p-3 rounded-2xl bg-slate-50/80 border border-slate-100 flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-xl bg-blue-50 text-[#2335f2] flex items-center justify-center font-bold shrink-0">
+                        <Wrench className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <div className="font-bold text-slate-900 font-mono">KA-01-MJ-9912</div>
+                        <div className="text-[11px] text-slate-500">Scheduled: 10,000 km Oil Service</div>
+                      </div>
                     </div>
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 font-semibold">
-                      Trip Active
+                    <span className="px-2.5 py-0.5 rounded-full bg-blue-50 text-[#2335f2] border border-blue-200 text-[10px] font-bold">
+                      Service Due
+                    </span>
+                  </div>
+                </div>
+
+                {/* Bottom Footer inside monitor */}
+                <div className="pt-2 flex items-center justify-between text-[11px] text-slate-400 font-medium">
+                  <span>Dual-Trigger Maintenance Engine Active</span>
+                  <Link to="/login" className="text-[#2335f2] font-bold hover:underline inline-flex items-center gap-1">
+                    Open Console <ArrowRight className="w-3 h-3" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            {/* Management Cards (2 Cards matching Reference Image Card Design) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Card 1: School Leadership Equivalent -> Organization Leadership */}
+              <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-2xs hover:shadow-md transition-shadow flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#2335f2] border border-blue-100 flex items-center justify-center">
+                      <Building2 className="w-5 h-5 stroke-[2.2]" />
+                    </div>
+                    <span className="px-2.5 py-1 rounded-full border border-slate-200 bg-slate-50 text-[10px] font-semibold text-slate-600 font-anek-latin">
+                      Admin dashboard and reports
                     </span>
                   </div>
 
-                  {/* Driver Quick Action Tiles */}
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="p-2.5 rounded-xl bg-blue-50/70 border border-blue-100/80 flex items-center gap-2">
-                      <Camera className="w-4 h-4 text-[#2335f2] shrink-0" />
-                      <div>
-                        <div className="text-xs font-bold text-slate-900 leading-tight">Report Issue</div>
-                        <div className="text-[10px] text-slate-500">Photo & GPS</div>
-                      </div>
+                  <h3 className="font-bold text-lg text-slate-900 font-anek-latin">
+                    Organization leadership
+                  </h3>
+                  <p className="text-xs text-slate-600 mt-2 leading-relaxed font-anek-latin">
+                    Review total operational expenses, compliance audits, fleet utilization metrics, and configured
+                    vehicle data from the executive web dashboard.
+                  </p>
+                </div>
+              </div>
+
+              {/* Card 2: Transport Managers Equivalent -> Fleet Managers */}
+              <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-2xs hover:shadow-md transition-shadow flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#2335f2] border border-blue-100 flex items-center justify-center">
+                      <Sliders className="w-5 h-5 stroke-[2.2]" />
                     </div>
-                    <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 flex items-center gap-2">
-                      <Gauge className="w-4 h-4 text-[#2335f2] shrink-0" />
-                      <div>
-                        <div className="text-xs font-bold text-slate-900 leading-tight">Odometer</div>
-                        <div className="text-[10px] text-slate-500">1-Tap Sync</div>
-                      </div>
+                    <span className="px-2.5 py-1 rounded-full border border-slate-200 bg-slate-50 text-[10px] font-semibold text-slate-600 font-anek-latin">
+                      Live fleet & maintenance visibility
+                    </span>
+                  </div>
+
+                  <h3 className="font-bold text-lg text-slate-900 font-anek-latin">
+                    Fleet managers
+                  </h3>
+                  <p className="text-xs text-slate-600 mt-2 leading-relaxed font-anek-latin">
+                    Track vehicles, odometer readings, service intervals, repair job cards, and workshop delays
+                    without switching tools.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* =====================================================================
+              RIGHT COLUMN: MOBILE SCREEN (DRIVER APP) + DRIVER ROLE CARDS
+          ===================================================================== */}
+          <div className="space-y-6">
+            {/* Mobile Screen Frame (Exact Phone Bezel & Layout of Reference Image) */}
+            <div className="rounded-[36px] border-4 border-slate-200/90 bg-white p-5 sm:p-6 shadow-[0_16px_40px_rgba(0,0,0,0.06)] hover:shadow-xl transition-all max-w-md mx-auto lg:max-w-none">
+              {/* Product Preview Pill & Top Notch */}
+              <div className="flex items-center justify-between pb-2 mb-2">
+                <span className="inline-block px-2.5 py-0.5 rounded-full border border-slate-200 bg-slate-50 text-[10px] text-slate-600 font-bold uppercase tracking-wider">
+                  Product preview
+                </span>
+                <div className="w-14 h-3 bg-slate-200 rounded-full" />
+                <span className="text-[11px] font-mono text-slate-400">09:41 AM</span>
+              </div>
+
+              {/* Mobile Screen Inner Canvas */}
+              <div className="space-y-4 pt-1">
+                {/* Header Row */}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-[10px] uppercase tracking-wider text-slate-400 font-bold font-mono">
+                      Driver Console
+                    </div>
+                    <div className="text-base sm:text-lg font-black text-slate-900 font-anek-latin">
+                      Morning Shift
+                    </div>
+                  </div>
+
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold font-anek-latin">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    Live Tracking
+                  </span>
+                </div>
+
+                {/* Assigned Vehicle Highlight Card (Matching Yellow Card in Reference Image) */}
+                <div className="p-3.5 rounded-2xl bg-amber-50/80 border border-amber-200/80 flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-amber-500 text-white flex items-center justify-center font-bold shrink-0 shadow-xs">
+                    <Truck className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="font-bold text-slate-900 text-xs sm:text-sm font-mono">
+                      Truck TN-09-CB-4820
+                    </div>
+                    <div className="text-[11px] text-slate-600">
+                      ETA: 18 mins (Checkpoint: Chennai Bypass)
                     </div>
                   </div>
                 </div>
+
+                {/* Dotted Route Graphic (Matching Reference Image) */}
+                <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 flex flex-col justify-center relative overflow-hidden">
+                  <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono mb-2">
+                    <span>Depot Gate</span>
+                    <span className="font-bold text-[#2335f2]">Live location active</span>
+                    <span>Destination</span>
+                  </div>
+
+                  {/* SVG Dotted Curved Route with Moving Pin Marker */}
+                  <div className="relative w-full h-8 flex items-center justify-center">
+                    <svg className="w-full h-8" viewBox="0 0 300 32" fill="none">
+                      <path
+                        d="M 10 16 Q 80 4 150 16 T 290 16"
+                        stroke="#cbd5e1"
+                        strokeWidth="2.5"
+                        strokeDasharray="4 4"
+                      />
+                    </svg>
+
+                    {/* Active Location Marker at Midpoint */}
+                    <div className="absolute left-[48%] -translate-x-1/2 w-6 h-6 rounded-full bg-[#2335f2] text-white flex items-center justify-center shadow-md">
+                      <MapPin className="w-3.5 h-3.5" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Driver Controls Section (Matching Reference Image) */}
+                <div className="space-y-2">
+                  <div className="text-[10px] uppercase tracking-wider text-slate-400 font-bold font-mono">
+                    Driver Controls
+                  </div>
+
+                  {/* Control Row 1 */}
+                  <div className="p-3 rounded-xl bg-white border border-slate-200 flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-2.5">
+                      <Camera className="w-4 h-4 text-[#2335f2]" />
+                      <span className="font-semibold text-slate-800">Report Breakdown (Photo & GPS)</span>
+                    </div>
+                    <div className="w-4 h-4 rounded-full border border-slate-300" />
+                  </div>
+
+                  {/* Control Row 2 */}
+                  <div className="p-3 rounded-xl bg-white border border-slate-200 flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-2.5">
+                      <FileText className="w-4 h-4 text-[#2335f2]" />
+                      <span className="font-semibold text-slate-800">Log Daily Morning Odometer</span>
+                    </div>
+                    <div className="w-4 h-4 rounded-full border border-slate-300" />
+                  </div>
+                </div>
+
+                {/* App Notifications Snippet (Matching Reference Image) */}
+                <div className="pt-2 border-t border-slate-100 text-[10px] text-slate-400 space-y-1 font-mono">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[#2335f2] font-bold">··</span>
+                    <span>Vehicle arrived at highway transit zone</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[#2335f2] font-bold">··</span>
+                    <span>Live odometer and trip sync refreshed</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Field & Driver Cards (2 Cards matching Reference Image Card Design) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Card 3: Parents Equivalent -> Drivers */}
+              <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-2xs hover:shadow-md transition-shadow flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#2335f2] border border-blue-100 flex items-center justify-center">
+                      <Smartphone className="w-5 h-5 stroke-[2.2]" />
+                    </div>
+                    <span className="px-2.5 py-1 rounded-full border border-slate-200 bg-slate-50 text-[10px] font-semibold text-slate-600 font-anek-latin">
+                      Daily odometer & mobile access
+                    </span>
+                  </div>
+
+                  <h3 className="font-bold text-lg text-slate-900 font-anek-latin">
+                    Drivers
+                  </h3>
+                  <p className="text-xs text-slate-600 mt-2 leading-relaxed font-anek-latin">
+                    Follow assigned vehicles, log daily odometers, access digital vehicle permits, and stay connected
+                    on highway routes.
+                  </p>
+                </div>
               </div>
 
-              {/* Key Features List */}
-              <div className="mt-6 space-y-3">
-                <div className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700">
-                  <Check className="w-4 h-4 text-[#2335f2] shrink-0 mt-0.5 stroke-[3]" />
-                  <span>
-                    <strong>1-Tap Breakdown Reporting:</strong> Snap a photo and submit; automatic GPS pinpoints vehicle location.
-                  </span>
-                </div>
-                <div className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700">
-                  <Check className="w-4 h-4 text-[#2335f2] shrink-0 mt-0.5 stroke-[3]" />
-                  <span>
-                    <strong>Daily Odometer Sync:</strong> Quick mileage logging at the start and end of shifts.
-                  </span>
-                </div>
-                <div className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700">
-                  <Check className="w-4 h-4 text-[#2335f2] shrink-0 mt-0.5 stroke-[3]" />
-                  <span>
-                    <strong>Digital Glovebox:</strong> Instant access to vehicle RC, insurance, and highway fitness permits.
-                  </span>
-                </div>
-                <div className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700">
-                  <Check className="w-4 h-4 text-[#2335f2] shrink-0 mt-0.5 stroke-[3]" />
-                  <span>
-                    <strong>Offline Support:</strong> Works reliably in weak-signal areas with automatic cloud sync.
-                  </span>
+              {/* Card 4: Drivers/SOS Equivalent -> Emergency & Breakdown Support */}
+              <div className="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-2xs hover:shadow-md transition-shadow flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#2335f2] border border-blue-100 flex items-center justify-center">
+                      <Truck className="w-5 h-5 stroke-[2.2]" />
+                    </div>
+                    <span className="px-2.5 py-1 rounded-full border border-slate-200 bg-slate-50 text-[10px] font-semibold text-slate-600 font-anek-latin">
+                      SOS breakdown workflow
+                    </span>
+                  </div>
+
+                  <h3 className="font-bold text-lg text-slate-900 font-anek-latin">
+                    Breakdown & SOS response
+                  </h3>
+                  <p className="text-xs text-slate-600 mt-2 leading-relaxed font-anek-latin">
+                    Run emergency workflows, report vehicle defects with photo & GPS, update trip state, and trigger
+                    SOS when roadside help is needed.
+                  </p>
                 </div>
               </div>
             </div>
-
-            {/* Bottom Actions */}
-            <div className="mt-8 pt-6 border-t border-slate-200/80 flex flex-wrap items-center justify-between gap-4">
-              <Link
-                to="/download"
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#2335f2] text-white font-bold text-xs sm:text-sm hover:bg-[#1c2bc4] transition-colors shadow-xs group-hover:scale-[1.02]"
-              >
-                <Download className="w-4 h-4" />
-                <span>Download Driver APK</span>
-              </Link>
-              <span className="text-xs text-slate-500 font-medium">Android 8.0+ · 28 MB</span>
-            </div>
           </div>
-        </div>
-
-        {/* =========================================================================
-            3. REAL-TIME SYNERGY FOOTER BANNER
-        ========================================================================= */}
-        <div className="mt-12 sm:mt-16 p-6 sm:p-8 rounded-[24px] bg-slate-50 border border-slate-200/80 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-blue-100 text-[#2335f2] flex items-center justify-center shrink-0">
-              <CheckCircle2 className="w-6 h-6 stroke-[2.5]" />
-            </div>
-            <div>
-              <h4 className="text-base sm:text-lg font-bold text-slate-900 font-anek-latin">
-                Seamless Two-Way Real-Time Synchronization
-              </h4>
-              <p className="text-xs sm:text-sm text-slate-600 mt-0.5 font-anek-latin">
-                When a driver logs daily kilometers or reports a defect on mobile, the Organization Admin and Fleet Manager
-                immediately see updated maintenance alerts and job cards on the Web App.
-              </p>
-            </div>
-          </div>
-
-          <Link
-            to="/register"
-            className="shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-800 text-xs sm:text-sm font-bold hover:bg-slate-100 transition-colors"
-          >
-            <span>Get Started with SERVIQ</span>
-            <ArrowRight className="w-4 h-4 text-[#2335f2]" />
-          </Link>
         </div>
       </div>
     </section>
