@@ -214,7 +214,7 @@ export const RoadFeaturesSection: React.FC = () => {
         >
           <div className="relative w-full min-w-[920px] flex flex-col justify-between">
             {/* ---------------------------------------------------------------------
-                A. TOP ROW: ODD STATIONS (01, 03, 05, 07, 09)
+                A. TOP ROW: ODD STATIONS (01, 03, 05, 07, 09) - ALL WHITE CARDS
             --------------------------------------------------------------------- */}
             <div className="relative w-full h-[190px] sm:h-[200px]">
               {FEATURES_DATA.map((feat, idx) => {
@@ -235,31 +235,30 @@ export const RoadFeaturesSection: React.FC = () => {
                       maxWidth: '220px',
                     }}
                   >
-                    {/* Top Feature Card */}
+                    {/* Top Feature Card: Pure White Container */}
                     <div
-                      className={`relative rounded-2xl p-3 sm:p-3.5 transition-all duration-300 flex flex-col justify-between select-none ${
+                      className={`relative rounded-2xl p-3 sm:p-3.5 transition-all duration-300 flex flex-col justify-between select-none bg-white text-slate-900 border border-slate-100 shadow-[0_10px_25px_rgba(0,0,0,0.12)] hover:shadow-[0_16px_36px_rgba(0,0,0,0.2)] hover:scale-102 ${
                         isActive
-                          ? 'bg-white text-slate-900 shadow-[0_16px_36px_rgba(0,0,0,0.4)] ring-2 ring-white scale-105 z-30'
-                          : 'bg-white/10 backdrop-blur-md text-white/90 border border-white/15 hover:bg-white/20 hover:scale-102 z-10'
+                          ? 'ring-2 ring-white shadow-[0_18px_40px_rgba(0,0,0,0.3)] scale-105 z-30'
+                          : 'opacity-95 hover:opacity-100 z-10'
                       }`}
                       style={{ minHeight: '175px' }}
                     >
                       <div>
-                        {/* Header: Badge & Icon */}
+                        {/* Header: Number Badge (no 'STOP' word) & Category Icon */}
                         <div className="flex items-center justify-between mb-1.5">
                           <span
                             className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold text-white shadow-xs"
                             style={{ backgroundColor: feat.accentColor }}
                           >
-                            STOP {feat.number}
+                            {feat.number}
                           </span>
 
                           <div
-                            className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold ${
-                              isActive ? 'bg-slate-100 text-slate-900' : 'bg-white/10 text-white'
-                            }`}
+                            className="w-7 h-7 rounded-lg flex items-center justify-center font-bold"
                             style={{
-                              color: isActive ? feat.accentColor : undefined,
+                              backgroundColor: `${feat.accentColor}18`,
+                              color: feat.accentColor,
                             }}
                           >
                             <feat.icon className="w-3.5 h-3.5" />
@@ -267,58 +266,37 @@ export const RoadFeaturesSection: React.FC = () => {
                         </div>
 
                         {/* Title */}
-                        <h3
-                          className={`font-black text-xs sm:text-sm font-anek-latin tracking-tight leading-tight line-clamp-1 ${
-                            isActive ? 'text-slate-900' : 'text-white'
-                          }`}
-                        >
+                        <h3 className="font-black text-xs sm:text-sm text-slate-900 font-anek-latin tracking-tight leading-tight line-clamp-1">
                           {feat.title}
                         </h3>
 
                         {/* Tagline */}
                         <p
                           className="font-bold text-[10px] sm:text-[11px] font-anek-latin mt-0.5 line-clamp-1"
-                          style={{
-                            color: isActive ? feat.accentColor : '#93c5fd',
-                          }}
+                          style={{ color: feat.accentColor }}
                         >
                           {feat.tagline}
                         </p>
 
                         {/* Description */}
-                        <p
-                          className={`text-[10px] mt-1 leading-snug font-anek-latin line-clamp-2 ${
-                            isActive ? 'text-slate-600' : 'text-white/60'
-                          }`}
-                        >
+                        <p className="text-[10px] text-slate-600 mt-1 leading-snug font-anek-latin line-clamp-2">
                           {feat.description}
                         </p>
                       </div>
 
-                      {/* Footer Badge */}
-                      <div className="mt-2 pt-1.5 border-t border-slate-100/20 flex items-center justify-between">
-                        <span
-                          className={`text-[9px] font-semibold truncate ${
-                            isActive ? 'text-slate-500' : 'text-white/50'
-                          }`}
-                        >
+                      {/* Clean Footer: Badge Pill & Accent Dot (NO '01 / 09' counter) */}
+                      <div className="mt-2 pt-1.5 border-t border-slate-100 flex items-center justify-between">
+                        <span className="text-[10px] font-semibold text-slate-500 font-anek-latin truncate">
                           {feat.badge}
                         </span>
                         <span
-                          className={`text-[9px] font-mono font-bold ${
-                            isActive ? 'text-slate-400' : 'text-white/40'
-                          }`}
-                        >
-                          {feat.number} / 09
-                        </span>
+                          className="w-1.5 h-1.5 rounded-full"
+                          style={{ backgroundColor: feat.accentColor }}
+                        />
                       </div>
 
                       {/* Downward Pointer Triangle connecting to Thin Line */}
-                      <div
-                        className={`absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px] transition-colors ${
-                          isActive ? 'border-t-white' : 'border-t-white/30'
-                        }`}
-                      />
+                      <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px] border-t-white drop-shadow-xs" />
                     </div>
                   </div>
                 );
@@ -374,7 +352,7 @@ export const RoadFeaturesSection: React.FC = () => {
             </div>
 
             {/* ---------------------------------------------------------------------
-                C. BOTTOM ROW: EVEN STATIONS (02, 04, 06, 08)
+                C. BOTTOM ROW: EVEN STATIONS (02, 04, 06, 08) - ALL WHITE CARDS
             --------------------------------------------------------------------- */}
             <div className="relative w-full h-[190px] sm:h-[200px]">
               {FEATURES_DATA.map((feat, idx) => {
@@ -396,37 +374,32 @@ export const RoadFeaturesSection: React.FC = () => {
                     }}
                   >
                     {/* Upward Pointer Triangle connecting to Thin Line */}
-                    <div
-                      className={`absolute -top-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[8px] transition-colors z-10 ${
-                        isActive ? 'border-b-white' : 'border-b-white/30'
-                      }`}
-                    />
+                    <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[8px] border-b-white drop-shadow-xs z-10" />
 
-                    {/* Bottom Feature Card */}
+                    {/* Bottom Feature Card: Pure White Container */}
                     <div
-                      className={`relative rounded-2xl p-3 sm:p-3.5 transition-all duration-300 flex flex-col justify-between select-none ${
+                      className={`relative rounded-2xl p-3 sm:p-3.5 transition-all duration-300 flex flex-col justify-between select-none bg-white text-slate-900 border border-slate-100 shadow-[0_10px_25px_rgba(0,0,0,0.12)] hover:shadow-[0_16px_36px_rgba(0,0,0,0.2)] hover:scale-102 ${
                         isActive
-                          ? 'bg-white text-slate-900 shadow-[0_16px_36px_rgba(0,0,0,0.4)] ring-2 ring-white scale-105 z-30'
-                          : 'bg-white/10 backdrop-blur-md text-white/90 border border-white/15 hover:bg-white/20 hover:scale-102 z-10'
+                          ? 'ring-2 ring-white shadow-[0_18px_40px_rgba(0,0,0,0.3)] scale-105 z-30'
+                          : 'opacity-95 hover:opacity-100 z-10'
                       }`}
                       style={{ minHeight: '175px' }}
                     >
                       <div>
-                        {/* Header: Badge & Icon */}
+                        {/* Header: Number Badge (no 'STOP' word) & Category Icon */}
                         <div className="flex items-center justify-between mb-1.5">
                           <span
                             className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold text-white shadow-xs"
                             style={{ backgroundColor: feat.accentColor }}
                           >
-                            STOP {feat.number}
+                            {feat.number}
                           </span>
 
                           <div
-                            className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold ${
-                              isActive ? 'bg-slate-100 text-slate-900' : 'bg-white/10 text-white'
-                            }`}
+                            className="w-7 h-7 rounded-lg flex items-center justify-center font-bold"
                             style={{
-                              color: isActive ? feat.accentColor : undefined,
+                              backgroundColor: `${feat.accentColor}18`,
+                              color: feat.accentColor,
                             }}
                           >
                             <feat.icon className="w-3.5 h-3.5" />
@@ -434,50 +407,33 @@ export const RoadFeaturesSection: React.FC = () => {
                         </div>
 
                         {/* Title */}
-                        <h3
-                          className={`font-black text-xs sm:text-sm font-anek-latin tracking-tight leading-tight line-clamp-1 ${
-                            isActive ? 'text-slate-900' : 'text-white'
-                          }`}
-                        >
+                        <h3 className="font-black text-xs sm:text-sm text-slate-900 font-anek-latin tracking-tight leading-tight line-clamp-1">
                           {feat.title}
                         </h3>
 
                         {/* Tagline */}
                         <p
                           className="font-bold text-[10px] sm:text-[11px] font-anek-latin mt-0.5 line-clamp-1"
-                          style={{
-                            color: isActive ? feat.accentColor : '#93c5fd',
-                          }}
+                          style={{ color: feat.accentColor }}
                         >
                           {feat.tagline}
                         </p>
 
                         {/* Description */}
-                        <p
-                          className={`text-[10px] mt-1 leading-snug font-anek-latin line-clamp-2 ${
-                            isActive ? 'text-slate-600' : 'text-white/60'
-                          }`}
-                        >
+                        <p className="text-[10px] text-slate-600 mt-1 leading-snug font-anek-latin line-clamp-2">
                           {feat.description}
                         </p>
                       </div>
 
-                      {/* Footer Badge */}
-                      <div className="mt-2 pt-1.5 border-t border-slate-100/20 flex items-center justify-between">
-                        <span
-                          className={`text-[9px] font-semibold truncate ${
-                            isActive ? 'text-slate-500' : 'text-white/50'
-                          }`}
-                        >
+                      {/* Clean Footer: Badge Pill & Accent Dot (NO '01 / 09' counter) */}
+                      <div className="mt-2 pt-1.5 border-t border-slate-100 flex items-center justify-between">
+                        <span className="text-[10px] font-semibold text-slate-500 font-anek-latin truncate">
                           {feat.badge}
                         </span>
                         <span
-                          className={`text-[9px] font-mono font-bold ${
-                            isActive ? 'text-slate-400' : 'text-white/40'
-                          }`}
-                        >
-                          {feat.number} / 09
-                        </span>
+                          className="w-1.5 h-1.5 rounded-full"
+                          style={{ backgroundColor: feat.accentColor }}
+                        />
                       </div>
                     </div>
                   </div>
