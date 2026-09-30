@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React from 'react';
 import {
   Truck,
   UserCheck,
@@ -19,373 +19,199 @@ export interface FeatureItem {
   icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
   badge: string;
   highlights: string[];
-  stationType: 'odd' | 'even';
 }
 
 export const FEATURES_DATA: FeatureItem[] = [
   {
     number: '01',
     title: 'Vehicle Management',
-    tagline: 'Know every vehicle.',
+    tagline: 'Know every vehicle, inside and out.',
     description:
-      'Manage profiles, assignments, status, odometer readings, and service history from one place.',
+      'Manage vehicle profiles, assignments, status, odometer readings, and service history from one place.',
     icon: Truck,
     badge: 'Asset Directory',
-    highlights: ['Digital RC & Docs', 'Odometer Sync'],
-    stationType: 'odd',
+    highlights: ['Digital RC & Docs', 'Odometer Sync', 'Service Log'],
   },
   {
     number: '02',
     title: 'Driver Management',
-    tagline: 'Connected drivers.',
+    tagline: 'Keep your drivers connected.',
     description:
-      'Create driver profiles, manage assignments, track licenses, and give drivers mobile access.',
+      'Create driver profiles, manage assignments, track licenses, and give drivers instant mobile access.',
     icon: UserCheck,
     badge: 'Driver Roster',
-    highlights: ['Driver Profiles', 'Mobile App'],
-    stationType: 'even',
+    highlights: ['Driver Profiles', 'Assignments', 'Mobile App'],
   },
   {
     number: '03',
     title: 'Maintenance',
-    tagline: 'Ahead of what’s due.',
+    tagline: 'Stay ahead of what’s due.',
     description:
-      'Schedule maintenance, track service history, monitor upcoming work, and prevent breakdowns.',
+      'Schedule maintenance, track service history, monitor upcoming work, and prevent roadside breakdowns.',
     icon: Wrench,
-    badge: 'Dual-Trigger',
-    highlights: ['Preventive Plan', 'Interval Alerts'],
-    stationType: 'odd',
+    badge: 'Dual-Trigger Engine',
+    highlights: ['Preventive Plan', 'Interval Alerts', 'Service History'],
   },
   {
     number: '04',
     title: 'Repair Tracking',
-    tagline: 'Reported to fixed.',
+    tagline: 'From reported to resolved.',
     description:
-      'Drivers report issues while fleet managers track job cards and repair status end-to-end.',
+      'Drivers report defect issues while fleet managers track job cards and repair status end-to-end.',
     icon: AlertTriangle,
-    badge: 'Resolution',
-    highlights: ['Defect Reports', 'Job Cards'],
-    stationType: 'even',
+    badge: 'Real-time Resolution',
+    highlights: ['Defect Reports', 'Job Cards', 'Live Status'],
   },
   {
     number: '05',
     title: 'Expense Management',
-    tagline: 'Control spend.',
+    tagline: 'Know where fleet spending goes.',
     description:
-      'Keep parts and maintenance expenses organized so your team has full visibility on costs.',
+      'Keep parts and maintenance expenses organized so your team has a clearer picture of vehicle costs.',
     icon: Receipt,
-    badge: 'TCO Audit',
-    highlights: ['Parts & Labor', 'Spend Audit'],
-    stationType: 'odd',
+    badge: 'TCO & Parts Audit',
+    highlights: ['Parts & Labor', 'Receipts', 'Spend Audit'],
   },
   {
     number: '06',
     title: 'Documents',
-    tagline: 'Within reach.',
+    tagline: 'Important docs within reach.',
     description:
-      'Store registration, insurance, fitness certificates, and permits in one secure digital vault.',
+      'Store registration, insurance, fitness certificates, and permits in one organized digital place.',
     icon: FileText,
-    badge: 'Compliance',
-    highlights: ['RC & Insurance', 'Expiry Alerts'],
-    stationType: 'even',
+    badge: 'Compliance Vault',
+    highlights: ['RC & Insurance', 'Permits', 'Expiry Alerts'],
   },
   {
     number: '07',
     title: 'Vehicle Health',
-    tagline: 'Peak condition.',
+    tagline: 'Keep fleet in peak condition.',
     description:
-      'Monitor vehicle readiness, track ongoing issues, and make sure every asset is roadworthy.',
+      'Monitor vehicle readiness, track ongoing issues, and make sure every vehicle is fit for the road.',
     icon: ShieldCheck,
-    badge: 'Intelligence',
-    highlights: ['Fleet Readiness', 'Diagnostics'],
-    stationType: 'odd',
+    badge: 'Health Intelligence',
+    highlights: ['Fleet Readiness', 'Issue Tracking', 'Roadworthy'],
   },
   {
     number: '08',
-    title: 'Notifications',
-    tagline: 'Never miss alerts.',
+    title: 'Notifications & Reminders',
+    tagline: 'Never miss what needs attention.',
     description:
-      'Get timely alerts for upcoming service, pending repairs, expiring documents, and fleet notices.',
+      'Get timely alerts for upcoming maintenance, pending repairs, expiring documents, and fleet updates.',
     icon: Bell,
-    badge: 'Auto Alerts',
-    highlights: ['Due Reminders', 'Push Notices'],
-    stationType: 'even',
+    badge: 'Automated Reminders',
+    highlights: ['Due Reminders', 'Expiry Notices', 'Push Alerts'],
   },
   {
     number: '09',
     title: 'Fleet Insights',
-    tagline: 'The big picture.',
+    tagline: 'See the big picture of your fleet.',
     description:
-      'View fleet activity, monitor vehicle status, track service records, and make informed decisions.',
+      'View fleet activity, monitor vehicle status, track service records, and make informed operational decisions.',
     icon: BarChart3,
-    badge: 'Visibility',
-    highlights: ['Analytics', 'Fleet Trends'],
-    stationType: 'odd',
+    badge: 'Operational Visibility',
+    highlights: ['Activity Analytics', 'Maintenance Trends', 'Transparency'],
   },
 ];
 
-const TOTAL_STOPS = FEATURES_DATA.length;
-const DWELL_SECONDS = 10; // Exactly 10 seconds per active stop
-
-// Percentage position of each of the 9 stops along the thin line (from 10% to 90%)
-const getStopPercent = (index: number) => 10 + index * 10;
-
 export const RoadFeaturesSection: React.FC = () => {
-  const [activeStop, setActiveStop] = useState<number>(0);
-  const [isHovered, setIsHovered] = useState<boolean>(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-
-  const goToStop = useCallback((targetIndex: number) => {
-    const normalizedIndex = (targetIndex + TOTAL_STOPS) % TOTAL_STOPS;
-    setActiveStop(normalizedIndex);
-  }, []);
-
-  const handleNext = useCallback(() => {
-    goToStop((activeStop + 1) % TOTAL_STOPS);
-  }, [activeStop, goToStop]);
-
-  // Automatic progression: moves to next stop every 10 seconds
-  useEffect(() => {
-    if (isHovered) {
-      if (timerRef.current) clearTimeout(timerRef.current);
-      return;
-    }
-
-    timerRef.current = setTimeout(() => {
-      handleNext();
-    }, DWELL_SECONDS * 1000);
-
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, [isHovered, activeStop, handleNext]);
+  // Triple the list to ensure perfectly smooth, seamless infinite scrolling
+  const carouselItems = [...FEATURES_DATA, ...FEATURES_DATA, ...FEATURES_DATA];
 
   return (
     <section
       id="features"
-      className="relative w-full bg-studio-blue text-white py-12 sm:py-16 overflow-hidden select-none"
+      className="relative w-full bg-studio-blue text-white py-16 sm:py-24 overflow-hidden select-none"
     >
       {/* Background ambient lighting */}
-      <div className="absolute top-1/4 -left-20 w-80 h-80 bg-blue-400/10 rounded-full blur-[130px] pointer-events-none" />
-      <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-indigo-500/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/4 -left-20 w-96 h-96 bg-blue-400/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-1/4 -right-20 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[160px] pointer-events-none" />
 
-      {/* Main Container - Fits Screen Viewport (100% width max-w-7xl) */}
-      <div className="w-full max-w-7xl mx-auto flex flex-col items-center px-2 sm:px-4 lg:px-6">
+      {/* Edge Gradient Overlays for Smooth Fading into the Screen */}
+      <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-r from-[#3236eb] to-transparent z-20 pointer-events-none" />
+      <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-l from-[#2f34e8] to-transparent z-20 pointer-events-none" />
+
+      <div className="w-full flex flex-col items-center">
         {/* =========================================================================
-            1. SECTION HEADER (Header pill removed as requested)
+            1. SECTION HEADER
         ========================================================================= */}
-        <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10 z-20">
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14 px-4 z-20">
           <h2
-            className="text-2xl sm:text-3xl md:text-4xl font-black text-white font-anek-latin tracking-tight leading-tight drop-shadow-sm"
+            className="text-2xl sm:text-3xl md:text-5xl font-black text-white font-anek-latin tracking-tight leading-tight drop-shadow-sm"
             style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
           >
             Everything You Need to Keep Moving.
           </h2>
 
-          <p className="font-neue-haas-medium text-white/80 text-xs sm:text-sm md:text-base max-w-2xl mx-auto mt-2 leading-relaxed">
-            All 9 core operational capabilities at a glance — Odd features on top, Even features on the bottom.
+          <p className="font-neue-haas-medium text-white/85 text-xs sm:text-sm md:text-base max-w-2xl mx-auto mt-2.5 leading-relaxed">
+            All 9 core operational capabilities designed to keep every vehicle, driver, and milestone moving efficiently.
           </p>
         </div>
 
         {/* =========================================================================
-            2. ALL FEATURES TOGETHER IN ONE SCREEN (TOP CARDS, THIN LINE, BOTTOM CARDS)
+            2. CONTINUOUS RIGHT-TO-LEFT MOVING CARDS (NEXT TO NEXT)
         ========================================================================= */}
-        <div
-          className="relative w-full overflow-x-auto lg:overflow-visible py-2"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
-          <div className="relative w-full min-w-[920px] flex flex-col justify-between">
-            {/* ---------------------------------------------------------------------
-                A. TOP ROW: ODD STATIONS (01, 03, 05, 07, 09) - ALL WHITE SERVIQ CARDS
-            --------------------------------------------------------------------- */}
-            <div className="relative w-full h-[190px] sm:h-[200px]">
-              {FEATURES_DATA.map((feat, idx) => {
-                const isOdd = idx % 2 === 0; // idx 0 = Stop 1 (odd)
-                if (!isOdd) return null;
+        <div className="w-full overflow-hidden py-4 cursor-grab active:cursor-grabbing">
+          {/* Infinite Marquee Track: Smoothly moves from right to left */}
+          <div className="animate-marquee-scroll flex gap-6 sm:gap-8 items-stretch px-4">
+            {carouselItems.map((feat, idx) => (
+              <div
+                key={`${feat.number}-${idx}`}
+                className="w-[300px] sm:w-[340px] shrink-0 bg-white text-slate-900 rounded-[24px] p-6 sm:p-7 shadow-[0_12px_32px_rgba(0,0,0,0.12)] hover:shadow-2xl hover:-translate-y-2 border border-slate-100/90 transition-all duration-300 flex flex-col justify-between select-none group"
+                style={{ minHeight: '300px' }}
+              >
+                <div>
+                  {/* Card Header: Number Badge & Category Icon in Serviq Brand Blue */}
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="px-2.5 py-1 rounded-lg text-xs font-mono font-bold text-white bg-[#2335f2] shadow-xs">
+                      {feat.number}
+                    </span>
 
-                const stopPct = getStopPercent(idx);
-                const isActive = activeStop === idx;
-
-                return (
-                  <div
-                    key={`station-top-${feat.number}`}
-                    onClick={() => goToStop(idx)}
-                    className="absolute bottom-2 -translate-x-1/2 cursor-pointer transition-all duration-300"
-                    style={{
-                      left: `${stopPct}%`,
-                      width: '17.5%',
-                      maxWidth: '220px',
-                    }}
-                  >
-                    {/* Top Feature Card: Crisp White with Serviq Brand Colors */}
-                    <div
-                      className={`relative rounded-2xl p-3 sm:p-3.5 transition-all duration-300 flex flex-col justify-between select-none bg-white text-slate-900 border border-slate-100 shadow-[0_8px_20px_rgba(0,0,0,0.12)] hover:shadow-[0_16px_32px_rgba(0,0,0,0.18)] hover:scale-102 ${
-                        isActive
-                          ? 'ring-2 ring-white shadow-[0_18px_40px_rgba(0,0,0,0.3)] scale-105 z-30'
-                          : 'opacity-95 hover:opacity-100 z-10'
-                      }`}
-                      style={{ minHeight: '175px' }}
-                    >
-                      <div>
-                        {/* Header: Number Badge in Serviq Blue & Category Icon in Serviq Blue */}
-                        <div className="flex items-center justify-between mb-1.5">
-                          <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold text-white bg-[#2335f2] shadow-xs">
-                            {feat.number}
-                          </span>
-
-                          <div className="w-7 h-7 rounded-lg bg-blue-50 text-[#2335f2] border border-blue-100/60 flex items-center justify-center font-bold">
-                            <feat.icon className="w-3.5 h-3.5 stroke-[2.2]" />
-                          </div>
-                        </div>
-
-                        {/* Title */}
-                        <h3 className="font-black text-xs sm:text-sm text-slate-900 font-anek-latin tracking-tight leading-tight line-clamp-1">
-                          {feat.title}
-                        </h3>
-
-                        {/* Tagline in Serviq Blue */}
-                        <p className="font-bold text-[10px] sm:text-[11px] font-anek-latin text-[#2335f2] mt-0.5 line-clamp-1">
-                          {feat.tagline}
-                        </p>
-
-                        {/* Description */}
-                        <p className="text-[10px] text-slate-600 mt-1 leading-snug font-anek-latin line-clamp-2">
-                          {feat.description}
-                        </p>
-                      </div>
-
-                      {/* Clean Footer in Serviq Styling (No '01 / 09' counter) */}
-                      <div className="mt-2 pt-1.5 border-t border-slate-100 flex items-center justify-between">
-                        <span className="text-[10px] font-semibold text-slate-500 font-anek-latin truncate">
-                          {feat.badge}
-                        </span>
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#2335f2]" />
-                      </div>
-
-                      {/* Downward Pointer Triangle connecting to Thin Line */}
-                      <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px] border-t-white drop-shadow-xs" />
+                    <div className="w-9 h-9 rounded-xl bg-blue-50 text-[#2335f2] border border-blue-100/70 flex items-center justify-center font-bold shadow-xs group-hover:scale-105 transition-transform">
+                      <feat.icon className="w-4 h-4 stroke-[2.2]" />
                     </div>
                   </div>
-                );
-              })}
-            </div>
 
-            {/* ---------------------------------------------------------------------
-                B. CENTER THIN LINE WITH 9 MILESTONE NODES (SERVIQ BLUE PALETTE)
-            --------------------------------------------------------------------- */}
-            <div className="relative w-full h-[32px] my-1 flex items-center select-none">
-              {/* The Thin Horizontal Line */}
-              <div className="w-full h-[2px] bg-gradient-to-r from-white/10 via-white/45 to-white/10 shadow-[0_0_8px_rgba(255,255,255,0.4)]" />
+                  {/* Title */}
+                  <h3 className="font-black text-xl sm:text-2xl text-slate-900 font-anek-latin tracking-tight leading-snug">
+                    {feat.title}
+                  </h3>
 
-              {/* 9 Numbered Milestone Nodes on the Line */}
-              {FEATURES_DATA.map((feat, idx) => {
-                const stopPct = getStopPercent(idx);
-                const isActive = activeStop === idx;
+                  {/* Tagline in Serviq Blue */}
+                  <p className="font-bold text-xs sm:text-sm font-anek-latin text-[#2335f2] mt-1.5">
+                    {feat.tagline}
+                  </p>
 
-                return (
-                  <div
-                    key={`node-${feat.number}`}
-                    onClick={() => goToStop(idx)}
-                    className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center cursor-pointer group z-20"
-                    style={{ left: `${stopPct}%` }}
-                  >
-                    {/* Node Dot / Badge on the Line in Serviq Blue */}
-                    <div
-                      className={`rounded-full flex items-center justify-center font-mono font-bold transition-all duration-300 ${
-                        isActive
-                          ? 'w-7 h-7 bg-white text-[#2335f2] shadow-[0_0_18px_rgba(255,255,255,0.9)] ring-4 ring-white/50 scale-110'
-                          : 'w-5 h-5 bg-[#0f172a] text-white/80 border border-white/40 group-hover:scale-110 group-hover:bg-[#2335f2] group-hover:text-white'
-                      }`}
-                    >
-                      <span className={isActive ? 'text-[11px] font-black' : 'text-[9px]'}>
-                        {feat.number}
+                  {/* Description */}
+                  <p className="text-xs sm:text-sm text-slate-600 mt-2.5 leading-relaxed font-anek-latin">
+                    {feat.description}
+                  </p>
+                </div>
+
+                <div>
+                  {/* Highlights Pills in Clean Serviq Palette */}
+                  <div className="pt-4 border-t border-slate-100 flex flex-wrap gap-1.5">
+                    {feat.highlights.map((h, hIdx) => (
+                      <span
+                        key={hIdx}
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-50 text-slate-700 border border-slate-200/80 font-anek-latin"
+                      >
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#2335f2]" />
+                        {h}
                       </span>
-                    </div>
-
-                    {/* Active Pulse Ring */}
-                    {isActive && (
-                      <span className="absolute w-8 h-8 rounded-full bg-white animate-ping pointer-events-none opacity-40" />
-                    )}
+                    ))}
                   </div>
-                );
-              })}
-            </div>
 
-            {/* ---------------------------------------------------------------------
-                C. BOTTOM ROW: EVEN STATIONS (02, 04, 06, 08) - ALL WHITE SERVIQ CARDS
-            --------------------------------------------------------------------- */}
-            <div className="relative w-full h-[190px] sm:h-[200px]">
-              {FEATURES_DATA.map((feat, idx) => {
-                const isEven = idx % 2 === 1; // idx 1 = Stop 2 (even)
-                if (!isEven) return null;
-
-                const stopPct = getStopPercent(idx);
-                const isActive = activeStop === idx;
-
-                return (
-                  <div
-                    key={`station-bot-${feat.number}`}
-                    onClick={() => goToStop(idx)}
-                    className="absolute top-2 -translate-x-1/2 cursor-pointer transition-all duration-300"
-                    style={{
-                      left: `${stopPct}%`,
-                      width: '17.5%',
-                      maxWidth: '220px',
-                    }}
-                  >
-                    {/* Upward Pointer Triangle connecting to Thin Line */}
-                    <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[8px] border-b-white drop-shadow-xs z-10" />
-
-                    {/* Bottom Feature Card: Crisp White with Serviq Brand Colors */}
-                    <div
-                      className={`relative rounded-2xl p-3 sm:p-3.5 transition-all duration-300 flex flex-col justify-between select-none bg-white text-slate-900 border border-slate-100 shadow-[0_8px_20px_rgba(0,0,0,0.12)] hover:shadow-[0_16px_32px_rgba(0,0,0,0.18)] hover:scale-102 ${
-                        isActive
-                          ? 'ring-2 ring-white shadow-[0_18px_40px_rgba(0,0,0,0.3)] scale-105 z-30'
-                          : 'opacity-95 hover:opacity-100 z-10'
-                      }`}
-                      style={{ minHeight: '175px' }}
-                    >
-                      <div>
-                        {/* Header: Number Badge in Serviq Blue & Category Icon in Serviq Blue */}
-                        <div className="flex items-center justify-between mb-1.5">
-                          <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold text-white bg-[#2335f2] shadow-xs">
-                            {feat.number}
-                          </span>
-
-                          <div className="w-7 h-7 rounded-lg bg-blue-50 text-[#2335f2] border border-blue-100/60 flex items-center justify-center font-bold">
-                            <feat.icon className="w-3.5 h-3.5 stroke-[2.2]" />
-                          </div>
-                        </div>
-
-                        {/* Title */}
-                        <h3 className="font-black text-xs sm:text-sm text-slate-900 font-anek-latin tracking-tight leading-tight line-clamp-1">
-                          {feat.title}
-                        </h3>
-
-                        {/* Tagline in Serviq Blue */}
-                        <p className="font-bold text-[10px] sm:text-[11px] font-anek-latin text-[#2335f2] mt-0.5 line-clamp-1">
-                          {feat.tagline}
-                        </p>
-
-                        {/* Description */}
-                        <p className="text-[10px] text-slate-600 mt-1 leading-snug font-anek-latin line-clamp-2">
-                          {feat.description}
-                        </p>
-                      </div>
-
-                      {/* Clean Footer in Serviq Styling (No '01 / 09' counter) */}
-                      <div className="mt-2 pt-1.5 border-t border-slate-100 flex items-center justify-between">
-                        <span className="text-[10px] font-semibold text-slate-500 font-anek-latin truncate">
-                          {feat.badge}
-                        </span>
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#2335f2]" />
-                      </div>
-                    </div>
+                  {/* Footer Row: Badge Pill and Serviq Indicator Dot (NO '01 / 09' counter) */}
+                  <div className="pt-3.5 mt-1 flex items-center justify-between">
+                    <span className="text-xs font-semibold text-slate-500 font-anek-latin truncate">
+                      {feat.badge}
+                    </span>
+                    <span className="w-2 h-2 rounded-full bg-[#2335f2]" />
                   </div>
-                );
-              })}
-            </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
