@@ -33,16 +33,11 @@ export const CompanyRegistration: React.FC = () => {
   const [companyLogo, setCompanyLogo] = useState<string>('');
   const [logoPreview, setLogoPreview] = useState<string>('');
 
-  // Step 2: Admin details & OTP
+  // Step 2: Admin details
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
-  const [otpSent, setOtpSent] = useState(false);
-  const [otpCode, setOtpCode] = useState('');
-  const [otpLoading, setOtpLoading] = useState(false);
-  const [otpVerified, setOtpVerified] = useState(false);
-  const [otpMessage, setOtpMessage] = useState<string | null>(null);
 
   // Step 3: Password setting
   const [password, setPassword] = useState('');
@@ -98,58 +93,6 @@ export const CompanyRegistration: React.FC = () => {
     setCurrentStep(2);
   };
 
-  // Send OTP
-  const handleSendOtp = async () => {
-    if (!email.trim()) {
-      setError('Please enter your admin email address first.');
-      return;
-    }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email.trim())) {
-      setError('Please enter a valid email address.');
-      return;
-    }
-
-    setError(null);
-    setOtpLoading(true);
-    try {
-      const res = await api.post('/auth/send-otp', { email: email.trim() });
-      if (res.data.success) {
-        setOtpSent(true);
-        setOtpMessage(res.data.message || `A 6-digit verification code has been sent to ${email.trim()}. Please check your inbox.`);
-      }
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to send OTP verification code.');
-    } finally {
-      setOtpLoading(false);
-    }
-  };
-
-  // Verify OTP
-  const handleVerifyOtp = async () => {
-    if (!otpCode.trim()) {
-      setError('Please enter the 6-digit OTP code.');
-      return;
-    }
-
-    setError(null);
-    setOtpLoading(true);
-    try {
-      const res = await api.post('/auth/verify-otp', {
-        email: email.trim(),
-        otp: otpCode.trim(),
-      });
-      if (res.data.success) {
-        setOtpVerified(true);
-        setOtpMessage('Email successfully verified!');
-      }
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Invalid or expired OTP code.');
-    } finally {
-      setOtpLoading(false);
-    }
-  };
-
   // Step 2 Validation -> Proceed to Step 3
   const handleProceedToStepThree = (e: React.FormEvent) => {
     e.preventDefault();
@@ -167,8 +110,9 @@ export const CompanyRegistration: React.FC = () => {
       setError('Please enter your Admin Email Address.');
       return;
     }
-    if (!otpVerified) {
-      setError('Please verify your email address with the 6-digit OTP before proceeding.');
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      setError('Please enter a valid email address.');
       return;
     }
 
@@ -311,8 +255,8 @@ export const CompanyRegistration: React.FC = () => {
                     </span>
                   )}
                   <div className="min-w-0">
-                    <span className="text-xs xl:text-sm font-bold text-white block truncate">2. Admin Details & OTP</span>
-                    <span className="text-[10px] xl:text-xs text-white/70 block truncate">Contact info & mail verification</span>
+                    <span className="text-xs xl:text-sm font-bold text-white block truncate">2. Admin Details</span>
+                    <span className="text-[10px] xl:text-xs text-white/70 block truncate">Contact info & email</span>
                   </div>
                 </div>
               </div>
@@ -364,7 +308,7 @@ export const CompanyRegistration: React.FC = () => {
               </span>
               <span className="text-[11px] text-gray-500">
                 {currentStep === 1 && 'Company Information'}
-                {currentStep === 2 && 'Admin & Email Verification'}
+                {currentStep === 2 && 'Admin Details'}
                 {currentStep === 3 && 'Security & Launch'}
               </span>
             </div>
@@ -376,7 +320,7 @@ export const CompanyRegistration: React.FC = () => {
             </h1>
             <p className="text-xs text-gray-400">
               {currentStep === 1 && 'Provide your organization name and upload your company logo.'}
-              {currentStep === 2 && 'Enter your contact info and verify your email via 6-digit OTP.'}
+              {currentStep === 2 && 'Enter your contact info to set up the organization admin account.'}
               {currentStep === 3 && 'Set a strong password to secure your SERVIQ command center.'}
             </p>
           </div>
@@ -386,14 +330,6 @@ export const CompanyRegistration: React.FC = () => {
             <div className="mb-3.5 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center gap-2.5">
               <ShieldAlert className="w-4 h-4 shrink-0" />
               <span>{error}</span>
-            </div>
-          )}
-
-          {/* OTP Status Toast Banner */}
-          {otpMessage && (
-            <div className="mb-3.5 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs flex items-center gap-2.5">
-              <CheckCircle2 className="w-4 h-4 shrink-0" />
-              <span>{otpMessage}</span>
             </div>
           )}
 
@@ -585,74 +521,20 @@ export const CompanyRegistration: React.FC = () => {
                 />
               </div>
 
-              {/* Mail with OTP Verification */}
+              {/* Admin Email */}
               <div className="space-y-1.5">
-                <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 flex items-center justify-between">
-                  <span className="flex items-center gap-1.5">
-                    <Mail className="w-3 h-3 text-[#393df0]" />
-                    Mail (OTP Verification) *
-                  </span>
-                  {otpVerified && (
-                    <span className="text-emerald-400 flex items-center gap-1 text-[10px] font-semibold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-                      <CheckCircle2 className="w-3 h-3" />
-                      Verified
-                    </span>
-                  )}
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
+                  <Mail className="w-3 h-3 text-[#393df0]" />
+                  Admin Email *
                 </label>
-
-                <div className="flex gap-2">
-                  <input
-                    type="email"
-                    required
-                    disabled={otpVerified}
-                    placeholder="admin@company.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="h-10 xl:h-11 flex-1 rounded-xl border border-gray-800 bg-gray-900/90 px-3.5 text-white text-xs xl:text-sm placeholder:text-gray-500 focus:border-[#393df0] focus:outline-none focus:ring-1 focus:ring-[#393df0] disabled:opacity-60 transition-all"
-                  />
-
-                  {!otpVerified && (
-                    <button
-                      type="button"
-                      disabled={otpLoading || !email.trim()}
-                      onClick={handleSendOtp}
-                      className="px-3.5 h-10 xl:h-11 bg-white text-black font-bold text-xs rounded-xl hover:bg-gray-200 disabled:opacity-50 transition-all shrink-0 flex items-center gap-1"
-                    >
-                      {otpLoading && <Loader2 className="w-3 h-3 animate-spin" />}
-                      <span>{otpSent ? 'Resend' : 'Send OTP'}</span>
-                    </button>
-                  )}
-                </div>
-
-                {/* OTP Code Input Box */}
-                {otpSent && !otpVerified && (
-                  <div className="mt-2 p-3 rounded-xl border border-gray-800 bg-gray-950/80 space-y-2">
-                    <div className="flex items-center justify-between text-[11px]">
-                      <span className="text-gray-300 font-semibold">Enter 6-digit OTP Code:</span>
-                      <span className="text-gray-500">Valid 10 mins</span>
-                    </div>
-
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        maxLength={6}
-                        placeholder="e.g. 123456"
-                        value={otpCode}
-                        onChange={(e) => setOtpCode(e.target.value)}
-                        className="h-9 xl:h-10 flex-1 tracking-widest text-center text-base font-mono rounded-lg border border-gray-700 bg-gray-900 text-white focus:border-[#393df0] focus:outline-none"
-                      />
-                      <button
-                        type="button"
-                        disabled={otpLoading || otpCode.length < 6}
-                        onClick={handleVerifyOtp}
-                        className="px-4 h-9 xl:h-10 bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-white font-bold text-xs rounded-lg transition-colors flex items-center gap-1"
-                      >
-                        {otpLoading && <Loader2 className="w-3 h-3 animate-spin" />}
-                        <span>Verify</span>
-                      </button>
-                    </div>
-                  </div>
-                )}
+                <input
+                  type="email"
+                  required
+                  placeholder="admin@company.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="h-10 xl:h-11 w-full rounded-xl border border-gray-800 bg-gray-900/90 px-3.5 text-white text-xs xl:text-sm placeholder:text-gray-500 focus:border-[#393df0] focus:outline-none focus:ring-1 focus:ring-[#393df0] transition-all"
+                />
               </div>
 
               {/* Back & Next Navigation Buttons */}
