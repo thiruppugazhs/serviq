@@ -16,8 +16,9 @@ const connectDB = async () => {
     console.log(`[MongoDB] Connected: ${conn.connection.host} / Database: ${conn.connection.name}`);
     return conn;
   } catch (error) {
+    isConnected = false;
     console.error(`[MongoDB Connection Error] ${error.message}`);
-    console.warn(`[MongoDB Warning] Please ensure your MONGODB_URI is configured correctly.`);
+    throw error;
   }
 };
 

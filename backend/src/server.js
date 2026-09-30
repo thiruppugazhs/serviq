@@ -94,8 +94,15 @@ app.get(['/api/health', '/health'], (req, res) => {
 
 // Ensure DB connection is established for serverless invocations
 app.use(async (req, res, next) => {
-  await connectDB();
-  next();
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: 'Database connection failed. Please ensure 0.0.0.0/0 is whitelisted in MongoDB Atlas Network Access and MONGODB_URI is set in Vercel.',
+    });
+  }
 });
 
 // API Routes
