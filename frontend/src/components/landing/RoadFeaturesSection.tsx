@@ -194,20 +194,18 @@ export const RoadFeaturesSection: React.FC = () => {
                     {feat.highlights.map((h, hIdx) => (
                       <span
                         key={hIdx}
-                        className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-50 text-slate-700 border border-slate-200/80 font-anek-latin"
+                        className="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-50 text-slate-700 border border-slate-200/80 font-anek-latin"
                       >
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#2335f2]" />
                         {h}
                       </span>
                     ))}
                   </div>
 
-                  {/* Footer Row: Badge Pill and Serviq Indicator Dot (NO '01 / 09' counter) */}
+                  {/* Footer Row: Badge */}
                   <div className="pt-3.5 mt-1 flex items-center justify-between">
                     <span className="text-xs font-semibold text-slate-500 font-anek-latin truncate">
                       {feat.badge}
                     </span>
-                    <span className="w-2 h-2 rounded-full bg-[#2335f2]" />
                   </div>
                 </div>
               </div>
