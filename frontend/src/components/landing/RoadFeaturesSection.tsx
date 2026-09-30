@@ -9,12 +9,6 @@ import {
   ShieldCheck,
   Bell,
   BarChart3,
-  Play,
-  Pause,
-  ChevronLeft,
-  ChevronRight,
-  Zap,
-  Clock,
   Radio,
 } from 'lucide-react';
 
@@ -164,12 +158,9 @@ export const RoadFeaturesSection: React.FC = () => {
   const [isDriving, setIsDriving] = useState<boolean>(false);
   const [carYOffset, setCarYOffset] = useState<number>(-8); // parked in top bay initially (Stop 1 is odd)
   const [driveDirection, setDriveDirection] = useState<'right' | 'left'>('right');
-  const [isPlaying, setIsPlaying] = useState<boolean>(true);
   const [isHovered, setIsHovered] = useState<boolean>(false);
-  const [secondsRemaining, setSecondsRemaining] = useState<number>(DWELL_SECONDS);
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const countdownIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const driveTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Jump or drive to a specific station
@@ -184,7 +175,6 @@ export const RoadFeaturesSection: React.FC = () => {
       setDriveDirection(normalizedIndex >= activeStop ? 'right' : 'left');
       setIsDriving(true);
       setActiveStop(normalizedIndex);
-      setSecondsRemaining(DWELL_SECONDS);
 
       // Hide active highlight while car travels
       setDisplayedStop(-1);
@@ -199,7 +189,6 @@ export const RoadFeaturesSection: React.FC = () => {
         setCarYOffset(targetBayY);
         setIsDriving(false);
         setDisplayedStop(normalizedIndex);
-        setSecondsRemaining(DWELL_SECONDS);
       }, 1000);
     },
     [activeStop, isDriving]
@@ -209,26 +198,12 @@ export const RoadFeaturesSection: React.FC = () => {
     goToStop((activeStop + 1) % TOTAL_STOPS);
   }, [activeStop, goToStop]);
 
-  const handlePrev = useCallback(() => {
-    goToStop((activeStop - 1 + TOTAL_STOPS) % TOTAL_STOPS);
-  }, [activeStop, goToStop]);
-
   // Automatic travel with exactly 10-second dwell time per station
   useEffect(() => {
-    if (!isPlaying || isHovered || isDriving) {
+    if (isDriving || isHovered) {
       if (timerRef.current) clearTimeout(timerRef.current);
-      if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current);
       return;
     }
-
-    setSecondsRemaining(DWELL_SECONDS);
-
-    countdownIntervalRef.current = setInterval(() => {
-      setSecondsRemaining((prev) => {
-        if (prev <= 1) return 0;
-        return prev - 1;
-      });
-    }, 1000);
 
     timerRef.current = setTimeout(() => {
       handleNext();
@@ -236,11 +211,9 @@ export const RoadFeaturesSection: React.FC = () => {
 
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
-      if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current);
     };
-  }, [isPlaying, isHovered, isDriving, activeStop, handleNext]);
+  }, [isDriving, isHovered, activeStop, handleNext]);
 
-  const activeFeature = FEATURES_DATA[activeStop];
   const activePercent = getStopPercent(activeStop);
 
   return (
@@ -288,7 +261,7 @@ export const RoadFeaturesSection: React.FC = () => {
             {/* ---------------------------------------------------------------------
                 A. TOP SECTION: ODD SERVICE STATIONS (Stop 01, 03, 05, 07, 09)
             --------------------------------------------------------------------- */}
-            <div className="relative w-full h-[210px] sm:h-[220px]">
+            <div className="relative w-full h-[200px] sm:h-[210px]">
               {FEATURES_DATA.map((feat, idx) => {
                 const isOdd = idx % 2 === 0; // idx 0 = Stop 1 (odd)
                 if (!isOdd) return null;
@@ -315,9 +288,9 @@ export const RoadFeaturesSection: React.FC = () => {
                           ? 'bg-white text-slate-900 shadow-[0_15px_35px_rgba(0,0,0,0.35)] ring-2 ring-white scale-105 z-30'
                           : 'bg-white/10 backdrop-blur-md text-white/90 border border-white/15 hover:bg-white/20 hover:scale-102 z-10'
                       }`}
-                      style={{ minHeight: '185px' }}
+                      style={{ minHeight: '175px' }}
                     >
-                      {/* Station Header: Badge + Category Icon + 10s Timer */}
+                      {/* Station Header: Badge + Category Icon */}
                       <div>
                         <div className="flex items-center justify-between mb-1.5">
                           <span
@@ -368,28 +341,22 @@ export const RoadFeaturesSection: React.FC = () => {
                         </p>
                       </div>
 
-                      {/* Footer: 10s Live Timer when active, or Category Pill */}
+                      {/* Clean Footer: Badge and Milestone Number (No timer/progress bar) */}
                       <div className="mt-2 pt-1.5 border-t border-slate-100/20 flex items-center justify-between">
-                        {isCardVisible ? (
-                          <div className="flex items-center justify-between w-full">
-                            <span className="flex items-center gap-1 text-[10px] font-bold text-emerald-600 font-mono">
-                              <Zap className="w-3 h-3 text-emerald-500 animate-pulse" />
-                              {secondsRemaining}s
-                            </span>
-                            <div className="w-12 h-1 bg-emerald-100 rounded-full overflow-hidden">
-                              <div
-                                className="h-full bg-emerald-500 transition-all duration-1000 ease-linear"
-                                style={{
-                                  width: `${((DWELL_SECONDS - secondsRemaining) / DWELL_SECONDS) * 100}%`,
-                                }}
-                              />
-                            </div>
-                          </div>
-                        ) : (
-                          <span className="text-[9px] text-white/50 font-semibold truncate">
-                            ▲ Top Bay
-                          </span>
-                        )}
+                        <span
+                          className={`text-[9px] font-semibold truncate ${
+                            isCardVisible ? 'text-slate-500' : 'text-white/50'
+                          }`}
+                        >
+                          {feat.badge}
+                        </span>
+                        <span
+                          className={`text-[9px] font-mono font-bold ${
+                            isCardVisible ? 'text-slate-400' : 'text-white/40'
+                          }`}
+                        >
+                          {feat.number} / 09
+                        </span>
                       </div>
 
                       {/* Downward Pointer Triangle pointing to Road */}
@@ -600,7 +567,7 @@ export const RoadFeaturesSection: React.FC = () => {
             {/* ---------------------------------------------------------------------
                 C. BOTTOM SECTION: EVEN SERVICE STATIONS (Stop 02, 04, 06, 08)
             --------------------------------------------------------------------- */}
-            <div className="relative w-full h-[210px] sm:h-[220px]">
+            <div className="relative w-full h-[200px] sm:h-[210px]">
               {FEATURES_DATA.map((feat, idx) => {
                 const isEven = idx % 2 === 1; // idx 1 = Stop 2 (even)
                 if (!isEven) return null;
@@ -634,9 +601,9 @@ export const RoadFeaturesSection: React.FC = () => {
                           ? 'bg-white text-slate-900 shadow-[0_15px_35px_rgba(0,0,0,0.35)] ring-2 ring-white scale-105 z-30'
                           : 'bg-white/10 backdrop-blur-md text-white/90 border border-white/15 hover:bg-white/20 hover:scale-102 z-10'
                       }`}
-                      style={{ minHeight: '185px' }}
+                      style={{ minHeight: '175px' }}
                     >
-                      {/* Station Header: Badge + Category Icon + 10s Timer */}
+                      {/* Station Header: Badge + Category Icon */}
                       <div>
                         <div className="flex items-center justify-between mb-1.5">
                           <span
@@ -687,132 +654,27 @@ export const RoadFeaturesSection: React.FC = () => {
                         </p>
                       </div>
 
-                      {/* Footer: 10s Live Timer when active, or Category Pill */}
+                      {/* Clean Footer: Badge and Milestone Number (No timer/progress bar) */}
                       <div className="mt-2 pt-1.5 border-t border-slate-100/20 flex items-center justify-between">
-                        {isCardVisible ? (
-                          <div className="flex items-center justify-between w-full">
-                            <span className="flex items-center gap-1 text-[10px] font-bold text-emerald-600 font-mono">
-                              <Zap className="w-3 h-3 text-emerald-500 animate-pulse" />
-                              {secondsRemaining}s
-                            </span>
-                            <div className="w-12 h-1 bg-emerald-100 rounded-full overflow-hidden">
-                              <div
-                                className="h-full bg-emerald-500 transition-all duration-1000 ease-linear"
-                                style={{
-                                  width: `${((DWELL_SECONDS - secondsRemaining) / DWELL_SECONDS) * 100}%`,
-                                }}
-                              />
-                            </div>
-                          </div>
-                        ) : (
-                          <span className="text-[9px] text-white/50 font-semibold truncate">
-                            ▼ Bottom Bay
-                          </span>
-                        )}
+                        <span
+                          className={`text-[9px] font-semibold truncate ${
+                            isCardVisible ? 'text-slate-500' : 'text-white/50'
+                          }`}
+                        >
+                          {feat.badge}
+                        </span>
+                        <span
+                          className={`text-[9px] font-mono font-bold ${
+                            isCardVisible ? 'text-slate-400' : 'text-white/40'
+                          }`}
+                        >
+                          {feat.number} / 09
+                        </span>
                       </div>
                     </div>
                   </div>
                 );
               })}
-            </div>
-          </div>
-        </div>
-
-        {/* =========================================================================
-            3. HIGHWAY CONTROLS & 10-SECOND SERVICE STATUS MONITOR
-        ========================================================================= */}
-        <div className="w-full max-w-3xl mx-auto mt-4 sm:mt-5 flex flex-col items-center gap-3 z-20">
-          {/* Quick Jump Buttons with Top/Bottom Indicators */}
-          <div className="flex items-center justify-center flex-wrap gap-1.5 px-2">
-            {FEATURES_DATA.map((feat, idx) => {
-              const isCurrent = activeStop === idx;
-              const isOdd = idx % 2 === 0;
-
-              return (
-                <button
-                  key={`pill-${feat.number}`}
-                  onClick={() => goToStop(idx)}
-                  className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold transition-all duration-300 cursor-pointer ${
-                    isCurrent
-                      ? 'bg-white text-slate-900 shadow-md ring-2 ring-white/60 scale-105'
-                      : 'bg-white/10 text-white/80 hover:bg-white/20 border border-white/15 hover:text-white'
-                  }`}
-                >
-                  <span
-                    className="w-1.5 h-1.5 rounded-full shrink-0"
-                    style={{
-                      backgroundColor: isCurrent ? feat.accentColor : 'rgba(255,255,255,0.4)',
-                    }}
-                  />
-                  <span>
-                    {feat.number} {feat.title.split(' ')[0]}
-                  </span>
-                  <span className="text-[8px] opacity-75 font-mono">
-                    {isOdd ? '▲' : '▼'}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Master Controller: Previous, Auto-Drive/Pause, Next & 10-Second Timer */}
-          <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md px-5 py-2 rounded-2xl border border-white/20 shadow-lg text-xs">
-            {/* Prev Station Button */}
-            <button
-              onClick={handlePrev}
-              className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer active:scale-95"
-              aria-label="Previous Service Station"
-              title="Previous Station"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-
-            {/* Play/Pause Auto-Tour Button */}
-            <button
-              onClick={() => setIsPlaying((prev) => !prev)}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-xl bg-white text-[#2335f2] font-bold text-xs shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer"
-            >
-              {isPlaying ? (
-                <>
-                  <Pause className="w-3.5 h-3.5 fill-[#2335f2]" />
-                  <span>Pause</span>
-                </>
-              ) : (
-                <>
-                  <Play className="w-3.5 h-3.5 fill-[#2335f2]" />
-                  <span>Auto-Drive (10s)</span>
-                </>
-              )}
-            </button>
-
-            {/* Next Station Button */}
-            <button
-              onClick={handleNext}
-              className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer active:scale-95"
-              aria-label="Next Service Station"
-              title="Next Station"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
-
-            <div className="w-[1px] h-5 bg-white/20" />
-
-            {/* Current Station & 10-Second Countdown Meter */}
-            <div className="flex items-center gap-2 text-white/90">
-              <span className="font-mono font-bold text-white">
-                Bay {activeFeature.number} / 09
-              </span>
-              <span className="hidden sm:inline text-white/80">
-                ({activeFeature.stationType === 'odd' ? 'Top' : 'Bottom'})
-              </span>
-
-              {/* 10-Second Dwell Meter */}
-              {isPlaying && !isHovered && !isDriving && (
-                <div className="flex items-center gap-1 bg-emerald-500/20 border border-emerald-400/40 px-2 py-0.5 rounded-full ml-1 font-mono text-emerald-300 font-bold text-[10px]">
-                  <Clock className="w-3 h-3 animate-spin" style={{ animationDuration: '6s' }} />
-                  <span>{secondsRemaining}s</span>
-                </div>
-              )}
             </div>
           </div>
         </div>
