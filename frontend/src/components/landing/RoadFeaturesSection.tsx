@@ -10,6 +10,8 @@ import {
   Bell,
   BarChart3,
   Radio,
+  CheckCircle2,
+  Lock,
 } from 'lucide-react';
 
 export interface FeatureItem {
@@ -35,9 +37,9 @@ export const FEATURES_DATA: FeatureItem[] = [
     icon: Truck,
     accentColor: '#2563eb',
     badge: 'Asset Directory',
-    highlights: ['Digital RC', 'Odometer Sync', 'Service Log'],
+    highlights: ['Digital RC & Docs', 'Odometer Sync', 'Service Log'],
     stationType: 'odd',
-    stationName: 'Profile Bay',
+    stationName: 'Profile & Intake Bay',
   },
   {
     number: '02',
@@ -50,7 +52,7 @@ export const FEATURES_DATA: FeatureItem[] = [
     badge: 'Driver Roster',
     highlights: ['Driver Profiles', 'Assignments', 'Mobile App'],
     stationType: 'even',
-    stationName: 'Dispatch Dock',
+    stationName: 'Dispatch & Roster Dock',
   },
   {
     number: '03',
@@ -61,9 +63,9 @@ export const FEATURES_DATA: FeatureItem[] = [
     icon: Wrench,
     accentColor: '#d97706',
     badge: 'Dual-Trigger',
-    highlights: ['Interval Alerts', 'Preventive Plan', 'Service History'],
+    highlights: ['Interval Alerts', 'Preventive Plan', 'Service Log'],
     stationType: 'odd',
-    stationName: 'Service Bay',
+    stationName: 'Scheduled Service Bay',
   },
   {
     number: '04',
@@ -76,7 +78,7 @@ export const FEATURES_DATA: FeatureItem[] = [
     badge: 'Resolution',
     highlights: ['Defect Reports', 'Job Cards', 'Live Status'],
     stationType: 'even',
-    stationName: 'Repair Bay',
+    stationName: 'Diagnostic & Repair Bay',
   },
   {
     number: '05',
@@ -89,7 +91,7 @@ export const FEATURES_DATA: FeatureItem[] = [
     badge: 'TCO Audit',
     highlights: ['Parts & Labor', 'Receipts', 'Spend Audit'],
     stationType: 'odd',
-    stationName: 'Accounting Dock',
+    stationName: 'Accounting & Fuel Dock',
   },
   {
     number: '06',
@@ -102,7 +104,7 @@ export const FEATURES_DATA: FeatureItem[] = [
     badge: 'Compliance Vault',
     highlights: ['RC & Insurance', 'Permits', 'Expiry Alerts'],
     stationType: 'even',
-    stationName: 'Compliance Station',
+    stationName: 'Compliance & RC Station',
   },
   {
     number: '07',
@@ -115,7 +117,7 @@ export const FEATURES_DATA: FeatureItem[] = [
     badge: 'Intelligence',
     highlights: ['Fleet Readiness', 'Issue Tracking', 'Roadworthy'],
     stationType: 'odd',
-    stationName: 'Diagnostics Bay',
+    stationName: 'Telemetry & Health Bay',
   },
   {
     number: '08',
@@ -128,7 +130,7 @@ export const FEATURES_DATA: FeatureItem[] = [
     badge: 'Auto Alerts',
     highlights: ['Due Reminders', 'Expiry Notices', 'Push Alerts'],
     stationType: 'even',
-    stationName: 'Alerts Kiosk',
+    stationName: 'Dispatch Alerts Kiosk',
   },
   {
     number: '09',
@@ -141,16 +143,18 @@ export const FEATURES_DATA: FeatureItem[] = [
     badge: 'Visibility',
     highlights: ['Analytics', 'Maintenance Trends', 'Transparency'],
     stationType: 'odd',
-    stationName: 'Operations HQ',
+    stationName: 'Operations Command HQ',
   },
 ];
 
 const TOTAL_STOPS = FEATURES_DATA.length;
 const DWELL_SECONDS = 10; // Exactly 10 seconds per stop
 
-// Percentage position of each of the 9 stops along the 100% width road
-// Spaced evenly from 6% to 94% across the screen
-const getStopPercent = (index: number) => 6 + index * 11;
+// Long distance between stops: 560px spacing between stations!
+const MARGIN_LEFT = 420;
+const STOP_SPACING = 560;
+const TRACK_WIDTH = MARGIN_LEFT * 2 + (TOTAL_STOPS - 1) * STOP_SPACING; // 4880px
+const getStopX = (index: number) => MARGIN_LEFT + index * STOP_SPACING;
 
 export const RoadFeaturesSection: React.FC = () => {
   const [activeStop, setActiveStop] = useState<number>(0);
@@ -159,9 +163,23 @@ export const RoadFeaturesSection: React.FC = () => {
   const [carYOffset, setCarYOffset] = useState<number>(-8); // parked in top bay initially (Stop 1 is odd)
   const [driveDirection, setDriveDirection] = useState<'right' | 'left'>('right');
   const [isHovered, setIsHovered] = useState<boolean>(false);
+  const [viewportWidth, setViewportWidth] = useState<number>(1200);
 
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const driveTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Track viewport width for smooth camera panning
+  useEffect(() => {
+    const updateWidth = () => {
+      if (wrapperRef.current) {
+        setViewportWidth(wrapperRef.current.clientWidth);
+      }
+    };
+    updateWidth();
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
+  }, []);
 
   // Jump or drive to a specific station
   const goToStop = useCallback(
@@ -176,7 +194,7 @@ export const RoadFeaturesSection: React.FC = () => {
       setIsDriving(true);
       setActiveStop(normalizedIndex);
 
-      // Hide active highlight while car travels
+      // Hide all feature details while the car is in transit
       setDisplayedStop(-1);
 
       // Car moves to road center lane (Y=0)
@@ -184,12 +202,13 @@ export const RoadFeaturesSection: React.FC = () => {
 
       if (driveTimerRef.current) clearTimeout(driveTimerRef.current);
 
-      // Car reaches destination after 1000ms, pulls into bay
+      // Car drives across the long distance (1350ms), arrives at the station, pulls into bay
       driveTimerRef.current = setTimeout(() => {
         setCarYOffset(targetBayY);
         setIsDriving(false);
+        // THE FEATURE IS REVEALED ONLY AFTER THE CAR HAS REACHED THE SERVICE CENTER!
         setDisplayedStop(normalizedIndex);
-      }, 1000);
+      }, 1350);
     },
     [activeStop, isDriving]
   );
@@ -214,7 +233,9 @@ export const RoadFeaturesSection: React.FC = () => {
     };
   }, [isDriving, isHovered, activeStop, handleNext]);
 
-  const activePercent = getStopPercent(activeStop);
+  // Camera tracking: keeps the active station and car centered in the screen
+  const targetX = getStopX(activeStop);
+  const cameraX = Math.max(0, targetX - viewportWidth / 2);
 
   return (
     <section
@@ -225,7 +246,7 @@ export const RoadFeaturesSection: React.FC = () => {
       <div className="absolute top-1/4 -left-20 w-80 h-80 bg-blue-400/10 rounded-full blur-[130px] pointer-events-none" />
       <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-indigo-500/10 rounded-full blur-[140px] pointer-events-none" />
 
-      {/* Main Container - Fits Screen 100% Width (max-w-7xl) */}
+      {/* Main Container - Fits Screen Viewport (max-w-7xl) */}
       <div className="w-full max-w-7xl mx-auto flex flex-col items-center px-3 sm:px-6">
         {/* =========================================================================
             1. SECTION HEADER
@@ -245,29 +266,37 @@ export const RoadFeaturesSection: React.FC = () => {
           </h2>
 
           <p className="font-neue-haas-medium text-white/80 text-xs sm:text-sm md:text-base max-w-2xl mx-auto mt-1.5 leading-relaxed">
-            Odd Stations on top, Even Stations on the bottom. The fleet vehicle automatically inspects each bay with a 10-second service stop.
+            Long-distance highway journey across 9 alternating Service Stations. Each feature is revealed only once the car pulls into the bay.
           </p>
         </div>
 
         {/* =========================================================================
-            2. HIGHWAY STAGE: FITS 100% SCREEN WIDTH, THIN ROAD IN CENTER
+            2. HIGHWAY STAGE: SMOOTH CAMERA TRACKING, LONG DISTANCE BETWEEN STOPS
         ========================================================================= */}
         <div
-          className="relative w-full flex flex-col justify-between py-2 overflow-x-auto sm:overflow-visible"
+          ref={wrapperRef}
+          className="relative w-full overflow-hidden rounded-3xl py-2"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          <div className="relative w-full min-w-[760px] flex flex-col justify-between">
+          {/* Smooth Camera Track - Moves seamlessly with the car */}
+          <div
+            className="relative flex flex-col justify-between transition-transform duration-1000 ease-[cubic-bezier(0.35,1,0.4,1)]"
+            style={{
+              width: `${TRACK_WIDTH}px`,
+              transform: `translateX(-${cameraX}px)`,
+            }}
+          >
             {/* ---------------------------------------------------------------------
                 A. TOP SECTION: ODD SERVICE STATIONS (Stop 01, 03, 05, 07, 09)
             --------------------------------------------------------------------- */}
-            <div className="relative w-full h-[200px] sm:h-[210px]">
+            <div className="relative w-full h-[220px] sm:h-[230px]">
               {FEATURES_DATA.map((feat, idx) => {
                 const isOdd = idx % 2 === 0; // idx 0 = Stop 1 (odd)
                 if (!isOdd) return null;
 
-                const stopPct = getStopPercent(idx);
-                const isCardVisible = displayedStop === idx;
+                const stopX = getStopX(idx);
+                const isStationRevealed = displayedStop === idx;
 
                 return (
                   <div
@@ -275,84 +304,118 @@ export const RoadFeaturesSection: React.FC = () => {
                     onClick={() => goToStop(idx)}
                     className="absolute bottom-1 -translate-x-1/2 cursor-pointer transition-all duration-500 ease-out"
                     style={{
-                      left: `${stopPct}%`,
-                      width: '18%',
-                      maxWidth: '210px',
-                      minWidth: '135px',
+                      left: `${stopX}px`,
+                      width: '320px',
+                      maxWidth: '90vw',
                     }}
                   >
-                    {/* Top Station Card */}
+                    {/* The Service Station Card: REVEALED vs STANDBY */}
                     <div
-                      className={`relative rounded-2xl p-3 sm:p-3.5 transition-all duration-300 flex flex-col justify-between select-none ${
-                        isCardVisible
-                          ? 'bg-white text-slate-900 shadow-[0_15px_35px_rgba(0,0,0,0.35)] ring-2 ring-white scale-105 z-30'
-                          : 'bg-white/10 backdrop-blur-md text-white/90 border border-white/15 hover:bg-white/20 hover:scale-102 z-10'
+                      className={`relative rounded-2xl p-4 transition-all duration-500 flex flex-col justify-between select-none ${
+                        isStationRevealed
+                          ? 'bg-white text-slate-900 shadow-[0_20px_45px_rgba(0,0,0,0.4)] ring-2 ring-white scale-105 z-30 animate-in fade-in zoom-in-95 duration-400'
+                          : 'bg-white/10 backdrop-blur-md text-white/80 border border-white/15 hover:bg-white/20 hover:scale-102 z-10'
                       }`}
-                      style={{ minHeight: '175px' }}
+                      style={{ minHeight: isStationRevealed ? '200px' : '90px' }}
                     >
-                      {/* Station Header: Badge + Category Icon */}
+                      {/* Station Top Bar */}
                       <div>
-                        <div className="flex items-center justify-between mb-1.5">
+                        <div className="flex items-center justify-between mb-2">
                           <span
-                            className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold text-white shadow-xs"
+                            className="px-2.5 py-0.5 rounded-md text-[11px] font-mono font-bold text-white shadow-xs"
                             style={{ backgroundColor: feat.accentColor }}
                           >
                             BAY {feat.number}
                           </span>
 
-                          <div
-                            className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold ${
-                              isCardVisible ? 'bg-slate-100 text-slate-900' : 'bg-white/10 text-white'
-                            }`}
-                            style={{
-                              color: isCardVisible ? feat.accentColor : undefined,
-                            }}
-                          >
-                            <feat.icon className="w-3.5 h-3.5" />
+                          <div className="flex items-center gap-2">
+                            {isStationRevealed ? (
+                              <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full flex items-center gap-1">
+                                <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+                                Reached & Inspected
+                              </span>
+                            ) : (
+                              <span className="text-[10px] text-white/50 font-mono font-semibold flex items-center gap-1">
+                                <Lock className="w-2.5 h-2.5 opacity-60" />
+                                Standby Bay
+                              </span>
+                            )}
+
+                            <div
+                              className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold ${
+                                isStationRevealed ? 'bg-slate-100' : 'bg-white/10'
+                              }`}
+                              style={{
+                                color: isStationRevealed ? feat.accentColor : 'rgba(255,255,255,0.7)',
+                              }}
+                            >
+                              <feat.icon className="w-4 h-4" />
+                            </div>
                           </div>
                         </div>
 
-                        {/* Title */}
-                        <h3
-                          className={`font-black text-xs sm:text-sm font-anek-latin tracking-tight leading-tight line-clamp-1 ${
-                            isCardVisible ? 'text-slate-900' : 'text-white'
-                          }`}
-                        >
-                          {feat.title}
-                        </h3>
+                        {/* REVEALED CONTENT: Displayed ONLY once car reaches station! */}
+                        {isStationRevealed ? (
+                          <div className="animate-in fade-in slide-in-from-top-2 duration-300">
+                            {/* Title */}
+                            <h3 className="font-black text-base sm:text-lg text-slate-900 font-anek-latin tracking-tight leading-tight">
+                              {feat.title}
+                            </h3>
 
-                        {/* Tagline */}
-                        <p
-                          className="font-bold text-[10px] sm:text-[11px] font-anek-latin mt-0.5 line-clamp-1"
-                          style={{
-                            color: isCardVisible ? feat.accentColor : '#93c5fd',
-                          }}
-                        >
-                          {feat.tagline}
-                        </p>
+                            {/* Tagline */}
+                            <p
+                              className="font-bold text-xs mt-0.5 font-anek-latin"
+                              style={{ color: feat.accentColor }}
+                            >
+                              {feat.tagline}
+                            </p>
 
-                        {/* Description */}
-                        <p
-                          className={`text-[10px] mt-1 leading-snug font-anek-latin line-clamp-2 ${
-                            isCardVisible ? 'text-slate-600' : 'text-white/60'
-                          }`}
-                        >
-                          {feat.description}
-                        </p>
+                            {/* Description */}
+                            <p className="text-xs text-slate-600 mt-1.5 leading-relaxed font-anek-latin">
+                              {feat.description}
+                            </p>
+
+                            {/* Feature Highlights */}
+                            <div className="mt-3 pt-2 border-t border-slate-100 flex flex-wrap gap-1.5">
+                              {feat.highlights.map((h, hIdx) => (
+                                <span
+                                  key={hIdx}
+                                  className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-md bg-slate-50 text-slate-700 border border-slate-200 font-anek-latin"
+                                >
+                                  <span
+                                    className="w-1.5 h-1.5 rounded-full shrink-0"
+                                    style={{ backgroundColor: feat.accentColor }}
+                                  />
+                                  {h}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        ) : (
+                          /* UNREVEALED / STANDBY CONTENT: Station Name & Awaiting prompt */
+                          <div className="pt-1">
+                            <span className="text-xs font-bold text-white/90 font-anek-latin block">
+                              {feat.stationName}
+                            </span>
+                            <span className="text-[10px] text-white/50 block mt-0.5">
+                              Feature revealed upon vehicle arrival...
+                            </span>
+                          </div>
+                        )}
                       </div>
 
-                      {/* Clean Footer: Badge and Milestone Number (No timer/progress bar) */}
-                      <div className="mt-2 pt-1.5 border-t border-slate-100/20 flex items-center justify-between">
+                      {/* Station Footer */}
+                      <div className="mt-2 pt-1.5 border-t border-slate-100/20 flex items-center justify-between text-[10px]">
                         <span
-                          className={`text-[9px] font-semibold truncate ${
-                            isCardVisible ? 'text-slate-500' : 'text-white/50'
+                          className={`font-semibold ${
+                            isStationRevealed ? 'text-slate-500' : 'text-white/50'
                           }`}
                         >
                           {feat.badge}
                         </span>
                         <span
-                          className={`text-[9px] font-mono font-bold ${
-                            isCardVisible ? 'text-slate-400' : 'text-white/40'
+                          className={`font-mono font-bold ${
+                            isStationRevealed ? 'text-slate-400' : 'text-white/40'
                           }`}
                         >
                           {feat.number} / 09
@@ -362,7 +425,7 @@ export const RoadFeaturesSection: React.FC = () => {
                       {/* Downward Pointer Triangle pointing to Road */}
                       <div
                         className={`absolute -bottom-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[8px] transition-colors ${
-                          isCardVisible ? 'border-t-white' : 'border-t-white/30'
+                          isStationRevealed ? 'border-t-white' : 'border-t-white/30'
                         }`}
                       />
                     </div>
@@ -372,7 +435,7 @@ export const RoadFeaturesSection: React.FC = () => {
             </div>
 
             {/* ---------------------------------------------------------------------
-                B. CENTER THIN ROAD (SLEEK 42px THICKNESS)
+                B. CENTER THIN ROAD (SLEEK 42px THICKNESS, EXTENDING ACROSS LONG TRACK)
             --------------------------------------------------------------------- */}
             <div className="relative w-full h-[42px] my-1 flex items-center select-none">
               {/* Upper Road Curb (Thin 2px line) */}
@@ -380,19 +443,19 @@ export const RoadFeaturesSection: React.FC = () => {
 
               {/* Thin Asphalt Lane Surface */}
               <div className="relative w-full h-[38px] bg-gradient-to-r from-slate-900 via-[#0f172a] to-slate-900 flex items-center justify-between px-2 overflow-hidden shadow-inner">
-                {/* Center Dashed Yellow Divider (Thin 1.5px) */}
+                {/* Center Dashed Yellow Divider (Thin 1.5px across long distance) */}
                 <div className="w-full flex items-center justify-between">
-                  {Array.from({ length: 45 }).map((_, i) => (
+                  {Array.from({ length: 140 }).map((_, i) => (
                     <div
                       key={`dash-${i}`}
-                      className="h-[2px] w-4 shrink-0 mx-1.5 bg-yellow-400/90 rounded-full shadow-[0_0_4px_rgba(250,204,21,0.5)]"
+                      className="h-[2px] w-5 shrink-0 mx-2 bg-yellow-400/90 rounded-full shadow-[0_0_4px_rgba(250,204,21,0.5)]"
                     />
                   ))}
                 </div>
 
                 {/* 9 Stencil Stop Checkpoints along the Road */}
                 {FEATURES_DATA.map((feat, idx) => {
-                  const stopPct = getStopPercent(idx);
+                  const stopX = getStopX(idx);
                   const isCurrent = activeStop === idx;
 
                   return (
@@ -400,7 +463,7 @@ export const RoadFeaturesSection: React.FC = () => {
                       key={`road-mark-${feat.number}`}
                       onClick={() => goToStop(idx)}
                       className="absolute top-0 bottom-0 -translate-x-1/2 flex items-center justify-center cursor-pointer group"
-                      style={{ left: `${stopPct}%`, width: '40px' }}
+                      style={{ left: `${stopX}px`, width: '80px' }}
                     >
                       <div
                         className={`w-0.5 h-full transition-colors ${
@@ -408,13 +471,13 @@ export const RoadFeaturesSection: React.FC = () => {
                         }`}
                       />
                       <span
-                        className={`absolute text-[8px] font-mono font-bold transition-all ${
+                        className={`absolute text-[9px] font-mono font-bold transition-all ${
                           isCurrent
-                            ? 'text-white drop-shadow-[0_0_4px_rgba(255,255,255,0.9)] scale-110'
+                            ? 'text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.9)] scale-110'
                             : 'text-white/30'
                         }`}
                       >
-                        {feat.number}
+                        BAY {feat.number}
                       </span>
                     </div>
                   );
@@ -426,7 +489,7 @@ export const RoadFeaturesSection: React.FC = () => {
                 <div
                   className="absolute z-20 pointer-events-none select-none transition-all duration-1000 ease-[cubic-bezier(0.34,1.15,0.64,1)]"
                   style={{
-                    left: `${activePercent}%`,
+                    left: `${targetX}px`,
                     top: '50%',
                     transform: `translate(-50%, -50%) translateY(${carYOffset}px) ${
                       driveDirection === 'left' ? 'scaleX(-1)' : 'scaleX(1)'
@@ -436,7 +499,7 @@ export const RoadFeaturesSection: React.FC = () => {
                   <div className="relative flex items-center justify-center">
                     {/* Forward Headlight Beam on the Thin Road */}
                     <div
-                      className={`absolute left-[80%] top-1/2 -translate-y-1/2 w-28 h-8 pointer-events-none transition-opacity ${
+                      className={`absolute left-[80%] top-1/2 -translate-y-1/2 w-32 h-8 pointer-events-none transition-opacity ${
                         isDriving ? 'opacity-90' : 'opacity-65'
                       }`}
                       style={{
@@ -453,10 +516,10 @@ export const RoadFeaturesSection: React.FC = () => {
                     {/* Under-Car Contact Shadow */}
                     <div className="absolute -bottom-0.5 left-1 right-1 h-2 bg-black/60 rounded-[100%] blur-[2px] pointer-events-none" />
 
-                    {/* Proportional Compact Fleet Vehicle SVG (70px x 28px) */}
+                    {/* Proportional Compact Fleet Vehicle SVG (72px x 28px) */}
                     <svg
                       viewBox="0 0 140 56"
-                      className="w-[66px] sm:w-[72px] h-auto drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)]"
+                      className="w-[70px] sm:w-[76px] h-auto drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)]"
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
                     >
@@ -567,13 +630,13 @@ export const RoadFeaturesSection: React.FC = () => {
             {/* ---------------------------------------------------------------------
                 C. BOTTOM SECTION: EVEN SERVICE STATIONS (Stop 02, 04, 06, 08)
             --------------------------------------------------------------------- */}
-            <div className="relative w-full h-[200px] sm:h-[210px]">
+            <div className="relative w-full h-[220px] sm:h-[230px]">
               {FEATURES_DATA.map((feat, idx) => {
                 const isEven = idx % 2 === 1; // idx 1 = Stop 2 (even)
                 if (!isEven) return null;
 
-                const stopPct = getStopPercent(idx);
-                const isCardVisible = displayedStop === idx;
+                const stopX = getStopX(idx);
+                const isStationRevealed = displayedStop === idx;
 
                 return (
                   <div
@@ -581,91 +644,125 @@ export const RoadFeaturesSection: React.FC = () => {
                     onClick={() => goToStop(idx)}
                     className="absolute top-1 -translate-x-1/2 cursor-pointer transition-all duration-500 ease-out"
                     style={{
-                      left: `${stopPct}%`,
-                      width: '18%',
-                      maxWidth: '210px',
-                      minWidth: '135px',
+                      left: `${stopX}px`,
+                      width: '320px',
+                      maxWidth: '90vw',
                     }}
                   >
                     {/* Upward Pointer Triangle pointing to Road */}
                     <div
                       className={`absolute -top-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[8px] transition-colors z-10 ${
-                        isCardVisible ? 'border-b-white' : 'border-b-white/30'
+                        isStationRevealed ? 'border-b-white' : 'border-b-white/30'
                       }`}
                     />
 
-                    {/* Bottom Station Card */}
+                    {/* Bottom Station Card: REVEALED vs STANDBY */}
                     <div
-                      className={`relative rounded-2xl p-3 sm:p-3.5 transition-all duration-300 flex flex-col justify-between select-none ${
-                        isCardVisible
-                          ? 'bg-white text-slate-900 shadow-[0_15px_35px_rgba(0,0,0,0.35)] ring-2 ring-white scale-105 z-30'
-                          : 'bg-white/10 backdrop-blur-md text-white/90 border border-white/15 hover:bg-white/20 hover:scale-102 z-10'
+                      className={`relative rounded-2xl p-4 transition-all duration-500 flex flex-col justify-between select-none ${
+                        isStationRevealed
+                          ? 'bg-white text-slate-900 shadow-[0_20px_45px_rgba(0,0,0,0.4)] ring-2 ring-white scale-105 z-30 animate-in fade-in zoom-in-95 duration-400'
+                          : 'bg-white/10 backdrop-blur-md text-white/80 border border-white/15 hover:bg-white/20 hover:scale-102 z-10'
                       }`}
-                      style={{ minHeight: '175px' }}
+                      style={{ minHeight: isStationRevealed ? '200px' : '90px' }}
                     >
-                      {/* Station Header: Badge + Category Icon */}
+                      {/* Station Top Bar */}
                       <div>
-                        <div className="flex items-center justify-between mb-1.5">
+                        <div className="flex items-center justify-between mb-2">
                           <span
-                            className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold text-white shadow-xs"
+                            className="px-2.5 py-0.5 rounded-md text-[11px] font-mono font-bold text-white shadow-xs"
                             style={{ backgroundColor: feat.accentColor }}
                           >
                             BAY {feat.number}
                           </span>
 
-                          <div
-                            className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold ${
-                              isCardVisible ? 'bg-slate-100 text-slate-900' : 'bg-white/10 text-white'
-                            }`}
-                            style={{
-                              color: isCardVisible ? feat.accentColor : undefined,
-                            }}
-                          >
-                            <feat.icon className="w-3.5 h-3.5" />
+                          <div className="flex items-center gap-2">
+                            {isStationRevealed ? (
+                              <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full flex items-center gap-1">
+                                <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+                                Reached & Inspected
+                              </span>
+                            ) : (
+                              <span className="text-[10px] text-white/50 font-mono font-semibold flex items-center gap-1">
+                                <Lock className="w-2.5 h-2.5 opacity-60" />
+                                Standby Bay
+                              </span>
+                            )}
+
+                            <div
+                              className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold ${
+                                isStationRevealed ? 'bg-slate-100' : 'bg-white/10'
+                              }`}
+                              style={{
+                                color: isStationRevealed ? feat.accentColor : 'rgba(255,255,255,0.7)',
+                              }}
+                            >
+                              <feat.icon className="w-4 h-4" />
+                            </div>
                           </div>
                         </div>
 
-                        {/* Title */}
-                        <h3
-                          className={`font-black text-xs sm:text-sm font-anek-latin tracking-tight leading-tight line-clamp-1 ${
-                            isCardVisible ? 'text-slate-900' : 'text-white'
-                          }`}
-                        >
-                          {feat.title}
-                        </h3>
+                        {/* REVEALED CONTENT: Displayed ONLY once car reaches station! */}
+                        {isStationRevealed ? (
+                          <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+                            {/* Title */}
+                            <h3 className="font-black text-base sm:text-lg text-slate-900 font-anek-latin tracking-tight leading-tight">
+                              {feat.title}
+                            </h3>
 
-                        {/* Tagline */}
-                        <p
-                          className="font-bold text-[10px] sm:text-[11px] font-anek-latin mt-0.5 line-clamp-1"
-                          style={{
-                            color: isCardVisible ? feat.accentColor : '#93c5fd',
-                          }}
-                        >
-                          {feat.tagline}
-                        </p>
+                            {/* Tagline */}
+                            <p
+                              className="font-bold text-xs mt-0.5 font-anek-latin"
+                              style={{ color: feat.accentColor }}
+                            >
+                              {feat.tagline}
+                            </p>
 
-                        {/* Description */}
-                        <p
-                          className={`text-[10px] mt-1 leading-snug font-anek-latin line-clamp-2 ${
-                            isCardVisible ? 'text-slate-600' : 'text-white/60'
-                          }`}
-                        >
-                          {feat.description}
-                        </p>
+                            {/* Description */}
+                            <p className="text-xs text-slate-600 mt-1.5 leading-relaxed font-anek-latin">
+                              {feat.description}
+                            </p>
+
+                            {/* Feature Highlights */}
+                            <div className="mt-3 pt-2 border-t border-slate-100 flex flex-wrap gap-1.5">
+                              {feat.highlights.map((h, hIdx) => (
+                                <span
+                                  key={hIdx}
+                                  className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-md bg-slate-50 text-slate-700 border border-slate-200 font-anek-latin"
+                                >
+                                  <span
+                                    className="w-1.5 h-1.5 rounded-full shrink-0"
+                                    style={{ backgroundColor: feat.accentColor }}
+                                  />
+                                  {h}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        ) : (
+                          /* UNREVEALED / STANDBY CONTENT: Station Name & Awaiting prompt */
+                          <div className="pt-1">
+                            <span className="text-xs font-bold text-white/90 font-anek-latin block">
+                              {feat.stationName}
+                            </span>
+                            <span className="text-[10px] text-white/50 block mt-0.5">
+                              Feature revealed upon vehicle arrival...
+                            </span>
+                          </div>
+                        )}
                       </div>
 
-                      {/* Clean Footer: Badge and Milestone Number (No timer/progress bar) */}
-                      <div className="mt-2 pt-1.5 border-t border-slate-100/20 flex items-center justify-between">
+                      {/* Station Footer */}
+                      <div className="mt-2 pt-1.5 border-t border-slate-100/20 flex items-center justify-between text-[10px]">
                         <span
-                          className={`text-[9px] font-semibold truncate ${
-                            isCardVisible ? 'text-slate-500' : 'text-white/50'
+                          className={`font-semibold ${
+                            isStationRevealed ? 'text-slate-500' : 'text-white/50'
                           }`}
                         >
                           {feat.badge}
                         </span>
                         <span
-                          className={`text-[9px] font-mono font-bold ${
-                            isCardVisible ? 'text-slate-400' : 'text-white/40'
+                          className={`font-mono font-bold ${
+                            isStationRevealed ? 'text-slate-400' : 'text-white/40'
                           }`}
                         >
                           {feat.number} / 09
