@@ -16,6 +16,7 @@ import { Login } from './components/auth/Login';
 import { AdminDashboard } from './components/admin/AdminDashboard';
 import { FleetManagersView } from './components/admin/FleetManagersView';
 import { CompanySettings } from './components/admin/CompanySettings';
+import { ProfileView } from './components/profile/ProfileView';
 
 // Fleet Manager
 import { FleetManagerDashboard } from './components/fleetManager/FleetManagerDashboard';
@@ -115,6 +116,7 @@ export const App: React.FC = () => {
                 <Route path="documents" element={<DocumentsView />} />
                 <Route path="reports" element={<ReportsView />} />
                 <Route path="settings" element={<CompanySettings />} />
+                <Route path="profile" element={<ProfileView />} />
               </Route>
             </Route>
 
@@ -130,6 +132,7 @@ export const App: React.FC = () => {
                 <Route path="expenses" element={<ExpensesView />} />
                 <Route path="documents" element={<DocumentsView />} />
                 <Route path="reports" element={<ReportsView />} />
+                <Route path="profile" element={<ProfileView />} />
               </Route>
             </Route>
 

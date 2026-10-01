@@ -25,6 +25,16 @@ const organizationSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    website: {
+      type: String,
+      trim: true,
+      default: '',
+    },
+    businessType: {
+      type: String,
+      trim: true,
+      default: 'Commercial Fleet Transport',
+    },
     logo: {
       type: String,
       default: '',

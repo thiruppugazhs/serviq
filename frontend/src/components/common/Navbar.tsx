@@ -12,6 +12,7 @@ import {
   ExternalLink,
   Bell,
   HelpCircle,
+  User as UserIcon,
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -235,38 +236,39 @@ export const Navbar: React.FC = () => {
                 </div>
               </div>
 
-              {user?.role !== 'driver' && (
+              {/* Dropdown Options */}
+              <div className="py-1 space-y-1">
                 <Link
-                  to="/driver/home"
+                  to={`${basePath}/profile`}
                   onClick={() => setProfileOpen(false)}
-                  className="flex items-center gap-2 px-3 py-2 text-xs text-slate-700 hover:bg-slate-50 rounded-xl transition-colors font-medium"
+                  className="flex items-center gap-2.5 px-3 py-2 text-xs text-slate-800 hover:bg-slate-50 rounded-xl transition-colors font-semibold"
                 >
-                  <Smartphone className="w-4 h-4 text-slate-500" />
-                  <span>Driver Mobile View</span>
+                  <UserIcon className="w-4 h-4 text-blue-600" />
+                  <span>Profile</span>
                 </Link>
-              )}
 
-              {isAdmin && (
-                <Link
-                  to="/admin/settings"
-                  onClick={() => setProfileOpen(false)}
-                  className="flex items-center gap-2 px-3 py-2 text-xs text-slate-700 hover:bg-slate-50 rounded-xl transition-colors font-medium"
+                {user?.role !== 'driver' && (
+                  <Link
+                    to="/driver/home"
+                    onClick={() => setProfileOpen(false)}
+                    className="flex items-center gap-2.5 px-3 py-2 text-xs text-slate-700 hover:bg-slate-50 rounded-xl transition-colors font-medium"
+                  >
+                    <Smartphone className="w-4 h-4 text-slate-500" />
+                    <span>Driver Mobile View</span>
+                  </Link>
+                )}
+
+                <button
+                  onClick={() => {
+                    setProfileOpen(false);
+                    logout();
+                  }}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-rose-600 hover:bg-rose-50 rounded-xl transition-colors font-semibold"
                 >
-                  <Settings className="w-4 h-4 text-slate-500" />
-                  <span>Company Settings</span>
-                </Link>
-              )}
-
-              <button
-                onClick={() => {
-                  setProfileOpen(false);
-                  logout();
-                }}
-                className="w-full flex items-center gap-2 px-3 py-2 text-xs text-rose-600 hover:bg-rose-50 rounded-xl transition-colors font-medium mt-1"
-              >
-                <LogOut className="w-4 h-4" />
-                <span>Sign Out</span>
-              </button>
+                  <LogOut className="w-4 h-4" />
+                  <span>Logout</span>
+                </button>
+              </div>
             </div>
           )}
         </div>

@@ -575,3 +575,82 @@ exports.getMe = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc    Update current user profile (admin details)
+// @route   PUT /api/auth/profile
+// @access  Private
+exports.updateUserProfile = async (req, res, next) => {
+  try {
+    const { name, phone, employeeId, address, password } = req.body;
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    if (name) user.name = name.trim();
+    if (phone !== undefined) user.phone = phone.trim();
+    if (employeeId !== undefined) user.employeeId = employeeId.trim();
+    if (address !== undefined) user.address = address.trim();
+
+    if (password && password.trim().length >= 6) {
+      user.password = password.trim();
+    }
+
+    await user.save();
+
+    const updatedUser = await User.findById(user._id).populate('organization');
+
+    res.status(200).json({
+      success: true,
+      message: 'User profile updated successfully',
+      user: {
+        id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        role: updatedUser.role,
+        phone: updatedUser.phone,
+        employeeId: updatedUser.employeeId,
+        address: updatedUser.address,
+        organization: updatedUser.organization,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Update company/organization details
+// @route   PUT /api/auth/company-profile
+// @access  Private
+exports.updateCompanyProfile = async (req, res, next) => {
+  try {
+    const { name, email, phone, address, registrationNumber, website, businessType, logo } = req.body;
+    const orgId = req.user.organization?._id || req.user.organization;
+
+    const organization = await Organization.findById(orgId);
+    if (!organization) {
+      return res.status(404).json({ success: false, message: 'Organization not found' });
+    }
+
+    if (name) organization.name = name.trim();
+    if (email) organization.email = email.toLowerCase().trim();
+    if (phone !== undefined) organization.phone = phone.trim();
+    if (address !== undefined) organization.address = address.trim();
+    if (registrationNumber !== undefined) organization.registrationNumber = registrationNumber.trim();
+    if (website !== undefined) organization.website = website.trim();
+    if (businessType !== undefined) organization.businessType = businessType.trim();
+    if (logo !== undefined) organization.logo = logo;
+
+    await organization.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Company profile updated successfully',
+      organization,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+

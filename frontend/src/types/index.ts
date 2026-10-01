@@ -7,6 +7,8 @@ export interface Organization {
   phone?: string;
   address?: string;
   registrationNumber?: string;
+  website?: string;
+  businessType?: string;
   logo?: string;
   createdAt?: string;
 }
