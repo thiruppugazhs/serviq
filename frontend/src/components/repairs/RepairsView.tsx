@@ -99,10 +99,10 @@ export const RepairsView: React.FC = () => {
     <div className="space-y-6 animate-in fade-in duration-200">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white font-['Outfit',sans-serif]">
+          <h1 className="text-2xl font-bold text-slate-900 font-['Outfit',sans-serif]">
             Repairs & Breakdown Tickets
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-500 mt-1">
             Real-time incident reports from drivers and workshop repair progress.
           </p>
         </div>
@@ -112,7 +112,7 @@ export const RepairsView: React.FC = () => {
             setError(null);
             setIsReportModalOpen(true);
           }}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-medium text-xs rounded-xl transition-colors shadow-lg shadow-rose-950/40"
+          className="inline-flex items-center gap-2 px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-medium text-xs rounded-xl transition-colors shadow-md shadow-rose-500/20"
         >
           <Plus className="w-4 h-4" />
           <span>Report Breakdown</span>
@@ -138,32 +138,32 @@ export const RepairsView: React.FC = () => {
             return (
               <div
                 key={repair._id}
-                className="glass-card p-5 rounded-2xl border flex flex-col md:flex-row md:items-center justify-between gap-4"
+                className="glass-card p-5 rounded-2xl border border-slate-200 bg-white shadow-2xs flex flex-col md:flex-row md:items-center justify-between gap-4"
               >
                 <div className="space-y-1.5 flex-1">
                   <div className="flex flex-wrap items-center gap-2.5">
-                    <span className="font-mono font-bold text-sm text-white">
+                    <span className="font-mono font-bold text-sm text-slate-900">
                       {veh ? veh.vehicleNumber : 'Vehicle'}
                     </span>
-                    <span className="text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-medium">
+                    <span className="text-xs px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200 font-medium">
                       {repair.issueType}
                     </span>
                     <Badge status={repair.priority} size="sm" />
                     <Badge status={repair.status} size="sm" />
                   </div>
 
-                  <p className="text-xs text-slate-300 font-medium">{repair.description}</p>
+                  <p className="text-xs text-slate-700 font-medium">{repair.description}</p>
 
                   <div className="flex flex-wrap items-center gap-4 text-[11px] text-slate-500 pt-1">
                     <span className="flex items-center gap-1">
                       <User className="w-3 h-3" />
-                      Reported by: {reporter?.name || 'Driver'}
+                      Reported by: <span className="font-semibold text-slate-700">{reporter?.name || 'Driver'}</span>
                     </span>
                     {repair.assignedWorkshop && (
-                      <span>Workshop: {repair.assignedWorkshop}</span>
+                      <span>Workshop: <span className="font-semibold text-slate-700">{repair.assignedWorkshop}</span></span>
                     )}
                     {repair.cost ? (
-                      <span className="text-slate-300 font-mono">Cost: ₹{repair.cost.toLocaleString()}</span>
+                      <span className="text-slate-900 font-mono font-semibold">Cost: ₹{repair.cost.toLocaleString()}</span>
                     ) : null}
                   </div>
                 </div>
@@ -180,7 +180,7 @@ export const RepairsView: React.FC = () => {
                       });
                       setIsUpdateModalOpen(true);
                     }}
-                    className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-colors"
+                    className="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 text-xs font-medium transition-colors"
                   >
                     Manage Ticket
                   </button>
@@ -198,7 +198,7 @@ export const RepairsView: React.FC = () => {
         title="Report Vehicle Breakdown / Issue"
       >
         {error && (
-          <div className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center gap-2">
+          <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
             <ShieldAlert className="w-4 h-4 shrink-0" />
             <span>{error}</span>
           </div>
@@ -206,15 +206,15 @@ export const RepairsView: React.FC = () => {
 
         <form onSubmit={handleReportIssue} className="space-y-4 text-xs">
           <div>
-            <label className="block font-semibold text-slate-300 mb-1">
-              Vehicle <span className="text-rose-400">*</span>
+            <label className="block font-semibold text-slate-700 mb-1">
+              Vehicle <span className="text-rose-500">*</span>
             </label>
             <select
               name="vehicleId"
               required
               value={formData.vehicleId}
               onChange={handleChange}
-              className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2 text-white outline-none font-mono"
+              className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none font-mono"
             >
               <option value="">-- Choose vehicle --</option>
               {vehicles.map((v) => (
@@ -227,14 +227,14 @@ export const RepairsView: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">
-                Issue Category <span className="text-rose-400">*</span>
+              <label className="block font-semibold text-slate-700 mb-1">
+                Issue Category <span className="text-rose-500">*</span>
               </label>
               <select
                 name="issueType"
                 value={formData.issueType}
                 onChange={handleChange}
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2 text-white outline-none"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
               >
                 <option value="Engine">Engine</option>
                 <option value="Brakes">Brakes</option>
@@ -250,14 +250,14 @@ export const RepairsView: React.FC = () => {
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">
+              <label className="block font-semibold text-slate-700 mb-1">
                 Priority
               </label>
               <select
                 name="priority"
                 value={formData.priority}
                 onChange={handleChange}
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2 text-white outline-none"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
               >
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
@@ -268,8 +268,8 @@ export const RepairsView: React.FC = () => {
           </div>
 
           <div>
-            <label className="block font-semibold text-slate-300 mb-1">
-              Issue Description <span className="text-rose-400">*</span>
+            <label className="block font-semibold text-slate-700 mb-1">
+              Issue Description <span className="text-rose-500">*</span>
             </label>
             <textarea
               name="description"
@@ -278,22 +278,22 @@ export const RepairsView: React.FC = () => {
               value={formData.description}
               onChange={handleChange}
               placeholder="Describe symptoms, warning lights, sounds, or damage..."
-              className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2 text-white outline-none resize-none"
+              className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none resize-none"
             />
           </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
+          <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
             <button
               type="button"
               onClick={() => setIsReportModalOpen(false)}
-              className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300"
+              className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={submitLoading}
-              className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-medium"
+              className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-medium transition-colors shadow-md shadow-rose-500/20"
             >
               {submitLoading ? 'Submitting...' : 'Dispatch Ticket'}
             </button>
@@ -309,13 +309,13 @@ export const RepairsView: React.FC = () => {
       >
         <form onSubmit={handleStatusUpdate} className="space-y-4 text-xs">
           <div>
-            <label className="block font-semibold text-slate-300 mb-1">
+            <label className="block font-semibold text-slate-700 mb-1">
               Ticket Status
             </label>
             <select
               value={updateStatus.status}
               onChange={(e) => setUpdateStatus({ ...updateStatus, status: e.target.value })}
-              className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2 text-white outline-none"
+              className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
             >
               <option value="reported">Reported (Pending Inspection)</option>
               <option value="in_progress">In Progress (At Workshop)</option>
@@ -326,7 +326,7 @@ export const RepairsView: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">
+              <label className="block font-semibold text-slate-700 mb-1">
                 Assigned Workshop
               </label>
               <input
@@ -334,12 +334,12 @@ export const RepairsView: React.FC = () => {
                 value={updateStatus.assignedWorkshop}
                 onChange={(e) => setUpdateStatus({ ...updateStatus, assignedWorkshop: e.target.value })}
                 placeholder="Workshop Name"
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2 text-white"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900"
               />
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">
+              <label className="block font-semibold text-slate-700 mb-1">
                 Repair Cost (₹)
               </label>
               <input
@@ -347,13 +347,13 @@ export const RepairsView: React.FC = () => {
                 value={updateStatus.cost}
                 onChange={(e) => setUpdateStatus({ ...updateStatus, cost: e.target.value })}
                 placeholder="0"
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2 text-white font-mono"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 font-mono"
               />
             </div>
           </div>
 
           <div>
-            <label className="block font-semibold text-slate-300 mb-1">
+            <label className="block font-semibold text-slate-700 mb-1">
               Technician Notes
             </label>
             <textarea
@@ -361,22 +361,22 @@ export const RepairsView: React.FC = () => {
               value={updateStatus.notes}
               onChange={(e) => setUpdateStatus({ ...updateStatus, notes: e.target.value })}
               placeholder="Parts replaced, labor details, or workshop remarks..."
-              className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2 text-white resize-none"
+              className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 resize-none"
             />
           </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
+          <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
             <button
               type="button"
               onClick={() => setIsUpdateModalOpen(false)}
-              className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300"
+              className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={submitLoading}
-              className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-medium"
+              className="px-4 py-2 rounded-xl bg-[#2335f2] hover:bg-blue-700 text-white font-medium transition-colors shadow-md shadow-blue-500/20"
             >
               {submitLoading ? 'Saving...' : 'Update Status'}
             </button>

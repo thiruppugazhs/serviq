@@ -157,7 +157,7 @@ export const CompanyRegistration: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen w-screen max-h-screen overflow-hidden bg-black text-white font-['Plus_Jakarta_Sans',sans-serif]">
+    <div className="flex h-screen w-screen max-h-screen overflow-hidden bg-slate-50 text-slate-900 font-['Plus_Jakarta_Sans',sans-serif]">
       {/* =========================================================================
           Left Showcase Panel (Dark Modern Gradient with Step Progress) - Fits Screen
       ========================================================================= */}
@@ -297,28 +297,28 @@ export const CompanyRegistration: React.FC = () => {
       {/* =========================================================================
           Right Form Panel: Step-Wise Account Creation - Fits Screen
       ========================================================================= */}
-      <div className="flex w-full lg:w-1/2 h-full items-center justify-center bg-black p-4 sm:p-6 lg:p-8 overflow-y-auto">
+      <div className="flex w-full lg:w-1/2 h-full items-center justify-center bg-white p-4 sm:p-6 lg:p-8 overflow-y-auto">
         <div className="w-full max-w-md xl:max-w-lg my-auto py-2">
           
           {/* Step Header */}
           <div className="mb-4">
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[10px] xl:text-xs font-mono font-bold uppercase tracking-wider text-[#393df0] bg-blue-500/10 px-2.5 py-0.5 rounded-full border border-blue-500/20">
+              <span className="text-[10px] xl:text-xs font-mono font-bold uppercase tracking-wider text-[#2335f2] bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200">
                 Step {currentStep} of 3
               </span>
-              <span className="text-[11px] text-gray-500">
+              <span className="text-[11px] text-slate-500">
                 {currentStep === 1 && 'Company Information'}
                 {currentStep === 2 && 'Admin Details'}
                 {currentStep === 3 && 'Security & Launch'}
               </span>
             </div>
 
-            <h1 className="text-2xl xl:text-3xl font-black text-white font-['Outfit',sans-serif] tracking-tight mb-1">
+            <h1 className="text-2xl xl:text-3xl font-black text-slate-900 font-['Outfit',sans-serif] tracking-tight mb-1">
               {currentStep === 1 && 'Company Setup'}
               {currentStep === 2 && 'Admin Details'}
               {currentStep === 3 && 'Password Setting'}
             </h1>
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-slate-500">
               {currentStep === 1 && 'Provide your organization name and upload your company logo.'}
               {currentStep === 2 && 'Enter your contact info to set up the organization admin account.'}
               {currentStep === 3 && 'Set a strong password to secure your SERVIQ command center.'}
@@ -327,7 +327,7 @@ export const CompanyRegistration: React.FC = () => {
 
           {/* Error Notification */}
           {error && (
-            <div className="mb-3.5 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center gap-2.5">
+            <div className="mb-3.5 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2.5">
               <ShieldAlert className="w-4 h-4 shrink-0" />
               <span>{error}</span>
             </div>
@@ -345,7 +345,7 @@ export const CompanyRegistration: React.FC = () => {
                   onClick={() => {
                     setError('Google Workspace sign-in will connect to your corporate Google account.');
                   }}
-                  className="w-full h-10 xl:h-11 flex items-center justify-center gap-2.5 rounded-xl border border-gray-800 bg-gray-900/80 hover:bg-gray-800 text-white font-semibold text-xs xl:text-sm transition-all shadow-sm"
+                  className="w-full h-10 xl:h-11 flex items-center justify-center gap-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs xl:text-sm transition-all shadow-2xs"
                 >
                   <svg className="h-4 w-4" viewBox="0 0 24 24">
                     <path
@@ -371,10 +371,10 @@ export const CompanyRegistration: React.FC = () => {
 
               <div className="relative my-2">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-800"></div>
+                  <div className="w-full border-t border-slate-200"></div>
                 </div>
                 <div className="relative flex justify-center text-[10px]">
-                  <span className="bg-black px-2.5 text-gray-500 font-semibold uppercase tracking-wider">
+                  <span className="bg-white px-2.5 text-slate-400 font-semibold uppercase tracking-wider">
                     Or setup company details
                   </span>
                 </div>
@@ -382,8 +382,8 @@ export const CompanyRegistration: React.FC = () => {
 
               {/* Company Name */}
               <div className="space-y-1.5">
-                <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
-                  <Building2 className="w-3 h-3 text-[#393df0]" />
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
+                  <Building2 className="w-3 h-3 text-[#2335f2]" />
                   Company / Organization Name *
                 </label>
                 <input
@@ -393,18 +393,18 @@ export const CompanyRegistration: React.FC = () => {
                   placeholder="e.g. Apex Global Logistics Pvt Ltd"
                   value={companyName}
                   onChange={(e) => setCompanyName(e.target.value)}
-                  className="h-10 xl:h-11 w-full rounded-xl border border-gray-800 bg-gray-900/90 px-3.5 text-white text-xs xl:text-sm placeholder:text-gray-500 focus:border-[#393df0] focus:outline-none focus:ring-1 focus:ring-[#393df0] transition-all"
+                  className="h-10 xl:h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-slate-900 text-xs xl:text-sm placeholder:text-slate-400 focus:border-[#2335f2] focus:outline-none focus:ring-1 focus:ring-[#2335f2] transition-all"
                 />
               </div>
 
               {/* Company Logo Upload */}
               <div className="space-y-1.5">
-                <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 flex items-center justify-between">
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-600 flex items-center justify-between">
                   <span className="flex items-center gap-1.5">
-                    <Upload className="w-3 h-3 text-[#393df0]" />
+                    <Upload className="w-3 h-3 text-[#2335f2]" />
                     Company Logo
                   </span>
-                  <span className="text-[10px] text-gray-500 font-normal">PNG, JPG, SVG up to 5MB</span>
+                  <span className="text-[10px] text-slate-400 font-normal">PNG, JPG, SVG up to 5MB</span>
                 </label>
 
                 <input
@@ -416,8 +416,8 @@ export const CompanyRegistration: React.FC = () => {
                 />
 
                 {logoPreview ? (
-                  <div className="flex items-center gap-3 p-2.5 xl:p-3 rounded-xl border border-gray-800 bg-gray-900/90">
-                    <div className="w-12 h-12 xl:w-14 xl:h-14 rounded-lg bg-black border border-gray-800 p-1 flex items-center justify-center overflow-hidden shrink-0">
+                  <div className="flex items-center gap-3 p-2.5 xl:p-3 rounded-xl border border-slate-200 bg-slate-50">
+                    <div className="w-12 h-12 xl:w-14 xl:h-14 rounded-lg bg-white border border-slate-200 p-1 flex items-center justify-center overflow-hidden shrink-0">
                       <img
                         src={logoPreview}
                         alt="Logo preview"
@@ -425,13 +425,13 @@ export const CompanyRegistration: React.FC = () => {
                       />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <span className="text-xs xl:text-sm font-bold text-white block truncate">Logo Attached</span>
-                      <span className="text-[10px] text-emerald-400 font-medium">Ready for your organization</span>
+                      <span className="text-xs xl:text-sm font-bold text-slate-900 block truncate">Logo Attached</span>
+                      <span className="text-[10px] text-emerald-600 font-medium">Ready for your organization</span>
                     </div>
                     <button
                       type="button"
                       onClick={removeLogo}
-                      className="p-1.5 rounded-lg text-gray-400 hover:text-rose-400 hover:bg-gray-800 transition-colors"
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-slate-200 transition-colors"
                       title="Remove Logo"
                     >
                       <X className="w-3.5 h-3.5" />
@@ -441,9 +441,9 @@ export const CompanyRegistration: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="w-full h-16 xl:h-20 border border-dashed border-gray-800 hover:border-[#393df0] rounded-xl flex flex-col items-center justify-center gap-1 text-xs text-gray-400 hover:text-white bg-gray-900/40 hover:bg-gray-900 transition-all group"
+                    className="w-full h-16 xl:h-20 border border-dashed border-slate-300 hover:border-[#2335f2] rounded-xl flex flex-col items-center justify-center gap-1 text-xs text-slate-500 hover:text-slate-800 bg-slate-50/50 hover:bg-slate-50 transition-all group"
                   >
-                    <Upload className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" />
+                    <Upload className="w-4 h-4 text-slate-400 group-hover:text-[#2335f2] transition-colors" />
                     <span className="text-[11px]">Click or drag image to upload logo</span>
                   </button>
                 )}
@@ -452,15 +452,15 @@ export const CompanyRegistration: React.FC = () => {
               {/* Continue to Step 2 Button */}
               <button
                 type="submit"
-                className="h-10.5 xl:h-11 w-full bg-white text-black font-bold text-xs xl:text-sm rounded-xl hover:bg-gray-200 transition-all flex items-center justify-center gap-2 mt-4 shadow-lg hover:scale-[1.01] active:scale-[0.99]"
+                className="h-10.5 xl:h-11 w-full bg-[#2335f2] hover:bg-blue-700 text-white font-bold text-xs xl:text-sm rounded-xl transition-all flex items-center justify-center gap-2 mt-4 shadow-md shadow-blue-500/20 hover:scale-[1.01] active:scale-[0.99]"
               >
                 <span>Continue to Admin Details</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
 
-              <p className="text-center text-[11px] text-gray-400 pt-1">
+              <p className="text-center text-[11px] text-slate-500 pt-1">
                 Already have an account?{' '}
-                <Link to="/login" className="text-white font-semibold hover:underline">
+                <Link to="/login" className="text-[#2335f2] font-semibold hover:underline">
                   Log in
                 </Link>
               </p>
@@ -468,15 +468,15 @@ export const CompanyRegistration: React.FC = () => {
           )}
 
           {/* ===============================================================
-              STEP 2: ADMIN DETAILS & MAIL OTP VERIFICATION
+              STEP 2: ADMIN DETAILS & CONTACT INFO
           =============================================================== */}
           {currentStep === 2 && (
             <form onSubmit={handleProceedToStepThree} className="space-y-3.5">
               {/* Admin First Name & Last Name (2 columns) */}
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 flex items-center gap-1">
-                    <UserIcon className="w-3 h-3 text-[#393df0]" />
+                  <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-600 flex items-center gap-1">
+                    <UserIcon className="w-3 h-3 text-[#2335f2]" />
                     First Name *
                   </label>
                   <input
@@ -486,12 +486,12 @@ export const CompanyRegistration: React.FC = () => {
                     placeholder="Admin First Name"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    className="h-10 xl:h-11 w-full rounded-xl border border-gray-800 bg-gray-900/90 px-3 text-white text-xs xl:text-sm placeholder:text-gray-500 focus:border-[#393df0] focus:outline-none focus:ring-1 focus:ring-[#393df0] transition-all"
+                    className="h-10 xl:h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-slate-900 text-xs xl:text-sm placeholder:text-slate-400 focus:border-[#2335f2] focus:outline-none focus:ring-1 focus:ring-[#2335f2] transition-all"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                  <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-600">
                     Last Name *
                   </label>
                   <input
@@ -500,15 +500,15 @@ export const CompanyRegistration: React.FC = () => {
                     placeholder="Admin Last Name"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    className="h-10 xl:h-11 w-full rounded-xl border border-gray-800 bg-gray-900/90 px-3 text-white text-xs xl:text-sm placeholder:text-gray-500 focus:border-[#393df0] focus:outline-none focus:ring-1 focus:ring-[#393df0] transition-all"
+                    className="h-10 xl:h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-slate-900 text-xs xl:text-sm placeholder:text-slate-400 focus:border-[#2335f2] focus:outline-none focus:ring-1 focus:ring-[#2335f2] transition-all"
                   />
                 </div>
               </div>
 
               {/* Admin Phone Number */}
               <div className="space-y-1.5">
-                <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
-                  <Phone className="w-3 h-3 text-[#393df0]" />
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
+                  <Phone className="w-3 h-3 text-[#2335f2]" />
                   Phone Number *
                 </label>
                 <input
@@ -517,14 +517,14 @@ export const CompanyRegistration: React.FC = () => {
                   placeholder="+91 98765 43210"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="h-10 xl:h-11 w-full rounded-xl border border-gray-800 bg-gray-900/90 px-3.5 text-white text-xs xl:text-sm placeholder:text-gray-500 focus:border-[#393df0] focus:outline-none focus:ring-1 focus:ring-[#393df0] transition-all"
+                  className="h-10 xl:h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-slate-900 text-xs xl:text-sm placeholder:text-slate-400 focus:border-[#2335f2] focus:outline-none focus:ring-1 focus:ring-[#2335f2] transition-all"
                 />
               </div>
 
               {/* Admin Email */}
               <div className="space-y-1.5">
-                <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
-                  <Mail className="w-3 h-3 text-[#393df0]" />
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
+                  <Mail className="w-3 h-3 text-[#2335f2]" />
                   Admin Email *
                 </label>
                 <input
@@ -533,7 +533,7 @@ export const CompanyRegistration: React.FC = () => {
                   placeholder="admin@company.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="h-10 xl:h-11 w-full rounded-xl border border-gray-800 bg-gray-900/90 px-3.5 text-white text-xs xl:text-sm placeholder:text-gray-500 focus:border-[#393df0] focus:outline-none focus:ring-1 focus:ring-[#393df0] transition-all"
+                  className="h-10 xl:h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-slate-900 text-xs xl:text-sm placeholder:text-slate-400 focus:border-[#2335f2] focus:outline-none focus:ring-1 focus:ring-[#2335f2] transition-all"
                 />
               </div>
 
@@ -542,7 +542,7 @@ export const CompanyRegistration: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setCurrentStep(1)}
-                  className="h-10.5 xl:h-11 px-4 border border-gray-800 hover:border-gray-700 bg-gray-900 text-gray-300 hover:text-white font-semibold text-xs xl:text-sm rounded-xl transition-colors flex items-center gap-1.5"
+                  className="h-10.5 xl:h-11 px-4 border border-slate-200 hover:border-slate-300 bg-white text-slate-700 hover:text-slate-900 font-semibold text-xs xl:text-sm rounded-xl transition-colors flex items-center gap-1.5"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   <span>Back</span>
@@ -550,7 +550,7 @@ export const CompanyRegistration: React.FC = () => {
 
                 <button
                   type="submit"
-                  className="h-10.5 xl:h-11 flex-1 bg-white text-black font-bold text-xs xl:text-sm rounded-xl hover:bg-gray-200 transition-all flex items-center justify-center gap-2 shadow-lg hover:scale-[1.01] active:scale-[0.99]"
+                  className="h-10.5 xl:h-11 flex-1 bg-[#2335f2] hover:bg-blue-700 text-white font-bold text-xs xl:text-sm rounded-xl transition-all flex items-center justify-center gap-2 shadow-md shadow-blue-500/20 hover:scale-[1.01] active:scale-[0.99]"
                 >
                   <span>Continue to Password Setting</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -565,10 +565,10 @@ export const CompanyRegistration: React.FC = () => {
           {currentStep === 3 && (
             <form onSubmit={handleSubmit} className="space-y-3.5">
               {/* Summary Card */}
-              <div className="p-3 rounded-xl border border-gray-800 bg-gray-900/60 space-y-1 text-xs">
+              <div className="p-3 rounded-xl border border-slate-200 bg-slate-50 space-y-1 text-xs">
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-400">Company:</span>
-                  <span className="font-bold text-white flex items-center gap-1.5 truncate">
+                  <span className="text-slate-500">Company:</span>
+                  <span className="font-bold text-slate-900 flex items-center gap-1.5 truncate">
                     {logoPreview && (
                       <img src={logoPreview} alt="" className="w-3.5 h-3.5 object-contain rounded" />
                     )}
@@ -576,12 +576,12 @@ export const CompanyRegistration: React.FC = () => {
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-400">Admin:</span>
-                  <span className="font-semibold text-white">{firstName} {lastName}</span>
+                  <span className="text-slate-500">Admin:</span>
+                  <span className="font-semibold text-slate-900">{firstName} {lastName}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-400">Verified Email:</span>
-                  <span className="font-mono text-emerald-400 flex items-center gap-1">
+                  <span className="text-slate-500">Email:</span>
+                  <span className="font-mono text-emerald-600 flex items-center gap-1 font-semibold">
                     <CheckCircle2 className="w-3 h-3" />
                     {email}
                   </span>
@@ -590,8 +590,8 @@ export const CompanyRegistration: React.FC = () => {
 
               {/* Password Setting */}
               <div className="space-y-1.5">
-                <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
-                  <Lock className="w-3 h-3 text-[#393df0]" />
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
+                  <Lock className="w-3 h-3 text-[#2335f2]" />
                   Set Password *
                 </label>
                 <div className="relative">
@@ -602,22 +602,22 @@ export const CompanyRegistration: React.FC = () => {
                     placeholder="Enter at least 8 characters"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="h-10 xl:h-11 w-full rounded-xl border border-gray-800 bg-gray-900/90 pl-3.5 pr-10 text-white text-xs xl:text-sm placeholder:text-gray-500 focus:border-[#393df0] focus:outline-none focus:ring-1 focus:ring-[#393df0] transition-all"
+                    className="h-10 xl:h-11 w-full rounded-xl border border-slate-200 bg-white pl-3.5 pr-10 text-slate-900 text-xs xl:text-sm placeholder:text-slate-400 focus:border-[#2335f2] focus:outline-none focus:ring-1 focus:ring-[#2335f2] transition-all"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                   >
                     {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                   </button>
                 </div>
-                <p className="text-[10px] text-gray-500">Must be at least 8 characters long.</p>
+                <p className="text-[10px] text-slate-400">Must be at least 8 characters long.</p>
               </div>
 
               {/* Confirm Password */}
               <div className="space-y-1.5">
-                <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-600">
                   Confirm Password *
                 </label>
                 <div className="relative">
@@ -627,12 +627,12 @@ export const CompanyRegistration: React.FC = () => {
                     placeholder="Re-enter password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="h-10 xl:h-11 w-full rounded-xl border border-gray-800 bg-gray-900/90 pl-3.5 pr-10 text-white text-xs xl:text-sm placeholder:text-gray-500 focus:border-[#393df0] focus:outline-none focus:ring-1 focus:ring-[#393df0] transition-all"
+                    className="h-10 xl:h-11 w-full rounded-xl border border-slate-200 bg-white pl-3.5 pr-10 text-slate-900 text-xs xl:text-sm placeholder:text-slate-400 focus:border-[#2335f2] focus:outline-none focus:ring-1 focus:ring-[#2335f2] transition-all"
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                   >
                     {showConfirmPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                   </button>
@@ -645,7 +645,7 @@ export const CompanyRegistration: React.FC = () => {
                   type="button"
                   disabled={loading}
                   onClick={() => setCurrentStep(2)}
-                  className="h-10.5 xl:h-11 px-4 border border-gray-800 hover:border-gray-700 bg-gray-900 text-gray-300 hover:text-white font-semibold text-xs xl:text-sm rounded-xl transition-colors flex items-center gap-1.5"
+                  className="h-10.5 xl:h-11 px-4 border border-slate-200 hover:border-slate-300 bg-white text-slate-700 hover:text-slate-900 font-semibold text-xs xl:text-sm rounded-xl transition-colors flex items-center gap-1.5"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   <span>Back</span>
@@ -654,9 +654,9 @@ export const CompanyRegistration: React.FC = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="h-10.5 xl:h-11 flex-1 bg-white text-black font-bold text-xs xl:text-sm rounded-xl hover:bg-gray-200 transition-all flex items-center justify-center gap-2 shadow-lg hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
+                  className="h-10.5 xl:h-11 flex-1 bg-[#2335f2] hover:bg-blue-700 text-white font-bold text-xs xl:text-sm rounded-xl transition-all flex items-center justify-center gap-2 shadow-md shadow-blue-500/20 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
                 >
-                  {loading && <Loader2 className="w-3.5 h-3.5 animate-spin text-black" />}
+                  {loading && <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />}
                   <span>Complete Account Creation</span>
                 </button>
               </div>

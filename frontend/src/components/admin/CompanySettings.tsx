@@ -93,18 +93,18 @@ export const CompanySettings: React.FC = () => {
   return (
     <div className="max-w-4xl space-y-8 animate-in fade-in duration-200">
       <div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-white font-['Outfit',sans-serif]">
+        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 font-['Outfit',sans-serif]">
           Company & Organization Settings
         </h1>
-        <p className="text-xs sm:text-sm text-slate-400 mt-1">
+        <p className="text-xs sm:text-sm text-slate-500 mt-1">
           Manage your organization profile, enterprise fleet tier, and high-security account settings.
         </p>
       </div>
 
       {/* Organization Identity Panel */}
-      <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-800 space-y-6">
-        <div className="flex items-center gap-4 pb-6 border-b border-slate-800">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center font-black text-2xl text-white shadow-xl shadow-emerald-950/50 overflow-hidden border border-emerald-500/20">
+      <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-200 bg-white shadow-2xs space-y-6">
+        <div className="flex items-center gap-4 pb-6 border-b border-slate-100">
+          <div className="w-16 h-16 rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-center font-black text-2xl text-[#2335f2] shadow-sm overflow-hidden">
             {org?.logo ? (
               <img
                 src={org.logo}
@@ -119,67 +119,67 @@ export const CompanySettings: React.FC = () => {
             )}
           </div>
           <div>
-            <div className="text-xs font-semibold uppercase tracking-wider text-emerald-400">
+            <div className="text-xs font-semibold uppercase tracking-wider text-[#2335f2]">
               Registered Organization
             </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-white font-['Outfit',sans-serif]">
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 font-['Outfit',sans-serif]">
               {org?.name || 'Commercial Fleet'}
             </h2>
-            <p className="text-xs text-slate-400">{org?.email || user?.email}</p>
+            <p className="text-xs text-slate-500">{org?.email || user?.email}</p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-          <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-1">
-            <span className="text-slate-400 font-medium">Company Name</span>
-            <div className="font-semibold text-white text-sm">{org?.name || 'N/A'}</div>
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
+            <span className="text-slate-500 font-medium">Company Name</span>
+            <div className="font-semibold text-slate-900 text-sm">{org?.name || 'N/A'}</div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-1">
-            <span className="text-slate-400 font-medium">Official Contact Email</span>
-            <div className="font-semibold text-white text-sm">{org?.email || user?.email}</div>
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
+            <span className="text-slate-500 font-medium">Official Contact Email</span>
+            <div className="font-semibold text-slate-900 text-sm">{org?.email || user?.email}</div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-1">
-            <span className="text-slate-400 font-medium">Phone Number</span>
-            <div className="font-semibold text-white text-sm">{org?.phone || user?.phone || 'Not provided'}</div>
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
+            <span className="text-slate-500 font-medium">Phone Number</span>
+            <div className="font-semibold text-slate-900 text-sm">{org?.phone || user?.phone || 'Not provided'}</div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-1">
-            <span className="text-slate-400 font-medium">Registration / Tax Number</span>
-            <div className="font-semibold text-white font-mono text-sm">
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
+            <span className="text-slate-500 font-medium">Registration / Tax Number</span>
+            <div className="font-semibold text-slate-900 font-mono text-sm">
               {org?.registrationNumber || 'Standard Enterprise Tier'}
             </div>
           </div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-1 text-xs">
-          <span className="text-slate-400 font-medium">Headquarters / Depot Address</span>
-          <div className="font-semibold text-white">{org?.address || 'No physical address configured'}</div>
+        <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1 text-xs">
+          <span className="text-slate-500 font-medium">Headquarters / Depot Address</span>
+          <div className="font-semibold text-slate-900">{org?.address || 'No physical address configured'}</div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-xs flex items-center gap-3">
-          <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0" />
-          <span className="text-emerald-300">
-            Active under <strong>SERVIQ Enterprise Fleet Tier</strong> with live Brevo transactional email delivery & OTP security.
+        <div className="p-4 rounded-2xl bg-blue-50 border border-blue-200 text-xs flex items-center gap-3">
+          <ShieldCheck className="w-5 h-5 text-[#2335f2] shrink-0" />
+          <span className="text-blue-900">
+            Active under <strong>SERVIQ Enterprise Fleet Tier</strong> with live transactional email delivery & account security.
           </span>
         </div>
       </div>
 
       {/* Danger Zone: Account Deletion */}
-      <div className="p-6 sm:p-8 rounded-3xl border border-rose-900/40 bg-rose-950/10 space-y-4">
+      <div className="p-6 sm:p-8 rounded-3xl border border-rose-200 bg-rose-50/50 space-y-4">
         <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-center shrink-0">
-            <AlertTriangle className="w-6 h-6 text-rose-400" />
+          <div className="w-12 h-12 rounded-2xl bg-rose-100 border border-rose-200 flex items-center justify-center shrink-0">
+            <AlertTriangle className="w-6 h-6 text-rose-600" />
           </div>
           <div className="space-y-1">
-            <h3 className="text-lg font-bold text-white font-['Outfit',sans-serif]">
+            <h3 className="text-lg font-bold text-slate-900 font-['Outfit',sans-serif]">
               Danger Zone: Delete Fleet Account
             </h3>
-            <p className="text-xs text-slate-400 leading-relaxed">
+            <p className="text-xs text-slate-600 leading-relaxed">
               Permanently delete this organization, purge all connected vehicles, driver profiles,
               telemetry records, maintenance logs, and financial expenses. This action is irreversible
-              and requires 6-digit email OTP verification via Brevo.
+              and requires 6-digit email OTP verification.
             </p>
           </div>
         </div>
@@ -188,7 +188,7 @@ export const CompanySettings: React.FC = () => {
           <button
             type="button"
             onClick={() => setShowDeleteModal(true)}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-rose-600/20 hover:bg-rose-600 border border-rose-500/40 hover:border-rose-500 text-rose-300 hover:text-white text-xs font-semibold transition-all duration-200 shadow-lg shadow-rose-950/30"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold transition-all duration-200 shadow-md shadow-rose-500/20"
           >
             <Trash2 className="w-4 h-4" />
             Delete Organization Account
@@ -198,29 +198,29 @@ export const CompanySettings: React.FC = () => {
 
       {/* Deletion Confirmation Modal */}
       {showDeleteModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-150">
-          <div className="w-full max-w-lg bg-[#0e1626] border border-rose-900/60 rounded-3xl shadow-2xl p-6 sm:p-8 space-y-6 relative overflow-hidden">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs animate-in fade-in duration-150">
+          <div className="w-full max-w-lg bg-white border border-slate-200 rounded-3xl shadow-2xl p-6 sm:p-8 space-y-6 relative overflow-hidden">
             {/* Top Accent */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-rose-600 via-red-500 to-amber-600" />
 
             {/* Modal Header */}
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center shrink-0">
-                <Lock className="w-6 h-6 text-rose-400" />
+              <div className="w-12 h-12 rounded-2xl bg-rose-100 border border-rose-200 flex items-center justify-center shrink-0">
+                <Lock className="w-6 h-6 text-rose-600" />
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-bold text-white font-['Outfit',sans-serif]">
+                <h3 className="text-lg font-bold text-slate-900 font-['Outfit',sans-serif]">
                   Authorize Permanent Deletion
                 </h3>
-                <p className="text-xs text-slate-400 mt-0.5">
-                  Verification code will be sent to <span className="text-white font-mono">{user?.email}</span>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Verification code will be sent to <span className="text-slate-900 font-mono font-semibold">{user?.email}</span>
                 </p>
               </div>
             </div>
 
             {/* Warning Message */}
-            <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/25 text-xs text-rose-300 space-y-1">
-              <div className="font-bold flex items-center gap-1.5 text-rose-400">
+            <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 space-y-1">
+              <div className="font-bold flex items-center gap-1.5 text-rose-600">
                 <AlertTriangle className="w-4 h-4 shrink-0" />
                 Irreversible Action
               </div>
@@ -232,14 +232,14 @@ export const CompanySettings: React.FC = () => {
 
             {/* Alerts */}
             {statusMessage && (
-              <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-300 flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
+              <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-700 flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-600" />
                 <span>{statusMessage}</span>
               </div>
             )}
             {errorMessage && (
-              <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-300 flex items-center gap-2">
-                <XCircle className="w-4 h-4 shrink-0 text-rose-400" />
+              <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700 flex items-center gap-2">
+                <XCircle className="w-4 h-4 shrink-0 text-rose-600" />
                 <span>{errorMessage}</span>
               </div>
             )}
@@ -247,16 +247,16 @@ export const CompanySettings: React.FC = () => {
             {/* Step 1: Initial Request */}
             {deleteStep === 'initial' && !deletionSuccess && (
               <div className="space-y-4">
-                <p className="text-xs text-slate-300">
+                <p className="text-xs text-slate-600">
                   To safeguard your fleet organization against unauthorized removal, click below to
-                  request a 6-digit authorization code delivered via our secure Brevo mail relay.
+                  request a 6-digit authorization code delivered via our secure mail relay.
                 </p>
 
                 <div className="flex items-center justify-end gap-3 pt-2">
                   <button
                     type="button"
                     onClick={resetModal}
-                    className="px-4 py-2 rounded-xl text-xs font-medium text-slate-400 hover:text-white transition-colors"
+                    className="px-4 py-2 rounded-xl text-xs font-medium text-slate-500 hover:text-slate-800 transition-colors"
                   >
                     Cancel
                   </button>
@@ -264,7 +264,7 @@ export const CompanySettings: React.FC = () => {
                     type="button"
                     onClick={handleRequestDeletionOtp}
                     disabled={loading}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold transition-all duration-200 disabled:opacity-50 shadow-lg shadow-rose-900/40"
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold transition-all duration-200 disabled:opacity-50 shadow-md shadow-rose-500/20"
                   >
                     {loading ? (
                       <>
@@ -286,7 +286,7 @@ export const CompanySettings: React.FC = () => {
             {deleteStep === 'otp_sent' && !deletionSuccess && (
               <form onSubmit={handleConfirmDeletion} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                  <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                     Enter 6-Digit Authorization Code
                   </label>
                   <input
@@ -295,34 +295,34 @@ export const CompanySettings: React.FC = () => {
                     value={otpCode}
                     onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
                     placeholder="• • • • • •"
-                    className="w-full text-center tracking-[0.5em] font-mono text-xl py-3 rounded-xl bg-slate-900 border border-slate-700 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 text-white placeholder-slate-600 outline-none transition-all"
+                    className="w-full text-center tracking-[0.5em] font-mono text-xl py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 text-slate-900 placeholder-slate-400 outline-none transition-all"
                     autoFocus
                   />
                   <div className="flex justify-between items-center mt-2">
-                    <span className="text-[11px] text-slate-500">Expires in 10 minutes</span>
+                    <span className="text-[11px] text-slate-400">Expires in 10 minutes</span>
                     <button
                       type="button"
                       onClick={handleRequestDeletionOtp}
                       disabled={loading}
-                      className="text-[11px] text-rose-400 hover:text-rose-300 transition-colors underline"
+                      className="text-[11px] text-rose-600 hover:text-rose-700 transition-colors underline font-medium"
                     >
                       Resend Code
                     </button>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-800">
+                <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
                   <button
                     type="button"
                     onClick={resetModal}
-                    className="px-4 py-2 rounded-xl text-xs font-medium text-slate-400 hover:text-white transition-colors"
+                    className="px-4 py-2 rounded-xl text-xs font-medium text-slate-500 hover:text-slate-800 transition-colors"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={loading || otpCode.length < 6}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold transition-all duration-200 disabled:opacity-50 shadow-lg shadow-red-900/50"
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition-all duration-200 disabled:opacity-50 shadow-md shadow-red-500/20"
                   >
                     {loading ? (
                       <>
@@ -343,13 +343,13 @@ export const CompanySettings: React.FC = () => {
             {/* Step 3: Success Animation */}
             {deletionSuccess && (
               <div className="py-6 text-center space-y-3">
-                <div className="w-14 h-14 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center mx-auto">
+                <div className="w-14 h-14 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center mx-auto">
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
-                <h4 className="text-lg font-bold text-white font-['Outfit',sans-serif]">
+                <h4 className="text-lg font-bold text-slate-900 font-['Outfit',sans-serif]">
                   Account Successfully Purged
                 </h4>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-slate-500">
                   Redirecting to SERVIQ homepage...
                 </p>
               </div>

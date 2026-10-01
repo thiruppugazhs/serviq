@@ -93,10 +93,10 @@ export const MaintenanceView: React.FC = () => {
     <div className="space-y-6 animate-in fade-in duration-200">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white font-['Outfit',sans-serif]">
+          <h1 className="text-2xl font-bold text-slate-900 font-['Outfit',sans-serif]">
             Preventive Maintenance
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-500 mt-1">
             Dual-trigger servicing reminders tracking both elapsed calendar time and odometer milestones.
           </p>
         </div>
@@ -106,7 +106,7 @@ export const MaintenanceView: React.FC = () => {
             setError(null);
             setIsAddModalOpen(true);
           }}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs rounded-xl transition-colors shadow-lg shadow-emerald-950/40"
+          className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#2335f2] hover:bg-blue-700 text-white font-medium text-xs rounded-xl transition-colors shadow-md shadow-blue-500/20"
         >
           <Plus className="w-4 h-4" />
           <span>New Service Schedule</span>
@@ -128,51 +128,51 @@ export const MaintenanceView: React.FC = () => {
           {maintenanceList.map((item) => {
             const veh = item.vehicle;
             return (
-              <div key={item._id} className="glass-card p-5 rounded-2xl border flex flex-col justify-between">
+              <div key={item._id} className="glass-card p-5 rounded-2xl border border-slate-200 bg-white shadow-2xs flex flex-col justify-between">
                 <div>
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <span className="font-mono font-bold text-sm text-white tracking-wider">
+                      <span className="font-mono font-bold text-sm text-slate-900 tracking-wider">
                         {veh ? veh.vehicleNumber : 'Vehicle'}
                       </span>
-                      <h3 className="font-semibold text-xs text-emerald-400 mt-0.5">
+                      <h3 className="font-semibold text-xs text-[#2335f2] mt-0.5">
                         {item.serviceType}
                       </h3>
                     </div>
                     <Badge status={item.status} />
                   </div>
 
-                  <div className="mt-4 p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-2 text-xs">
+                  <div className="mt-4 p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-2 text-xs">
                     <div className="flex items-center justify-between">
-                      <span className="text-slate-400 flex items-center gap-1.5">
-                        <Calendar className="w-3.5 h-3.5 text-slate-500" />
+                      <span className="text-slate-500 flex items-center gap-1.5">
+                        <Calendar className="w-3.5 h-3.5 text-slate-400" />
                         Next Due Date:
                       </span>
-                      <span className="font-semibold text-white">
+                      <span className="font-semibold text-slate-900">
                         {item.nextDueDate ? new Date(item.nextDueDate).toLocaleDateString() : 'N/A'}
                       </span>
                     </div>
 
                     <div className="flex items-center justify-between">
-                      <span className="text-slate-400 flex items-center gap-1.5">
-                        <Gauge className="w-3.5 h-3.5 text-slate-500" />
+                      <span className="text-slate-500 flex items-center gap-1.5">
+                        <Gauge className="w-3.5 h-3.5 text-slate-400" />
                         Next Due Odo:
                       </span>
-                      <span className="font-mono font-semibold text-white">
+                      <span className="font-mono font-semibold text-slate-900">
                         {item.nextDueOdometer ? `${item.nextDueOdometer.toLocaleString()} km` : 'N/A'}
                       </span>
                     </div>
                   </div>
 
                   {item.serviceCenter && (
-                    <p className="mt-3 text-xs text-slate-400">
-                      Center: <span className="text-slate-200">{item.serviceCenter}</span>
+                    <p className="mt-3 text-xs text-slate-500">
+                      Center: <span className="text-slate-800 font-medium">{item.serviceCenter}</span>
                     </p>
                   )}
                 </div>
 
-                <div className="mt-5 pt-3 border-t border-slate-800 flex items-center justify-between">
-                  <span className="text-[11px] text-slate-500">
+                <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between">
+                  <span className="text-[11px] text-slate-400">
                     Cycle: {item.intervalKm.toLocaleString()} km / {item.intervalMonths} mo
                   </span>
                   <button
@@ -186,7 +186,7 @@ export const MaintenanceView: React.FC = () => {
                       });
                       setIsCompleteModalOpen(true);
                     }}
-                    className="inline-flex items-center gap-1.5 text-xs text-emerald-400 hover:text-white px-2.5 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-600 transition-colors"
+                    className="inline-flex items-center gap-1.5 text-xs text-[#2335f2] hover:text-blue-800 px-2.5 py-1 rounded-lg bg-blue-50 border border-blue-200 font-medium hover:bg-blue-100 transition-colors"
                   >
                     <CheckCircle className="w-3.5 h-3.5" />
                     Log Service
@@ -205,7 +205,7 @@ export const MaintenanceView: React.FC = () => {
         title="Create Maintenance Schedule"
       >
         {error && (
-          <div className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center gap-2">
+          <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
             <ShieldAlert className="w-4 h-4 shrink-0" />
             <span>{error}</span>
           </div>
@@ -213,15 +213,15 @@ export const MaintenanceView: React.FC = () => {
 
         <form onSubmit={handleAddSchedule} className="space-y-4 text-xs">
           <div>
-            <label className="block font-semibold text-slate-300 mb-1">
-              Select Fleet Vehicle <span className="text-rose-400">*</span>
+            <label className="block font-semibold text-slate-700 mb-1">
+              Select Fleet Vehicle <span className="text-rose-500">*</span>
             </label>
             <select
               name="vehicleId"
               required
               value={formData.vehicleId}
               onChange={handleChange}
-              className="w-full bg-slate-800 border border-slate-700 focus:border-emerald-500 rounded-xl px-3.5 py-2 text-white outline-none font-mono"
+              className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none font-mono"
             >
               <option value="">-- Choose vehicle --</option>
               {vehicles.map((v) => (
@@ -233,8 +233,8 @@ export const MaintenanceView: React.FC = () => {
           </div>
 
           <div>
-            <label className="block font-semibold text-slate-300 mb-1">
-              Service Type <span className="text-rose-400">*</span>
+            <label className="block font-semibold text-slate-700 mb-1">
+              Service Type <span className="text-rose-500">*</span>
             </label>
             <input
               type="text"
@@ -243,13 +243,13 @@ export const MaintenanceView: React.FC = () => {
               value={formData.serviceType}
               onChange={handleChange}
               placeholder="e.g. Full Synthetic Oil & Filter Replacement"
-              className="w-full bg-slate-800 border border-slate-700 focus:border-emerald-500 rounded-xl px-3.5 py-2 text-white outline-none"
+              className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">
+              <label className="block font-semibold text-slate-700 mb-1">
                 Interval (Kilometers)
               </label>
               <input
@@ -258,12 +258,12 @@ export const MaintenanceView: React.FC = () => {
                 value={formData.intervalKm}
                 onChange={handleChange}
                 placeholder="10000"
-                className="w-full bg-slate-800 border border-slate-700 focus:border-emerald-500 rounded-xl px-3.5 py-2 text-white outline-none"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
               />
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">
+              <label className="block font-semibold text-slate-700 mb-1">
                 Interval (Months)
               </label>
               <input
@@ -272,13 +272,13 @@ export const MaintenanceView: React.FC = () => {
                 value={formData.intervalMonths}
                 onChange={handleChange}
                 placeholder="6"
-                className="w-full bg-slate-800 border border-slate-700 focus:border-emerald-500 rounded-xl px-3.5 py-2 text-white outline-none"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
               />
             </div>
           </div>
 
           <div>
-            <label className="block font-semibold text-slate-300 mb-1">
+            <label className="block font-semibold text-slate-700 mb-1">
               Service Center / Workshop
             </label>
             <input
@@ -287,22 +287,22 @@ export const MaintenanceView: React.FC = () => {
               value={formData.serviceCenter}
               onChange={handleChange}
               placeholder="e.g. Authorized Dealership Workshop"
-              className="w-full bg-slate-800 border border-slate-700 focus:border-emerald-500 rounded-xl px-3.5 py-2 text-white outline-none"
+              className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
             />
           </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
+          <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
             <button
               type="button"
               onClick={() => setIsAddModalOpen(false)}
-              className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300"
+              className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={submitLoading}
-              className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-medium"
+              className="px-4 py-2 rounded-xl bg-[#2335f2] hover:bg-blue-700 text-white font-medium transition-colors shadow-md shadow-blue-500/20"
             >
               {submitLoading ? 'Saving...' : 'Set Schedule'}
             </button>
@@ -318,7 +318,7 @@ export const MaintenanceView: React.FC = () => {
       >
         <form onSubmit={handleCompleteService} className="space-y-4 text-xs">
           <div>
-            <label className="block font-semibold text-slate-300 mb-1">
+            <label className="block font-semibold text-slate-700 mb-1">
               Odometer Reading at Service (km)
             </label>
             <input
@@ -326,13 +326,13 @@ export const MaintenanceView: React.FC = () => {
               required
               value={completeData.completedOdometer}
               onChange={(e) => setCompleteData({ ...completeData, completedOdometer: e.target.value })}
-              className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2 text-white font-mono"
+              className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 font-mono"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">
+              <label className="block font-semibold text-slate-700 mb-1">
                 Total Service Cost (₹)
               </label>
               <input
@@ -340,35 +340,35 @@ export const MaintenanceView: React.FC = () => {
                 value={completeData.cost}
                 onChange={(e) => setCompleteData({ ...completeData, cost: e.target.value })}
                 placeholder="0"
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2 text-white font-mono"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 font-mono"
               />
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">
+              <label className="block font-semibold text-slate-700 mb-1">
                 Workshop / Vendor
               </label>
               <input
                 type="text"
                 value={completeData.serviceCenter}
                 onChange={(e) => setCompleteData({ ...completeData, serviceCenter: e.target.value })}
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2 text-white"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900"
               />
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
+          <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
             <button
               type="button"
               onClick={() => setIsCompleteModalOpen(false)}
-              className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300"
+              className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={submitLoading}
-              className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-medium"
+              className="px-4 py-2 rounded-xl bg-[#2335f2] hover:bg-blue-700 text-white font-medium transition-colors shadow-md shadow-blue-500/20"
             >
               {submitLoading ? 'Updating...' : 'Log & Recalculate Next Schedule'}
             </button>

@@ -86,31 +86,31 @@ export const DriverProfileView: React.FC = () => {
     <div className="max-w-3xl mx-auto space-y-6 animate-in fade-in duration-200">
       <button
         onClick={() => navigate(`${basePath}/drivers`)}
-        className="inline-flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-white transition-colors"
+        className="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
         Back to Drivers List
       </button>
 
       {/* Driver Profile Card */}
-      <div className="glass-panel rounded-3xl p-8 border border-slate-800 shadow-2xl">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
+      <div className="glass-panel rounded-3xl p-8 border border-slate-200 bg-white shadow-2xs">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-100">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center font-black text-2xl text-white shadow-xl shadow-emerald-950/50">
+            <div className="w-16 h-16 rounded-2xl bg-[#2335f2] flex items-center justify-center font-black text-2xl text-white shadow-lg shadow-blue-500/20">
               {user?.name?.charAt(0).toUpperCase() || 'D'}
             </div>
             <div>
-              <div className="text-xs uppercase tracking-wider text-slate-400 font-semibold">
+              <div className="text-xs uppercase tracking-wider text-slate-500 font-semibold">
                 Driver Profile
               </div>
-              <h1 className="text-2xl font-extrabold text-white font-['Outfit',sans-serif]">
+              <h1 className="text-2xl font-extrabold text-slate-900 font-['Outfit',sans-serif]">
                 {user?.name || 'Driver'}
               </h1>
               <div className="flex items-center gap-2 mt-1">
-                <span className="font-mono text-xs text-emerald-400 font-bold px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20">
+                <span className="font-mono text-xs text-[#2335f2] font-bold px-2 py-0.5 rounded bg-blue-50 border border-blue-200">
                   {driver.driverId}
                 </span>
-                <span className="text-xs text-slate-400 capitalize">
+                <span className="text-xs text-slate-500 capitalize">
                   {driver.employmentStatus.replace('_', ' ')}
                 </span>
               </div>
@@ -123,8 +123,8 @@ export const DriverProfileView: React.FC = () => {
               onClick={handleToggleStatus}
               className={`text-xs px-3 py-1.5 rounded-xl border transition-colors ${
                 driver.status === 'active'
-                  ? 'border-rose-500/30 text-rose-400 hover:bg-rose-500/10'
-                  : 'border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10'
+                  ? 'border-rose-200 text-rose-600 hover:bg-rose-50'
+                  : 'border-emerald-200 text-emerald-600 hover:bg-emerald-50'
               }`}
             >
               {driver.status === 'active' ? 'Deactivate' : 'Activate'}
@@ -133,37 +133,37 @@ export const DriverProfileView: React.FC = () => {
         </div>
 
         {/* Details Grid */}
-        <div className="py-6 space-y-4 text-sm divide-y divide-slate-800/60">
+        <div className="py-6 space-y-4 text-sm divide-y divide-slate-100">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
             <div>
-              <span className="text-xs text-slate-400 font-medium block">Driver ID</span>
-              <span className="font-mono font-bold text-white text-base">{driver.driverId}</span>
+              <span className="text-xs text-slate-500 font-medium block">Driver ID</span>
+              <span className="font-mono font-bold text-slate-900 text-base">{driver.driverId}</span>
             </div>
             <div>
-              <span className="text-xs text-slate-400 font-medium block">Phone</span>
-              <span className="font-medium text-white">{user?.phone || 'Not provided'}</span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-            <div>
-              <span className="text-xs text-slate-400 font-medium block">Email Address</span>
-              <span className="font-medium text-white">{user?.email}</span>
-            </div>
-            <div>
-              <span className="text-xs text-slate-400 font-medium block">Address</span>
-              <span className="font-medium text-white">{user?.address || 'Not specified'}</span>
+              <span className="text-xs text-slate-500 font-medium block">Phone</span>
+              <span className="font-medium text-slate-900">{user?.phone || 'Not provided'}</span>
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
             <div>
-              <span className="text-xs text-slate-400 font-medium block">Licence Number</span>
-              <span className="font-mono font-bold text-emerald-400">{driver.drivingLicenceNumber}</span>
+              <span className="text-xs text-slate-500 font-medium block">Email Address</span>
+              <span className="font-medium text-slate-900">{user?.email}</span>
             </div>
             <div>
-              <span className="text-xs text-slate-400 font-medium block">Licence Expiry</span>
-              <span className="font-medium text-white">
+              <span className="text-xs text-slate-500 font-medium block">Address</span>
+              <span className="font-medium text-slate-900">{user?.address || 'Not specified'}</span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+            <div>
+              <span className="text-xs text-slate-500 font-medium block">Licence Number</span>
+              <span className="font-mono font-bold text-[#2335f2]">{driver.drivingLicenceNumber}</span>
+            </div>
+            <div>
+              <span className="text-xs text-slate-500 font-medium block">Licence Expiry</span>
+              <span className="font-medium text-slate-900">
                 {driver.licenceExpiry ? new Date(driver.licenceExpiry).toLocaleDateString() : 'N/A'}
               </span>
             </div>
@@ -172,10 +172,10 @@ export const DriverProfileView: React.FC = () => {
           {/* Assigned Vehicle Highlight */}
           <div className="pt-4">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs text-slate-400 font-medium block">Assigned Vehicle</span>
+              <span className="text-xs text-slate-500 font-medium block">Assigned Vehicle</span>
               <button
                 onClick={() => setIsEditing(!isEditing)}
-                className="text-xs text-emerald-400 hover:text-emerald-300 flex items-center gap-1 font-medium"
+                className="text-xs text-[#2335f2] hover:text-blue-700 flex items-center gap-1 font-medium"
               >
                 <Edit3 className="w-3.5 h-3.5" />
                 {isEditing ? 'Cancel Reassign' : 'Change Assignment'}
@@ -187,7 +187,7 @@ export const DriverProfileView: React.FC = () => {
                 <select
                   value={selectedVehicle}
                   onChange={(e) => setSelectedVehicle(e.target.value)}
-                  className="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white outline-none flex-1 font-mono"
+                  className="bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 outline-none flex-1 font-mono focus:border-[#2335f2]"
                 >
                   <option value="">-- No Vehicle Assigned --</option>
                   {vehicles.map((v) => (
@@ -198,22 +198,22 @@ export const DriverProfileView: React.FC = () => {
                 </select>
                 <button
                   onClick={handleAssignVehicle}
-                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold"
+                  className="px-4 py-2 bg-[#2335f2] hover:bg-blue-700 text-white rounded-xl text-xs font-semibold shadow-md shadow-blue-500/20"
                 >
                   Save
                 </button>
               </div>
             ) : (
-              <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center justify-between">
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300">
-                    <Truck className="w-5 h-5 text-emerald-400" />
+                  <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-[#2335f2]">
+                    <Truck className="w-5 h-5 text-[#2335f2]" />
                   </div>
                   <div>
-                    <div className="font-mono font-bold text-white text-base">
+                    <div className="font-mono font-bold text-slate-900 text-base">
                       {assignedVeh ? assignedVeh.vehicleNumber : 'No Vehicle Assigned'}
                     </div>
-                    <div className="text-xs text-slate-400">
+                    <div className="text-xs text-slate-500">
                       {assignedVeh ? `${assignedVeh.manufacturer} ${assignedVeh.model} (${assignedVeh.year})` : 'Allocate a fleet asset to this driver'}
                     </div>
                   </div>

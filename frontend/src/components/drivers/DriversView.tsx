@@ -102,10 +102,10 @@ export const DriversView: React.FC = () => {
     <div className="space-y-6 animate-in fade-in duration-200">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white font-['Outfit',sans-serif]">
+          <h1 className="text-2xl font-bold text-slate-900 font-['Outfit',sans-serif]">
             Driver Management
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-500 mt-1">
             Registered commercial drivers, licences, emergency contacts, and vehicle assignments.
           </p>
         </div>
@@ -115,7 +115,7 @@ export const DriversView: React.FC = () => {
             setError(null);
             setIsModalOpen(true);
           }}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs rounded-xl transition-colors shadow-lg shadow-emerald-950/40"
+          className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#2335f2] hover:bg-blue-700 text-white font-medium text-xs rounded-xl transition-colors shadow-md shadow-blue-500/20"
         >
           <Plus className="w-4 h-4" />
           <span>Add New Driver</span>
@@ -123,15 +123,15 @@ export const DriversView: React.FC = () => {
       </div>
 
       {/* Filter Bar */}
-      <div className="flex items-center gap-4 bg-slate-900/60 border border-slate-800 p-3 rounded-2xl">
+      <div className="flex items-center gap-4 bg-white border border-slate-200 p-3 rounded-2xl shadow-2xs">
         <div className="relative flex-1">
-          <Search className="w-4 h-4 absolute left-3.5 top-3 text-slate-500" />
+          <Search className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by driver name, Driver ID (e.g. DRV-001), or licence number..."
-            className="w-full bg-slate-900 border border-slate-800 focus:border-emerald-500 rounded-xl pl-10 pr-4 py-2 text-xs text-white placeholder-slate-500 outline-none"
+            className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl pl-10 pr-4 py-2 text-xs text-slate-900 placeholder-slate-400 outline-none"
           />
         </div>
       </div>
@@ -158,21 +158,21 @@ export const DriversView: React.FC = () => {
               <div
                 key={driver._id}
                 onClick={() => navigate(`${basePath}/drivers/${driver._id}`)}
-                className="glass-card p-5 rounded-2xl border hover:border-slate-700 transition-all cursor-pointer flex flex-col justify-between group"
+                className="glass-card p-5 rounded-2xl border border-slate-200 bg-white hover:border-blue-300 shadow-2xs transition-all cursor-pointer flex flex-col justify-between group"
               >
                 <div>
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-11 h-11 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-white text-sm">
+                      <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center font-bold text-[#2335f2] text-sm">
                         {userName.charAt(0).toUpperCase()}
                       </div>
                       <div>
                         <div className="flex items-center gap-2">
-                          <h3 className="font-bold text-sm text-white group-hover:text-emerald-400 transition-colors">
+                          <h3 className="font-bold text-sm text-slate-900 group-hover:text-[#2335f2] transition-colors">
                             {userName}
                           </h3>
                         </div>
-                        <p className="text-[11px] font-mono text-emerald-400 font-semibold">
+                        <p className="text-[11px] font-mono text-[#2335f2] font-semibold">
                           {driver.driverId}
                         </p>
                       </div>
@@ -180,37 +180,37 @@ export const DriversView: React.FC = () => {
                     <Badge status={driver.status} />
                   </div>
 
-                  <div className="mt-4 space-y-2 text-xs text-slate-300">
+                  <div className="mt-4 space-y-2 text-xs text-slate-600">
                     <div className="flex items-center gap-2">
-                      <Mail className="w-3.5 h-3.5 text-slate-500" />
+                      <Mail className="w-3.5 h-3.5 text-slate-400" />
                       <span>{userEmail}</span>
                     </div>
                     {userPhone && (
                       <div className="flex items-center gap-2">
-                        <Phone className="w-3.5 h-3.5 text-slate-500" />
+                        <Phone className="w-3.5 h-3.5 text-slate-400" />
                         <span>{userPhone}</span>
                       </div>
                     )}
                     <div className="flex items-center gap-2">
-                      <FileText className="w-3.5 h-3.5 text-slate-500" />
+                      <FileText className="w-3.5 h-3.5 text-slate-400" />
                       <span>Licence: {driver.drivingLicenceNumber}</span>
                     </div>
                   </div>
 
-                  <div className="mt-4 p-2.5 rounded-xl bg-slate-900/80 border border-slate-800/80 flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-2 text-slate-400">
-                      <Truck className="w-3.5 h-3.5 text-slate-500" />
+                  <div className="mt-4 p-2.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-2 text-slate-500">
+                      <Truck className="w-3.5 h-3.5 text-slate-400" />
                       <span>Assigned Vehicle:</span>
                     </div>
-                    <span className="font-bold font-mono text-white">
+                    <span className="font-bold font-mono text-slate-900">
                       {assignedVeh ? assignedVeh.vehicleNumber : 'Unassigned'}
                     </span>
                   </div>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
+                <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
                   <span>View Full Profile</span>
-                  <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform text-emerald-400" />
+                  <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform text-[#2335f2]" />
                 </div>
               </div>
             );
@@ -226,7 +226,7 @@ export const DriversView: React.FC = () => {
         maxWidth="xl"
       >
         {error && (
-          <div className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center gap-2">
+          <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
             <ShieldAlert className="w-4 h-4 shrink-0" />
             <span>{error}</span>
           </div>
@@ -235,8 +235,8 @@ export const DriversView: React.FC = () => {
         <form onSubmit={handleAddDriver} className="space-y-4 text-xs">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">
-                Driver Full Name <span className="text-rose-400">*</span>
+              <label className="block font-semibold text-slate-700 mb-1">
+                Driver Full Name <span className="text-rose-500">*</span>
               </label>
               <input
                 type="text"
@@ -245,13 +245,13 @@ export const DriversView: React.FC = () => {
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="e.g. John Kumar"
-                className="w-full bg-slate-800 border border-slate-700 focus:border-emerald-500 rounded-xl px-3.5 py-2 text-white outline-none"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
               />
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">
-                Driver ID <span className="text-rose-400">*</span>
+              <label className="block font-semibold text-slate-700 mb-1">
+                Driver ID <span className="text-rose-500">*</span>
               </label>
               <input
                 type="text"
@@ -260,15 +260,15 @@ export const DriversView: React.FC = () => {
                 value={formData.driverId}
                 onChange={handleChange}
                 placeholder="e.g. DRV-001"
-                className="w-full bg-slate-800 border border-slate-700 focus:border-emerald-500 rounded-xl px-3.5 py-2 text-white outline-none uppercase font-mono"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none uppercase font-mono"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">
-                Login Email Address <span className="text-rose-400">*</span>
+              <label className="block font-semibold text-slate-700 mb-1">
+                Login Email Address <span className="text-rose-500">*</span>
               </label>
               <input
                 type="email"
@@ -277,13 +277,13 @@ export const DriversView: React.FC = () => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="john@company.com"
-                className="w-full bg-slate-800 border border-slate-700 focus:border-emerald-500 rounded-xl px-3.5 py-2 text-white outline-none"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
               />
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">
-                App Password <span className="text-rose-400">*</span>
+              <label className="block font-semibold text-slate-700 mb-1">
+                App Password <span className="text-rose-500">*</span>
               </label>
               <input
                 type="password"
@@ -292,14 +292,14 @@ export const DriversView: React.FC = () => {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Min 6 characters"
-                className="w-full bg-slate-800 border border-slate-700 focus:border-emerald-500 rounded-xl px-3.5 py-2 text-white outline-none"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">
+              <label className="block font-semibold text-slate-700 mb-1">
                 Phone Number
               </label>
               <input
@@ -308,19 +308,19 @@ export const DriversView: React.FC = () => {
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder="+91 XXXXX XXXXX"
-                className="w-full bg-slate-800 border border-slate-700 focus:border-emerald-500 rounded-xl px-3.5 py-2 text-white outline-none"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
               />
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">
+              <label className="block font-semibold text-slate-700 mb-1">
                 Employment Type
               </label>
               <select
                 name="employmentStatus"
                 value={formData.employmentStatus}
                 onChange={handleChange}
-                className="w-full bg-slate-800 border border-slate-700 focus:border-emerald-500 rounded-xl px-3.5 py-2 text-white outline-none"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
               >
                 <option value="full_time">Full Time</option>
                 <option value="contract">Contract</option>
@@ -332,8 +332,8 @@ export const DriversView: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">
-                Driving Licence Number <span className="text-rose-400">*</span>
+              <label className="block font-semibold text-slate-700 mb-1">
+                Driving Licence Number <span className="text-rose-500">*</span>
               </label>
               <input
                 type="text"
@@ -342,13 +342,13 @@ export const DriversView: React.FC = () => {
                 value={formData.drivingLicenceNumber}
                 onChange={handleChange}
                 placeholder="e.g. DL-0420110012345"
-                className="w-full bg-slate-800 border border-slate-700 focus:border-emerald-500 rounded-xl px-3.5 py-2 text-white outline-none uppercase font-mono"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none uppercase font-mono"
               />
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">
-                Licence Expiry Date <span className="text-rose-400">*</span>
+              <label className="block font-semibold text-slate-700 mb-1">
+                Licence Expiry Date <span className="text-rose-500">*</span>
               </label>
               <input
                 type="date"
@@ -356,20 +356,20 @@ export const DriversView: React.FC = () => {
                 required
                 value={formData.licenceExpiry}
                 onChange={handleChange}
-                className="w-full bg-slate-800 border border-slate-700 focus:border-emerald-500 rounded-xl px-3.5 py-2 text-white outline-none"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
               />
             </div>
           </div>
 
           <div>
-            <label className="block font-semibold text-slate-300 mb-1">
+            <label className="block font-semibold text-slate-700 mb-1">
               Assign Initial Vehicle (Optional)
             </label>
             <select
               name="assignedVehicleId"
               value={formData.assignedVehicleId}
               onChange={handleChange}
-              className="w-full bg-slate-800 border border-slate-700 focus:border-emerald-500 rounded-xl px-3.5 py-2 text-white outline-none font-mono"
+              className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none font-mono"
             >
               <option value="">-- No vehicle assigned initially --</option>
               {vehicles.map((v) => (
@@ -380,18 +380,18 @@ export const DriversView: React.FC = () => {
             </select>
           </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
+          <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium"
+              className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={submitLoading}
-              className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-medium"
+              className="px-4 py-2 rounded-xl bg-[#2335f2] hover:bg-blue-700 disabled:opacity-50 text-white font-medium transition-colors shadow-md shadow-blue-500/20"
             >
               {submitLoading ? 'Registering...' : 'Save Driver'}
             </button>

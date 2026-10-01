@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Mail, Lock, LogIn, ShieldAlert, Eye, EyeOff, Loader2, ShieldCheck, Sparkles } from 'lucide-react';
+import { Mail, Lock, ShieldAlert, Eye, EyeOff, Loader2, ShieldCheck, Sparkles } from 'lucide-react';
 
 export const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -38,12 +38,12 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen w-screen max-h-screen overflow-hidden bg-black text-white font-['Plus_Jakarta_Sans',sans-serif]">
+    <div className="flex h-screen w-screen max-h-screen overflow-hidden bg-slate-50 text-slate-900 font-['Plus_Jakarta_Sans',sans-serif]">
       {/* =========================================================================
-          Left Showcase Panel (Dark Modern Gradient) - Fits Screen
+          Left Showcase Panel (Serviq Studio Blue Brand Gradient) - Fits Screen
       ========================================================================= */}
       <div className="relative hidden w-1/2 h-full p-4 lg:p-5 xl:p-6 lg:flex flex-col">
-        <div className="h-full w-full overflow-hidden rounded-[32px] xl:rounded-[40px] bg-studio-blue border border-white/10 p-6 xl:p-8 flex flex-col justify-between relative shadow-2xl">
+        <div className="h-full w-full overflow-hidden rounded-[32px] xl:rounded-[40px] bg-studio-blue border border-white/20 p-6 xl:p-8 flex flex-col justify-between relative shadow-xl">
           {/* Ambient Lighting */}
           <div className="absolute top-10 left-10 w-64 h-64 bg-white/10 rounded-full blur-[80px] pointer-events-none" />
           <div className="absolute bottom-10 right-10 w-72 h-72 bg-blue-500/20 rounded-full blur-[90px] pointer-events-none" />
@@ -74,32 +74,32 @@ export const Login: React.FC = () => {
             <h2 className="mb-2.5 text-3xl xl:text-4xl font-black text-white font-['Outfit',sans-serif] tracking-tight">
               Welcome Back
             </h2>
-            <p className="mb-6 text-xs xl:text-sm text-blue-100/80 leading-relaxed">
+            <p className="mb-6 text-xs xl:text-sm text-blue-100/90 leading-relaxed">
               Sign in to access your organization command center, manage vehicles, schedule maintenance, and coordinate your drivers.
             </p>
 
             {/* Info Cards */}
             <div className="w-full space-y-2.5 xl:space-y-3 text-left">
-              <div className="rounded-xl xl:rounded-2xl bg-white/10 p-3 xl:p-3.5 backdrop-blur-md border border-white/15 shadow-lg">
+              <div className="rounded-xl xl:rounded-2xl bg-white/15 p-3 xl:p-3.5 backdrop-blur-md border border-white/20 shadow-md">
                 <div className="flex items-center gap-3">
-                  <span className="flex h-7 w-7 xl:h-8 xl:w-8 items-center justify-center rounded-full bg-white text-[#393df0] font-bold text-xs shadow shrink-0">
-                    <ShieldCheck className="w-4 h-4 text-[#393df0]" />
+                  <span className="flex h-7 w-7 xl:h-8 xl:w-8 items-center justify-center rounded-full bg-white text-[#2335f2] font-bold text-xs shadow-xs shrink-0">
+                    <ShieldCheck className="w-4 h-4 text-[#2335f2]" />
                   </span>
                   <div className="min-w-0">
                     <span className="text-xs xl:text-sm font-bold text-white block truncate">Multi-Role Architecture</span>
-                    <span className="text-[10px] xl:text-xs text-white/70 block truncate">Separate portals for Admins, Managers & Drivers</span>
+                    <span className="text-[10px] xl:text-xs text-blue-100/80 block truncate">Separate portals for Admins, Managers & Drivers</span>
                   </div>
                 </div>
               </div>
 
-              <div className="rounded-xl xl:rounded-2xl bg-white/5 p-3 xl:p-3.5 backdrop-blur-md border border-white/10">
+              <div className="rounded-xl xl:rounded-2xl bg-white/10 p-3 xl:p-3.5 backdrop-blur-md border border-white/15">
                 <div className="flex items-center gap-3">
                   <span className="flex h-7 w-7 xl:h-8 xl:w-8 items-center justify-center rounded-full bg-white/20 text-white font-bold text-xs shrink-0">
                     <Sparkles className="w-4 h-4 text-white" />
                   </span>
                   <div className="min-w-0">
-                    <span className="text-xs xl:text-sm font-bold text-white block truncate">Zero Mock Data</span>
-                    <span className="text-[10px] xl:text-xs text-white/60 block truncate">Strictly connected to live MongoDB Atlas</span>
+                    <span className="text-xs xl:text-sm font-bold text-white block truncate">Live Cloud Sync</span>
+                    <span className="text-[10px] xl:text-xs text-blue-100/70 block truncate">Connected to live MongoDB Atlas</span>
                   </div>
                 </div>
               </div>
@@ -107,44 +107,44 @@ export const Login: React.FC = () => {
           </div>
 
           {/* Bottom Footer Note */}
-          <div className="z-10 text-[11px] text-white/50 text-center flex items-center justify-center gap-1.5 shrink-0">
+          <div className="z-10 text-[11px] text-white/70 text-center flex items-center justify-center gap-1.5 shrink-0">
             <span>Enterprise Fleet Command & Driver Portal</span>
           </div>
         </div>
       </div>
 
       {/* =========================================================================
-          Right Form Panel (Dark Modern Sleek Sign In) - Fits Screen
+          Right Form Panel (Clean Modern Light Sign In) - Fits Screen
       ========================================================================= */}
-      <div className="flex w-full lg:w-1/2 h-full items-center justify-center bg-black p-4 sm:p-6 lg:p-8 overflow-y-auto">
+      <div className="flex w-full lg:w-1/2 h-full items-center justify-center bg-white p-4 sm:p-6 lg:p-8 overflow-y-auto">
         <div className="w-full max-w-sm xl:max-w-md my-auto py-2">
           
           {/* Form Title & Subtitle */}
-          <div className="mb-4">
-            <h1 className="text-2xl xl:text-3xl font-black text-white font-['Outfit',sans-serif] tracking-tight mb-1">
+          <div className="mb-5">
+            <h1 className="text-2xl xl:text-3xl font-black text-slate-900 font-['Outfit',sans-serif] tracking-tight mb-1">
               Sign In
             </h1>
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-slate-500">
               Enter your credentials to access your fleet command center.
             </p>
           </div>
 
           {/* Error Banner */}
           {error && (
-            <div className="mb-3.5 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center gap-2.5">
+            <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2.5">
               <ShieldAlert className="w-4 h-4 shrink-0" />
               <span>{error}</span>
             </div>
           )}
 
-          {/* Social Authentication: Google Only (GitHub Removed) */}
+          {/* Social Authentication: Google Only */}
           <div className="mb-4">
             <button
               type="button"
               onClick={() => {
                 setError('Google OAuth will sign you in using your corporate Google account.');
               }}
-              className="w-full h-10 xl:h-11 flex items-center justify-center gap-2.5 rounded-xl border border-gray-800 bg-gray-900/80 hover:bg-gray-800 text-white font-semibold text-xs xl:text-sm transition-all shadow-sm"
+              className="w-full h-10 xl:h-11 flex items-center justify-center gap-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs xl:text-sm transition-all shadow-2xs"
             >
               <svg className="h-4 w-4" viewBox="0 0 24 24">
                 <path
@@ -169,12 +169,12 @@ export const Login: React.FC = () => {
           </div>
 
           {/* Divider */}
-          <div className="relative my-3">
+          <div className="relative my-4">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-800"></div>
+              <div className="w-full border-t border-slate-200"></div>
             </div>
             <div className="relative flex justify-center text-[10px]">
-              <span className="bg-black px-2.5 text-gray-500 font-semibold uppercase tracking-wider">
+              <span className="bg-white px-2.5 text-slate-400 font-semibold uppercase tracking-wider">
                 Or continue with email
               </span>
             </div>
@@ -183,8 +183,8 @@ export const Login: React.FC = () => {
           {/* Sign In Form */}
           <form onSubmit={handleSubmit} className="space-y-3.5">
             <div className="space-y-1.5">
-              <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
-                <Mail className="w-3 h-3 text-[#393df0]" />
+              <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                <Mail className="w-3 h-3 text-[#2335f2]" />
                 Email Address
               </label>
               <input
@@ -194,13 +194,13 @@ export const Login: React.FC = () => {
                 placeholder="name@company.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="h-10 xl:h-11 w-full rounded-xl border border-gray-800 bg-gray-900/90 px-3.5 text-white text-xs xl:text-sm placeholder:text-gray-500 focus:border-[#393df0] focus:outline-none focus:ring-1 focus:ring-[#393df0] transition-all"
+                className="h-10 xl:h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-slate-900 text-xs xl:text-sm placeholder:text-slate-400 focus:border-[#2335f2] focus:outline-none focus:ring-1 focus:ring-[#2335f2] transition-all shadow-2xs"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 flex items-center gap-1.5">
-                <Lock className="w-3 h-3 text-[#393df0]" />
+              <label className="text-[11px] font-semibold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                <Lock className="w-3 h-3 text-[#2335f2]" />
                 Password
               </label>
               <div className="relative">
@@ -210,12 +210,12 @@ export const Login: React.FC = () => {
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="h-10 xl:h-11 w-full rounded-xl border border-gray-800 bg-gray-900/90 pl-3.5 pr-10 text-white text-xs xl:text-sm placeholder:text-gray-500 focus:border-[#393df0] focus:outline-none focus:ring-1 focus:ring-[#393df0] transition-all"
+                  className="h-10 xl:h-11 w-full rounded-xl border border-slate-200 bg-white pl-3.5 pr-10 text-slate-900 text-xs xl:text-sm placeholder:text-slate-400 focus:border-[#2335f2] focus:outline-none focus:ring-1 focus:ring-[#2335f2] transition-all shadow-2xs"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                 >
                   {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                 </button>
@@ -225,15 +225,15 @@ export const Login: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="h-10.5 xl:h-11 w-full bg-white text-black font-bold text-xs xl:text-sm rounded-xl hover:bg-gray-200 transition-all flex items-center justify-center gap-2 mt-4 shadow-lg hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
+              className="h-10.5 xl:h-11 w-full bg-[#2335f2] text-white font-bold text-xs xl:text-sm rounded-xl hover:bg-[#1a29cc] transition-all flex items-center justify-center gap-2 mt-4 shadow-md shadow-blue-600/20 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
             >
-              {loading && <Loader2 className="w-3.5 h-3.5 animate-spin text-black" />}
+              {loading && <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />}
               <span>Sign In to SERVIQ</span>
             </button>
 
-            <p className="text-center text-[11px] text-gray-400 pt-2">
+            <p className="text-center text-[11px] text-slate-500 pt-2">
               Don't have an organization account yet?{' '}
-              <Link to="/register" className="text-white font-semibold hover:underline">
+              <Link to="/register" className="text-[#2335f2] font-semibold hover:underline">
                 Register Company
               </Link>
             </p>

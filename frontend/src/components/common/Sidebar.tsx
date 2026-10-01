@@ -88,9 +88,9 @@ export const Sidebar: React.FC = () => {
   );
 
   return (
-    <aside className="w-64 border-r border-slate-800 bg-slate-950/50 flex flex-col justify-between shrink-0 min-h-[calc(100vh-4rem)] p-4">
+    <aside className="w-64 border-r border-slate-200 bg-white flex flex-col justify-between shrink-0 min-h-[calc(100vh-4rem)] p-4 shadow-2xs">
       <div className="space-y-1">
-        <div className="px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+        <div className="px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-slate-400">
           Navigation
         </div>
         {visibleItems.map((item) => {
@@ -102,8 +102,8 @@ export const Sidebar: React.FC = () => {
               className={({ isActive }) =>
                 `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                   isActive
-                    ? 'bg-emerald-600/15 text-emerald-400 border border-emerald-500/30'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent'
+                    ? 'bg-blue-50 text-[#2335f2] border border-blue-200/90 font-semibold shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-transparent'
                 }`
               }
             >
@@ -115,17 +115,17 @@ export const Sidebar: React.FC = () => {
       </div>
 
       {/* Driver APK Download Banner */}
-      <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-900/90 border border-slate-800 text-left">
-        <div className="flex items-center gap-2 text-emerald-400 text-xs font-semibold">
+      <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-left">
+        <div className="flex items-center gap-2 text-[#2335f2] text-xs font-semibold">
           <Download className="w-3.5 h-3.5" />
           Driver Android APK
         </div>
-        <p className="text-[11px] text-slate-400 mt-1 leading-relaxed">
+        <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">
           Standalone driver app for mobile devices.
         </p>
         <a
           href="/driver/home"
-          className="mt-2.5 block text-center py-1.5 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium transition-colors"
+          className="mt-2.5 block text-center py-1.5 px-3 rounded-lg bg-[#2335f2] hover:bg-[#1a29cc] text-white text-xs font-medium transition-colors shadow-xs"
         >
           Open Driver View
         </a>

@@ -82,10 +82,10 @@ export const FleetManagersView: React.FC = () => {
     <div className="space-y-6 animate-in fade-in duration-200">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white font-['Outfit',sans-serif]">
+          <h1 className="text-2xl font-bold text-slate-900 font-['Outfit',sans-serif]">
             Fleet Managers
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-500 mt-1">
             Authorize and manage operational fleet managers for your organization.
           </p>
         </div>
@@ -95,7 +95,7 @@ export const FleetManagersView: React.FC = () => {
             setError(null);
             setIsModalOpen(true);
           }}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs rounded-xl transition-colors shadow-lg shadow-emerald-950/40"
+          className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#2335f2] hover:bg-blue-700 text-white font-medium text-xs rounded-xl transition-colors shadow-md shadow-blue-500/20"
         >
           <Plus className="w-4 h-4" />
           <span>Add Fleet Manager</span>
@@ -115,16 +115,16 @@ export const FleetManagersView: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {managers.map((mgr) => (
-            <div key={mgr._id || mgr.id} className="glass-card p-5 rounded-2xl border flex flex-col justify-between">
+            <div key={mgr._id || mgr.id} className="glass-card p-5 rounded-2xl border border-slate-200 bg-white shadow-2xs flex flex-col justify-between">
               <div>
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-white">
+                    <div className="w-10 h-10 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center font-bold text-[#2335f2]">
                       {mgr.name.charAt(0).toUpperCase()}
                     </div>
                     <div>
-                      <h3 className="font-bold text-sm text-white">{mgr.name}</h3>
-                      <p className="text-[11px] text-slate-400">
+                      <h3 className="font-bold text-sm text-slate-900">{mgr.name}</h3>
+                      <p className="text-[11px] font-mono text-[#2335f2] font-semibold">
                         {mgr.employeeId ? `Emp ID: ${mgr.employeeId}` : 'Fleet Manager'}
                       </p>
                     </div>
@@ -132,36 +132,36 @@ export const FleetManagersView: React.FC = () => {
                   <Badge status={mgr.status} />
                 </div>
 
-                <div className="mt-4 space-y-2 text-xs text-slate-300">
+                <div className="mt-4 space-y-2 text-xs text-slate-600">
                   <div className="flex items-center gap-2">
-                    <Mail className="w-3.5 h-3.5 text-slate-500" />
+                    <Mail className="w-3.5 h-3.5 text-slate-400" />
                     <span>{mgr.email}</span>
                   </div>
                   {mgr.phone && (
                     <div className="flex items-center gap-2">
-                      <Phone className="w-3.5 h-3.5 text-slate-500" />
+                      <Phone className="w-3.5 h-3.5 text-slate-400" />
                       <span>{mgr.phone}</span>
                     </div>
                   )}
                   {mgr.address && (
                     <div className="flex items-center gap-2">
-                      <MapPin className="w-3.5 h-3.5 text-slate-500" />
+                      <MapPin className="w-3.5 h-3.5 text-slate-400" />
                       <span className="truncate">{mgr.address}</span>
                     </div>
                   )}
                 </div>
               </div>
 
-              <div className="mt-5 pt-4 border-t border-slate-800 flex items-center justify-between">
-                <span className="text-[11px] text-slate-500">
+              <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between">
+                <span className="text-[11px] text-slate-400">
                   Role: Organization Controller
                 </span>
                 <button
                   onClick={() => handleToggleStatus(mgr._id || mgr.id)}
-                  className={`text-xs px-2.5 py-1 rounded-lg font-medium transition-colors ${
+                  className={`text-xs px-2.5 py-1 rounded-lg font-medium transition-colors border ${
                     mgr.status === 'active'
-                      ? 'text-rose-400 hover:bg-rose-500/10'
-                      : 'text-emerald-400 hover:bg-emerald-500/10'
+                      ? 'border-rose-200 text-rose-600 hover:bg-rose-50'
+                      : 'border-emerald-200 text-emerald-600 hover:bg-emerald-50'
                   }`}
                 >
                   {mgr.status === 'active' ? 'Deactivate' : 'Activate'}
@@ -179,7 +179,7 @@ export const FleetManagersView: React.FC = () => {
         title="Create Fleet Manager Account"
       >
         {error && (
-          <div className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center gap-2">
+          <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
             <ShieldAlert className="w-4 h-4 shrink-0" />
             <span>{error}</span>
           </div>
@@ -187,8 +187,8 @@ export const FleetManagersView: React.FC = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
           <div>
-            <label className="block font-semibold text-slate-300 mb-1">
-              Full Name <span className="text-rose-400">*</span>
+            <label className="block font-semibold text-slate-700 mb-1">
+              Full Name <span className="text-rose-500">*</span>
             </label>
             <input
               type="text"
@@ -197,14 +197,14 @@ export const FleetManagersView: React.FC = () => {
               value={formData.name}
               onChange={handleChange}
               placeholder="e.g. Ramesh Babu"
-              className="w-full bg-slate-800 border border-slate-700 focus:border-emerald-500 rounded-xl px-3.5 py-2 text-white outline-none"
+              className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">
-                Official Email <span className="text-rose-400">*</span>
+              <label className="block font-semibold text-slate-700 mb-1">
+                Official Email <span className="text-rose-500">*</span>
               </label>
               <input
                 type="email"
@@ -213,12 +213,12 @@ export const FleetManagersView: React.FC = () => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="manager@company.com"
-                className="w-full bg-slate-800 border border-slate-700 focus:border-emerald-500 rounded-xl px-3.5 py-2 text-white outline-none"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
               />
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">
+              <label className="block font-semibold text-slate-700 mb-1">
                 Employee ID
               </label>
               <input
@@ -227,14 +227,14 @@ export const FleetManagersView: React.FC = () => {
                 value={formData.employeeId}
                 onChange={handleChange}
                 placeholder="e.g. FM-104"
-                className="w-full bg-slate-800 border border-slate-700 focus:border-emerald-500 rounded-xl px-3.5 py-2 text-white outline-none"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none font-mono"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">
+              <label className="block font-semibold text-slate-700 mb-1">
                 Phone Number
               </label>
               <input
@@ -243,13 +243,13 @@ export const FleetManagersView: React.FC = () => {
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder="+91 XXXXX XXXXX"
-                className="w-full bg-slate-800 border border-slate-700 focus:border-emerald-500 rounded-xl px-3.5 py-2 text-white outline-none"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
               />
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">
-                Login Password <span className="text-rose-400">*</span>
+              <label className="block font-semibold text-slate-700 mb-1">
+                Login Password <span className="text-rose-500">*</span>
               </label>
               <input
                 type="password"
@@ -258,13 +258,13 @@ export const FleetManagersView: React.FC = () => {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Min 6 characters"
-                className="w-full bg-slate-800 border border-slate-700 focus:border-emerald-500 rounded-xl px-3.5 py-2 text-white outline-none"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
               />
             </div>
           </div>
 
           <div>
-            <label className="block font-semibold text-slate-300 mb-1">
+            <label className="block font-semibold text-slate-700 mb-1">
               Station / Address
             </label>
             <textarea
@@ -273,22 +273,22 @@ export const FleetManagersView: React.FC = () => {
               value={formData.address}
               onChange={handleChange}
               placeholder="Depot or Regional office address"
-              className="w-full bg-slate-800 border border-slate-700 focus:border-emerald-500 rounded-xl px-3.5 py-2 text-white outline-none resize-none"
+              className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none resize-none"
             />
           </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
+          <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium"
+              className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={submitLoading}
-              className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-medium"
+              className="px-4 py-2 rounded-xl bg-[#2335f2] hover:bg-blue-700 disabled:opacity-50 text-white font-medium transition-colors shadow-md shadow-blue-500/20"
             >
               {submitLoading ? 'Creating Manager...' : 'Confirm Account Creation'}
             </button>

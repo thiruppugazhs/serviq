@@ -40,7 +40,7 @@ import { DownloadAppPage } from './components/download/DownloadAppPage';
 
 const DashboardLayout: React.FC = () => {
   return (
-    <div className="min-h-screen bg-[#090d16] flex flex-col">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-['Plus_Jakarta_Sans',sans-serif]">
       <Navbar />
       <div className="flex flex-1">
         <Sidebar />

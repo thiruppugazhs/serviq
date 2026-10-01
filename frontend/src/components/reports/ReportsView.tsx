@@ -52,19 +52,19 @@ export const ReportsView: React.FC = () => {
     <div className="space-y-6 animate-in fade-in duration-200">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white font-['Outfit',sans-serif]">
+          <h1 className="text-2xl font-bold text-slate-900 font-['Outfit',sans-serif]">
             Reports & Fleet Analytics
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-500 mt-1">
             Aggregated audit logs, compliance posture, and operating expenditure summaries.
           </p>
         </div>
 
         <button
           onClick={handleExportCSV}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 font-medium text-xs rounded-xl transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-medium text-xs rounded-xl transition-colors shadow-2xs"
         >
-          <Download className="w-4 h-4 text-emerald-400" />
+          <Download className="w-4 h-4 text-[#2335f2]" />
           <span>Export Summary CSV</span>
         </button>
       </div>
@@ -104,32 +104,32 @@ export const ReportsView: React.FC = () => {
         />
       </div>
 
-      <div className="glass-panel p-6 rounded-3xl border border-slate-800">
-        <h2 className="text-base font-bold text-white font-['Outfit',sans-serif] mb-2">
+      <div className="glass-panel p-6 rounded-3xl border border-slate-200 bg-white shadow-2xs">
+        <h2 className="text-base font-bold text-slate-900 font-['Outfit',sans-serif] mb-2">
           Fleet Health Overview
         </h2>
-        <p className="text-xs text-slate-400 mb-6">
+        <p className="text-xs text-slate-500 mb-6">
           Real-time snapshot across all vehicles in this organization.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-          <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800">
-            <span className="text-slate-400 block mb-1">Vehicles in Workshop</span>
-            <span className="text-xl font-bold font-mono text-rose-400">
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+            <span className="text-slate-500 block mb-1">Vehicles in Workshop</span>
+            <span className="text-xl font-bold font-mono text-rose-600">
               {stats?.vehicles.inShop || 0}
             </span>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800">
-            <span className="text-slate-400 block mb-1">Compliance Certificates Expiring</span>
-            <span className="text-xl font-bold font-mono text-amber-400">
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+            <span className="text-slate-500 block mb-1">Compliance Certificates Expiring</span>
+            <span className="text-xl font-bold font-mono text-amber-600">
               {stats?.documents.expiringOrExpired || 0}
             </span>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800">
-            <span className="text-slate-400 block mb-1">Breakdown Incident Tickets</span>
-            <span className="text-xl font-bold font-mono text-emerald-400">
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+            <span className="text-slate-500 block mb-1">Breakdown Incident Tickets</span>
+            <span className="text-xl font-bold font-mono text-[#2335f2]">
               {stats?.repairs.active || 0} active
             </span>
           </div>

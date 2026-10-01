@@ -115,10 +115,10 @@ export const VehiclesView: React.FC = () => {
     <div className="space-y-6 animate-in fade-in duration-200">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white font-['Outfit',sans-serif]">
+          <h1 className="text-2xl font-bold text-slate-900 font-['Outfit',sans-serif]">
             Vehicle Fleet Registry
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-500 mt-1">
             Registered commercial haulers, buses, trucks, and driver assignments.
           </p>
         </div>
@@ -128,7 +128,7 @@ export const VehiclesView: React.FC = () => {
             setError(null);
             setIsAddModalOpen(true);
           }}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs rounded-xl transition-colors shadow-lg shadow-emerald-950/40"
+          className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#2335f2] hover:bg-blue-700 text-white font-medium text-xs rounded-xl transition-colors shadow-md shadow-blue-500/20"
         >
           <Plus className="w-4 h-4" />
           <span>Add Fleet Asset</span>
@@ -136,15 +136,15 @@ export const VehiclesView: React.FC = () => {
       </div>
 
       {/* Search Bar */}
-      <div className="flex items-center gap-4 bg-slate-900/60 border border-slate-800 p-3 rounded-2xl">
+      <div className="flex items-center gap-4 bg-white border border-slate-200 p-3 rounded-2xl shadow-2xs">
         <div className="relative flex-1">
-          <Search className="w-4 h-4 absolute left-3.5 top-3 text-slate-500" />
+          <Search className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by license plate (e.g. TN 01 AB 1234), model, or type..."
-            className="w-full bg-slate-900 border border-slate-800 focus:border-emerald-500 rounded-xl pl-10 pr-4 py-2 text-xs text-white placeholder-slate-500 outline-none"
+            className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl pl-10 pr-4 py-2 text-xs text-slate-900 placeholder-slate-400 outline-none"
           />
         </div>
       </div>
@@ -168,18 +168,18 @@ export const VehiclesView: React.FC = () => {
             return (
               <div
                 key={vehicle._id}
-                className="glass-card p-5 rounded-2xl border flex flex-col justify-between"
+                className="glass-card p-5 rounded-2xl border border-slate-200 bg-white shadow-2xs flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <div className="text-[11px] font-semibold uppercase tracking-wider text-emerald-400">
+                      <div className="text-[11px] font-semibold uppercase tracking-wider text-[#2335f2]">
                         {vehicle.vehicleType} • {vehicle.fuelType}
                       </div>
-                      <h3 className="font-extrabold text-base text-white font-mono tracking-wider mt-0.5">
+                      <h3 className="font-extrabold text-base text-slate-900 font-mono tracking-wider mt-0.5">
                         {vehicle.vehicleNumber}
                       </h3>
-                      <p className="text-xs text-slate-400 mt-0.5">
+                      <p className="text-xs text-slate-500 mt-0.5">
                         {vehicle.manufacturer} {vehicle.model} ({vehicle.year})
                       </p>
                     </div>
@@ -187,13 +187,13 @@ export const VehiclesView: React.FC = () => {
                   </div>
 
                   {/* Odometer readout */}
-                  <div className="mt-4 p-3 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+                  <div className="mt-4 p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <Gauge className="w-4 h-4 text-emerald-400" />
-                      <span className="text-xs text-slate-400">Odometer:</span>
+                      <Gauge className="w-4 h-4 text-[#2335f2]" />
+                      <span className="text-xs text-slate-500">Odometer:</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-sm text-white font-mono">
+                      <span className="font-bold text-sm text-slate-900 font-mono">
                         {vehicle.odometer.toLocaleString()} km
                       </span>
                       <button
@@ -203,7 +203,7 @@ export const VehiclesView: React.FC = () => {
                           setError(null);
                           setIsOdoModalOpen(true);
                         }}
-                        className="text-[10px] text-emerald-400 hover:text-white px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20"
+                        className="text-[10px] text-[#2335f2] hover:text-blue-700 px-2 py-0.5 rounded bg-blue-50 border border-blue-200 font-medium"
                       >
                         Update
                       </button>
@@ -211,18 +211,18 @@ export const VehiclesView: React.FC = () => {
                   </div>
 
                   {/* Assigned Driver */}
-                  <div className="mt-3 flex items-center gap-2.5 text-xs text-slate-300">
-                    <User className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                  <div className="mt-3 flex items-center gap-2.5 text-xs text-slate-600">
+                    <User className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                     <span>Driver:</span>
-                    <span className="font-semibold text-white">
+                    <span className="font-semibold text-slate-900">
                       {driverUser ? `${driverUser.name} (${driver?.driverId})` : 'Unassigned'}
                     </span>
                   </div>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-500">
+                <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
                   <span>SERVIQ Fleet Asset</span>
-                  <span className="text-slate-400">Status: {vehicle.status}</span>
+                  <span className="text-slate-500">Status: {vehicle.status}</span>
                 </div>
               </div>
             );
@@ -237,7 +237,7 @@ export const VehiclesView: React.FC = () => {
         title="Add Fleet Vehicle"
       >
         {error && (
-          <div className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center gap-2">
+          <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
             <ShieldAlert className="w-4 h-4 shrink-0" />
             <span>{error}</span>
           </div>
@@ -245,8 +245,8 @@ export const VehiclesView: React.FC = () => {
 
         <form onSubmit={handleAddVehicle} className="space-y-4 text-xs">
           <div>
-            <label className="block font-semibold text-slate-300 mb-1">
-              Vehicle Plate Number <span className="text-rose-400">*</span>
+            <label className="block font-semibold text-slate-700 mb-1">
+              Vehicle Plate Number <span className="text-rose-500">*</span>
             </label>
             <input
               type="text"
@@ -255,20 +255,20 @@ export const VehiclesView: React.FC = () => {
               value={formData.vehicleNumber}
               onChange={handleChange}
               placeholder="e.g. TN 01 AB 1234"
-              className="w-full bg-slate-800 border border-slate-700 focus:border-emerald-500 rounded-xl px-3.5 py-2 text-white outline-none font-mono uppercase"
+              className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none font-mono uppercase"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">
+              <label className="block font-semibold text-slate-700 mb-1">
                 Vehicle Type
               </label>
               <select
                 name="vehicleType"
                 value={formData.vehicleType}
                 onChange={handleChange}
-                className="w-full bg-slate-800 border border-slate-700 focus:border-emerald-500 rounded-xl px-3.5 py-2 text-white outline-none"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
               >
                 <option value="Truck">Truck</option>
                 <option value="Bus">Bus</option>
@@ -282,14 +282,14 @@ export const VehiclesView: React.FC = () => {
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">
+              <label className="block font-semibold text-slate-700 mb-1">
                 Fuel Type
               </label>
               <select
                 name="fuelType"
                 value={formData.fuelType}
                 onChange={handleChange}
-                className="w-full bg-slate-800 border border-slate-700 focus:border-emerald-500 rounded-xl px-3.5 py-2 text-white outline-none"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
               >
                 <option value="Diesel">Diesel</option>
                 <option value="Petrol">Petrol</option>
@@ -302,8 +302,8 @@ export const VehiclesView: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="sm:col-span-1">
-              <label className="block font-semibold text-slate-300 mb-1">
-                Manufacturer <span className="text-rose-400">*</span>
+              <label className="block font-semibold text-slate-700 mb-1">
+                Manufacturer <span className="text-rose-500">*</span>
               </label>
               <input
                 type="text"
@@ -312,13 +312,13 @@ export const VehiclesView: React.FC = () => {
                 value={formData.manufacturer}
                 onChange={handleChange}
                 placeholder="e.g. Ashok Leyland"
-                className="w-full bg-slate-800 border border-slate-700 focus:border-emerald-500 rounded-xl px-3.5 py-2 text-white outline-none"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
               />
             </div>
 
             <div className="sm:col-span-1">
-              <label className="block font-semibold text-slate-300 mb-1">
-                Model <span className="text-rose-400">*</span>
+              <label className="block font-semibold text-slate-700 mb-1">
+                Model <span className="text-rose-500">*</span>
               </label>
               <input
                 type="text"
@@ -327,13 +327,13 @@ export const VehiclesView: React.FC = () => {
                 value={formData.model}
                 onChange={handleChange}
                 placeholder="e.g. Boss 1616"
-                className="w-full bg-slate-800 border border-slate-700 focus:border-emerald-500 rounded-xl px-3.5 py-2 text-white outline-none"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
               />
             </div>
 
             <div className="sm:col-span-1">
-              <label className="block font-semibold text-slate-300 mb-1">
-                Year <span className="text-rose-400">*</span>
+              <label className="block font-semibold text-slate-700 mb-1">
+                Year <span className="text-rose-500">*</span>
               </label>
               <input
                 type="number"
@@ -341,14 +341,14 @@ export const VehiclesView: React.FC = () => {
                 required
                 value={formData.year}
                 onChange={handleChange}
-                className="w-full bg-slate-800 border border-slate-700 focus:border-emerald-500 rounded-xl px-3.5 py-2 text-white outline-none"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">
+              <label className="block font-semibold text-slate-700 mb-1">
                 Current Odometer (km)
               </label>
               <input
@@ -357,19 +357,19 @@ export const VehiclesView: React.FC = () => {
                 value={formData.odometer}
                 onChange={handleChange}
                 placeholder="0"
-                className="w-full bg-slate-800 border border-slate-700 focus:border-emerald-500 rounded-xl px-3.5 py-2 text-white outline-none"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
               />
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-300 mb-1">
+              <label className="block font-semibold text-slate-700 mb-1">
                 Assign Driver
               </label>
               <select
                 name="assignedDriverId"
                 value={formData.assignedDriverId}
                 onChange={handleChange}
-                className="w-full bg-slate-800 border border-slate-700 focus:border-emerald-500 rounded-xl px-3.5 py-2 text-white outline-none"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
               >
                 <option value="">-- No Driver Assigned --</option>
                 {drivers.map((d) => {
@@ -384,18 +384,18 @@ export const VehiclesView: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
+          <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
             <button
               type="button"
               onClick={() => setIsAddModalOpen(false)}
-              className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium"
+              className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={submitLoading}
-              className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-medium"
+              className="px-4 py-2 rounded-xl bg-[#2335f2] hover:bg-blue-700 disabled:opacity-50 text-white font-medium transition-colors shadow-md shadow-blue-500/20"
             >
               {submitLoading ? 'Registering Asset...' : 'Save Vehicle'}
             </button>
@@ -411,7 +411,7 @@ export const VehiclesView: React.FC = () => {
         maxWidth="sm"
       >
         {error && (
-          <div className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center gap-2">
+          <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
             <ShieldAlert className="w-4 h-4 shrink-0" />
             <span>{error}</span>
           </div>
@@ -419,7 +419,7 @@ export const VehiclesView: React.FC = () => {
 
         <form onSubmit={handleUpdateOdometer} className="space-y-4 text-xs">
           <div>
-            <label className="block font-semibold text-slate-300 mb-1">
+            <label className="block font-semibold text-slate-700 mb-1">
               New Odometer (km)
             </label>
             <input
@@ -428,7 +428,7 @@ export const VehiclesView: React.FC = () => {
               min={selectedVehicle?.odometer || 0}
               value={newOdometerInput}
               onChange={(e) => setNewOdometerInput(e.target.value)}
-              className="w-full bg-slate-800 border border-slate-700 focus:border-emerald-500 rounded-xl px-3.5 py-2.5 text-white outline-none font-mono text-sm"
+              className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2.5 text-slate-900 outline-none font-mono text-sm"
             />
             <p className="text-[11px] text-slate-500 mt-1">
               Current reading: {selectedVehicle?.odometer.toLocaleString()} km
@@ -439,14 +439,14 @@ export const VehiclesView: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsOdoModalOpen(false)}
-              className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300"
+              className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={submitLoading}
-              className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-medium"
+              className="px-4 py-2 rounded-xl bg-[#2335f2] hover:bg-blue-700 text-white font-medium transition-colors shadow-md shadow-blue-500/20"
             >
               {submitLoading ? 'Updating...' : 'Save Reading'}
             </button>
