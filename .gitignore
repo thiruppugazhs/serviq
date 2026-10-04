@@ -46,3 +46,15 @@ ios/App/build/
 # Vercel
 .vercel/
 
+# Mobile App & Android Builds
+*.apk
+*.aab
+*.keystore
+!debug.keystore
+frontend/public/downloads/*.apk
+serviq-driver/node_modules/
+serviq-driver/android/.gradle/
+serviq-driver/android/app/build/
+serviq-driver/android/build/
+serviq-driver/android/.cxx/
+

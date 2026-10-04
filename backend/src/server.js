@@ -14,6 +14,7 @@ const errorHandler = require('./middleware/errorHandler');
 const authRoutes = require('./routes/authRoutes');
 const fleetManagerRoutes = require('./routes/fleetManagerRoutes');
 const driverRoutes = require('./routes/driverRoutes');
+const driverPortalRoutes = require('./routes/driverPortalRoutes');
 const vehicleRoutes = require('./routes/vehicleRoutes');
 const repairRoutes = require('./routes/repairRoutes');
 const maintenanceRoutes = require('./routes/maintenanceRoutes');
@@ -92,6 +93,21 @@ app.get(['/api/health', '/health'], (req, res) => {
   });
 });
 
+// Driver mobile app APK direct download endpoint
+app.get(['/download/driver-app', '/api/driver/download-apk'], (req, res) => {
+  const fs = require('fs');
+  const candidatePaths = [
+    path.join(__dirname, '../../frontend/public/downloads/serviq-driver.apk'),
+    path.join(__dirname, '../../serviq-driver/android/app/build/outputs/apk/debug/app-debug.apk'),
+  ];
+  for (const p of candidatePaths) {
+    if (fs.existsSync(p)) {
+      return res.download(p, 'serviq-driver.apk');
+    }
+  }
+  return res.status(404).json({ success: false, message: 'Driver APK file not found on server' });
+});
+
 // Ensure DB connection is established for serverless invocations
 app.use(async (req, res, next) => {
   try {
@@ -109,6 +125,7 @@ app.use(async (req, res, next) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/fleet-managers', fleetManagerRoutes);
 app.use('/api/drivers', driverRoutes);
+app.use('/api/driver', driverPortalRoutes);
 app.use('/api/vehicles', vehicleRoutes);
 app.use('/api/repairs', repairRoutes);
 app.use('/api/maintenance', maintenanceRoutes);

@@ -482,16 +482,22 @@ exports.registerCompany = async (req, res, next) => {
 // @access  Public
 exports.login = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, phone } = req.body;
+    const loginIdentifier = (email || phone || '').trim();
 
-    if (!email || !password) {
+    if (!loginIdentifier || !password) {
       return res.status(400).json({
         success: false,
-        message: 'Please provide email and password',
+        message: 'Please provide email or phone and password',
       });
     }
 
-    const user = await User.findOne({ email: email.toLowerCase().trim() })
+    const user = await User.findOne({
+      $or: [
+        { email: loginIdentifier.toLowerCase() },
+        { phone: loginIdentifier },
+      ],
+    })
       .select('+password')
       .populate('organization');
 

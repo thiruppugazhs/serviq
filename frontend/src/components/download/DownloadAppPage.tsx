@@ -52,22 +52,16 @@ export const DownloadAppPage: React.FC = () => {
 
   const handleApkDownload = () => {
     setDownloadStarted(true);
-    // Create simulated direct APK download blob for smooth user experience
-    const dummyBlob = new Blob(['SERVIQ Fleet Android APK Package v2.4.1'], {
-      type: 'application/vnd.android.package-archive',
-    });
-    const url = window.URL.createObjectURL(dummyBlob);
     const a = document.createElement('a');
-    a.href = url;
-    a.download = 'serviq-fleet-v2.4.1.apk';
+    a.href = '/downloads/serviq-driver.apk';
+    a.download = 'serviq-driver.apk';
     document.body.appendChild(a);
     a.click();
-    window.URL.revokeObjectURL(url);
     document.body.removeChild(a);
 
     setTimeout(() => {
       setDownloadStarted(false);
-    }, 5000);
+    }, 4000);
   };
 
   return (
