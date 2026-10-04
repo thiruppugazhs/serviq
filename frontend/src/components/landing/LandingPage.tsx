@@ -43,42 +43,22 @@ const WORKFLOW_STEPS = [
   {
     title: 'Manage & Assign',
     description:
-      'Add vehicles and drivers, configure registration details, and assign vehicles with complete handover clarity before operations begin.',
-    highlights: [
-      'Digital RC & document profiles',
-      'Driver roster & license tracking',
-      'Instant vehicle assignments',
-    ],
+      'Seamlessly register commercial vehicles, delivery trucks, and haulers with complete digital RC documentation. Onboard certified drivers, verify license credentials, and assign active vehicles before daily operational dispatches begin.',
   },
   {
     title: 'Monitor Fleet',
     description:
-      'Track vehicle availability, odometer readings, and operational readiness in real time to keep every route running reliably.',
-    highlights: [
-      'Odometer & mileage sync',
-      'Live vehicle availability status',
-      'Operational health monitoring',
-    ],
+      'Maintain continuous real-time visibility across vehicle availability, live operational status, and automated odometer readings. Keep track of driver assignments, daily trip dispatches, and usage metrics from a single centralized dashboard.',
   },
   {
     title: 'Stay Ahead of Maintenance',
     description:
-      'Schedule routine servicing, track mileage intervals, and maintain a complete service history to prevent costly roadside breakdowns.',
-    highlights: [
-      'Preventive maintenance schedules',
-      'Service due & renewal alerts',
-      'Full vehicle maintenance logs',
-    ],
+      'Proactively schedule preventive servicing, monitor mileage intervals, and receive timely alerts for insurance and fitness renewals. Prevent unexpected roadside breakdowns and optimize fleet uptime with a comprehensive digital service history.',
   },
   {
     title: 'Resolve & Record',
     description:
-      'Empower drivers to report defect issues instantly, manage repair workflows, and track workshop expenses from start to finish.',
-    highlights: [
-      'One-tap driver issue reporting',
-      'Workshop repair status tracking',
-      'Detailed expense & billing records',
-    ],
+      'Empower drivers to report defect issues and mechanical faults instantly from their mobile devices. Fleet managers can assign workshop job cards, monitor repair turnaround, and maintain detailed audit trails for every service expense.',
   },
 ];
 
@@ -144,37 +124,23 @@ const WorkflowSection: React.FC = () => {
             return (
               <div
                 key={card.title}
-                className="group relative bg-white rounded-[22px] border border-slate-200/90 hover:border-[#2335f2]/40 p-6 sm:p-7 shadow-[0_2px_12px_rgba(35,53,242,0.04)] hover:shadow-2xl hover:shadow-[#2335f2]/10 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between"
+                className="group relative bg-white rounded-[22px] border border-slate-200/90 hover:border-[#2335f2]/40 p-6 sm:p-7 shadow-[0_2px_12px_rgba(35,53,242,0.04)] hover:shadow-2xl hover:shadow-[#2335f2]/10 hover:-translate-y-1.5 transition-all duration-300"
               >
-                <div>
-                  {/* Card Title */}
-                  <h3
-                    className="text-lg sm:text-xl font-bold text-[#2335f2] mb-3 tracking-tight font-anek-latin"
-                    style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                  >
-                    {card.title}
-                  </h3>
+                {/* Card Title */}
+                <h3
+                  className="text-lg sm:text-xl font-bold text-[#2335f2] mb-3 tracking-tight font-anek-latin"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  {card.title}
+                </h3>
 
-                  {/* Card Description */}
-                  <p
-                    className="text-slate-600 text-xs sm:text-sm leading-relaxed font-anek-latin"
-                    style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
-                  >
-                    {card.description}
-                  </p>
-                </div>
-
-                {/* Key Capabilities Checklist to Fill Card */}
-                <div className="mt-6 pt-5 border-t border-slate-100">
-                  <div className="space-y-2.5">
-                    {card.highlights.map((item, idx) => (
-                      <div key={idx} className="flex items-center gap-2 text-xs font-medium text-slate-700 font-anek-latin">
-                        <CheckCircle2 className="w-4 h-4 text-[#2335f2] shrink-0" />
-                        <span>{item}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                {/* Card Description */}
+                <p
+                  className="text-slate-600 text-xs sm:text-sm leading-relaxed font-anek-latin"
+                  style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
+                >
+                  {card.description}
+                </p>
               </div>
             );
           })}
