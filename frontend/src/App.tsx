@@ -25,6 +25,7 @@ import { FleetManagerDashboard } from './components/fleetManager/FleetManagerDas
 import { DriversView } from './components/drivers/DriversView';
 import { DriverProfileView } from './components/drivers/DriverProfileView';
 import { VehiclesView } from './components/vehicles/VehiclesView';
+import { LiveTrackingView } from './components/tracking/LiveTrackingView';
 import { MaintenanceView } from './components/maintenance/MaintenanceView';
 import { RepairsView } from './components/repairs/RepairsView';
 import { ExpensesView } from './components/expenses/ExpensesView';
@@ -110,6 +111,8 @@ export const App: React.FC = () => {
                 <Route path="drivers" element={<DriversView />} />
                 <Route path="drivers/:id" element={<DriverProfileView />} />
                 <Route path="vehicles" element={<VehiclesView />} />
+                <Route path="tracking" element={<LiveTrackingView />} />
+                <Route path="map" element={<LiveTrackingView />} />
                 <Route path="maintenance" element={<MaintenanceView />} />
                 <Route path="repairs" element={<RepairsView />} />
                 <Route path="expenses" element={<ExpensesView />} />
@@ -127,6 +130,8 @@ export const App: React.FC = () => {
                 <Route path="drivers" element={<DriversView />} />
                 <Route path="drivers/:id" element={<DriverProfileView />} />
                 <Route path="vehicles" element={<VehiclesView />} />
+                <Route path="tracking" element={<LiveTrackingView />} />
+                <Route path="map" element={<LiveTrackingView />} />
                 <Route path="maintenance" element={<MaintenanceView />} />
                 <Route path="repairs" element={<RepairsView />} />
                 <Route path="expenses" element={<ExpensesView />} />

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../../api/client';
 import { Vehicle, Driver } from '../../types';
 import { Badge } from '../common/Badge';
 import { Modal } from '../common/Modal';
 import { EmptyState } from '../common/EmptyState';
-import { Truck, Plus, Search, Gauge, User, ShieldAlert, Calendar, Fuel } from 'lucide-react';
+import { Truck, Plus, Search, Gauge, User, ShieldAlert, Calendar, Fuel, MapPin } from 'lucide-react';
 
 export const VehiclesView: React.FC = () => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
@@ -123,16 +124,27 @@ export const VehiclesView: React.FC = () => {
           </p>
         </div>
 
-        <button
-          onClick={() => {
-            setError(null);
-            setIsAddModalOpen(true);
-          }}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#2335f2] hover:bg-blue-700 text-white font-medium text-xs rounded-xl transition-colors shadow-md shadow-blue-500/20"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Add Fleet Asset</span>
-        </button>
+        <div className="flex items-center gap-2.5">
+          <Link
+            to="../tracking"
+            className="inline-flex items-center gap-2 px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-xs rounded-xl transition-colors border border-slate-200/90 shadow-2xs"
+            title="Open Live Fleet GPS Tracking Map"
+          >
+            <MapPin className="w-4 h-4 text-[#2335f2]" />
+            <span>Live GPS Map</span>
+          </Link>
+
+          <button
+            onClick={() => {
+              setError(null);
+              setIsAddModalOpen(true);
+            }}
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#2335f2] hover:bg-blue-700 text-white font-medium text-xs rounded-xl transition-colors shadow-md shadow-blue-500/20"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Add Fleet Asset</span>
+          </button>
+        </div>
       </div>
 
       {/* Search Bar */}

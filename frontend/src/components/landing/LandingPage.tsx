@@ -30,7 +30,7 @@ import {
 
 import { HelpFeedbackModal } from '../support/HelpFeedbackModal';
 import { RoadFeaturesSection } from './RoadFeaturesSection';
-import { VehicleShowcaseSection } from './VehicleShowcaseSection';
+import { PlatformEcosystemSection } from './PlatformEcosystemSection';
 
 const WORKFLOW_PILLS = [
   { label: 'Vehicle visibility', icon: Eye },
@@ -538,9 +538,9 @@ export const LandingPage: React.FC = () => {
       <RoadFeaturesSection />
 
       {/* =========================================================================
-          PAGE 4: INTERACTIVE VEHICLE SHOWCASE (SCROLL-DRIVEN ROTATING CAR & DYNAMIC FEATURES)
+          PAGE 4: PURPOSE-BUILT ECOSYSTEM (WEB APP FOR ADMIN & MOBILE FOR DRIVER)
       ========================================================================= */}
-      <VehicleShowcaseSection />
+      <PlatformEcosystemSection />
 
       {/* =========================================================================
           FAQS SECTION — BLUE BACKGROUND WITH 10 ACCORDION CARDS
