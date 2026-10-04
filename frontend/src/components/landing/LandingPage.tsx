@@ -41,24 +41,44 @@ const WORKFLOW_PILLS = [
 
 const WORKFLOW_STEPS = [
   {
-    step: '01',
     title: 'Manage & Assign',
-    description: 'Add vehicles and drivers, manage fleet details, and assign vehicles before operations begin.',
+    description:
+      'Add vehicles and drivers, configure registration details, and assign vehicles with complete handover clarity before operations begin.',
+    highlights: [
+      'Digital RC & document profiles',
+      'Driver roster & license tracking',
+      'Instant vehicle assignments',
+    ],
   },
   {
-    step: '02',
     title: 'Monitor Fleet',
-    description: 'Track vehicle status, odometer readings, availability, and important fleet information in one place.',
+    description:
+      'Track vehicle availability, odometer readings, and operational readiness in real time to keep every route running reliably.',
+    highlights: [
+      'Odometer & mileage sync',
+      'Live vehicle availability status',
+      'Operational health monitoring',
+    ],
   },
   {
-    step: '03',
     title: 'Stay Ahead of Maintenance',
-    description: 'Schedule services, monitor maintenance due dates, and maintain a complete service history for every vehicle.',
+    description:
+      'Schedule routine servicing, track mileage intervals, and maintain a complete service history to prevent costly roadside breakdowns.',
+    highlights: [
+      'Preventive maintenance schedules',
+      'Service due & renewal alerts',
+      'Full vehicle maintenance logs',
+    ],
   },
   {
-    step: '04',
     title: 'Resolve & Record',
-    description: 'Report vehicle issues, manage repairs, track expenses, and keep every service and repair record organized.',
+    description:
+      'Empower drivers to report defect issues instantly, manage repair workflows, and track workshop expenses from start to finish.',
+    highlights: [
+      'One-tap driver issue reporting',
+      'Workshop repair status tracking',
+      'Detailed expense & billing records',
+    ],
   },
 ];
 
@@ -123,20 +143,13 @@ const WorkflowSection: React.FC = () => {
           {WORKFLOW_STEPS.map((card) => {
             return (
               <div
-                key={card.step}
+                key={card.title}
                 className="group relative bg-white rounded-[22px] border border-slate-200/90 hover:border-[#2335f2]/40 p-6 sm:p-7 shadow-[0_2px_12px_rgba(35,53,242,0.04)] hover:shadow-2xl hover:shadow-[#2335f2]/10 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
-                  {/* Card Top Row: Step Number */}
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-xs sm:text-sm font-mono font-bold text-[#2335f2] tracking-wider px-2 py-0.5 rounded-md bg-blue-50 border border-blue-100/70">
-                      {card.step}
-                    </span>
-                  </div>
-
                   {/* Card Title */}
                   <h3
-                    className="text-lg sm:text-xl font-bold text-[#2335f2] mb-2 tracking-tight font-anek-latin"
+                    className="text-lg sm:text-xl font-bold text-[#2335f2] mb-3 tracking-tight font-anek-latin"
                     style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
                   >
                     {card.title}
@@ -144,11 +157,23 @@ const WorkflowSection: React.FC = () => {
 
                   {/* Card Description */}
                   <p
-                    className="text-slate-500 text-xs sm:text-sm leading-relaxed font-anek-latin"
+                    className="text-slate-600 text-xs sm:text-sm leading-relaxed font-anek-latin"
                     style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
                   >
                     {card.description}
                   </p>
+                </div>
+
+                {/* Key Capabilities Checklist to Fill Card */}
+                <div className="mt-6 pt-5 border-t border-slate-100">
+                  <div className="space-y-2.5">
+                    {card.highlights.map((item, idx) => (
+                      <div key={idx} className="flex items-center gap-2 text-xs font-medium text-slate-700 font-anek-latin">
+                        <CheckCircle2 className="w-4 h-4 text-[#2335f2] shrink-0" />
+                        <span>{item}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             );
