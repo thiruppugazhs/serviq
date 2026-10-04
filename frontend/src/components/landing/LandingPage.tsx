@@ -2,9 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
-  Truck,
   Wrench,
-  AlertTriangle,
   UserCheck,
   Receipt,
   FileText,
@@ -16,7 +14,6 @@ import {
   ArrowRight,
   Menu,
   X,
-  Gauge,
   Calendar,
   Lock,
   Download,
@@ -47,33 +44,21 @@ const WORKFLOW_STEPS = [
     step: '01',
     title: 'Manage & Assign',
     description: 'Add vehicles and drivers, manage fleet details, and assign vehicles before operations begin.',
-    icon: Truck,
-    iconBg: 'bg-[#2335f2]',
-    shadowGlow: 'shadow-blue-600/25',
   },
   {
     step: '02',
     title: 'Monitor Fleet',
     description: 'Track vehicle status, odometer readings, availability, and important fleet information in one place.',
-    icon: Gauge,
-    iconBg: 'bg-[#393df0]',
-    shadowGlow: 'shadow-indigo-600/25',
   },
   {
     step: '03',
     title: 'Stay Ahead of Maintenance',
     description: 'Schedule services, monitor maintenance due dates, and maintain a complete service history for every vehicle.',
-    icon: Wrench,
-    iconBg: 'bg-[#2563eb]',
-    shadowGlow: 'shadow-blue-500/25',
   },
   {
     step: '04',
     title: 'Resolve & Record',
     description: 'Report vehicle issues, manage repairs, track expenses, and keep every service and repair record organized.',
-    icon: AlertTriangle,
-    iconBg: 'bg-[#1826d0]',
-    shadowGlow: 'shadow-blue-950/25',
   },
 ];
 
@@ -136,20 +121,14 @@ const WorkflowSection: React.FC = () => {
         {/* 4 Workflow Sequential Cards in SERVIQ Colors */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 mt-12 sm:mt-16">
           {WORKFLOW_STEPS.map((card) => {
-            const CardIcon = card.icon;
             return (
               <div
                 key={card.step}
                 className="group relative bg-white rounded-[22px] border border-slate-200/90 hover:border-[#2335f2]/40 p-6 sm:p-7 shadow-[0_2px_12px_rgba(35,53,242,0.04)] hover:shadow-2xl hover:shadow-[#2335f2]/10 hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between"
               >
                 <div>
-                  {/* Card Top Row: SERVIQ Brand Squircle Icon + Step Number */}
-                  <div className="flex items-start justify-between">
-                    <div
-                      className={`w-12 h-12 rounded-xl ${card.iconBg} text-white flex items-center justify-center shadow-lg ${card.shadowGlow} group-hover:scale-105 transition-transform duration-300`}
-                    >
-                      <CardIcon className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.2]" />
-                    </div>
+                  {/* Card Top Row: Step Number */}
+                  <div className="flex items-center justify-between mb-4">
                     <span className="text-xs sm:text-sm font-mono font-semibold text-slate-400 group-hover:text-[#2335f2] transition-colors tracking-wider">
                       {card.step}
                     </span>
@@ -157,7 +136,7 @@ const WorkflowSection: React.FC = () => {
 
                   {/* Card Title */}
                   <h3
-                    className="text-lg sm:text-xl font-bold text-slate-900 group-hover:text-[#2335f2] transition-colors mt-6 mb-2 tracking-tight font-anek-latin"
+                    className="text-lg sm:text-xl font-bold text-slate-900 group-hover:text-[#2335f2] transition-colors mb-2 tracking-tight font-anek-latin"
                     style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
                   >
                     {card.title}
