@@ -129,14 +129,14 @@ const WorkflowSection: React.FC = () => {
                 <div>
                   {/* Card Top Row: Step Number */}
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-xs sm:text-sm font-mono font-semibold text-slate-400 group-hover:text-[#2335f2] transition-colors tracking-wider">
+                    <span className="text-xs sm:text-sm font-mono font-bold text-[#2335f2] tracking-wider px-2 py-0.5 rounded-md bg-blue-50 border border-blue-100/70">
                       {card.step}
                     </span>
                   </div>
 
                   {/* Card Title */}
                   <h3
-                    className="text-lg sm:text-xl font-bold text-slate-900 group-hover:text-[#2335f2] transition-colors mb-2 tracking-tight font-anek-latin"
+                    className="text-lg sm:text-xl font-bold text-[#2335f2] mb-2 tracking-tight font-anek-latin"
                     style={{ fontFamily: "'Anek Latin', 'AnekLatin', sans-serif" }}
                   >
                     {card.title}
