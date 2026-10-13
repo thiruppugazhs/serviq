@@ -221,12 +221,12 @@ export const ContactForm: React.FC<ContactFormProps> = ({
             />
           </div>
 
-          {/* Row 5: Action Button (Matching Reference Red Pill Button) */}
+          {/* Row 5: Action Button (SERVIQ Electric Blue Brand Color) */}
           <div className="pt-2">
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-4 rounded-full bg-[#ea3829] hover:bg-[#d62f20] active:scale-[0.99] text-white font-extrabold uppercase text-sm sm:text-base tracking-wider transition-all shadow-lg shadow-red-500/25 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70"
+              className="w-full py-4 rounded-full bg-[#2335f2] hover:bg-[#1a2bd6] active:scale-[0.99] text-white font-extrabold uppercase text-sm sm:text-base tracking-wider transition-all shadow-lg shadow-blue-600/25 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70"
             >
               {isSubmitting ? (
                 <>
