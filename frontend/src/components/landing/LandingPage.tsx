@@ -393,13 +393,6 @@ export const LandingPage: React.FC = () => {
               Pricing
             </a>
             <a
-              href="#enterprise"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-[72px] font-bold text-white/70 hover:text-white leading-[1.12] tracking-tight block transition-colors select-none"
-            >
-              Enterprise
-            </a>
-            <a
               href="#faq"
               onClick={() => setMobileMenuOpen(false)}
               className="text-4xl sm:text-5xl md:text-6xl lg:text-[72px] font-bold text-white/70 hover:text-white leading-[1.12] tracking-tight block transition-colors select-none"
