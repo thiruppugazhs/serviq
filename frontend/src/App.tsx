@@ -39,6 +39,7 @@ import { DriverHome } from './components/driverApp/DriverHome';
 import { LandingPage } from './components/landing/LandingPage';
 import { LegalPage } from './components/legal/LegalPage';
 import { DownloadAppPage } from './components/download/DownloadAppPage';
+import { PricingPage } from './components/pricing/PricingPage';
 
 const DashboardLayout: React.FC = () => {
   return (
@@ -86,6 +87,9 @@ export const App: React.FC = () => {
           <Routes>
             {/* Public Landing Page */}
             <Route path="/" element={<LandingPage />} />
+
+            {/* Dedicated Pricing Page */}
+            <Route path="/pricing" element={<PricingPage />} />
 
             {/* Dedicated Download App Page */}
             <Route path="/download" element={<DownloadAppPage />} />

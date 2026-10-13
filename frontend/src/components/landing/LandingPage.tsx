@@ -385,6 +385,13 @@ export const LandingPage: React.FC = () => {
               Features
             </a>
             <Link
+              to="/pricing"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-[72px] font-bold text-white/70 hover:text-white leading-[1.12] tracking-tight block transition-colors select-none"
+            >
+              Pricing
+            </Link>
+            <Link
               to="/download"
               onClick={() => setMobileMenuOpen(false)}
               className="text-4xl sm:text-5xl md:text-6xl lg:text-[72px] font-bold text-white/70 hover:text-white leading-[1.12] tracking-tight block transition-colors select-none"
@@ -663,6 +670,7 @@ export const LandingPage: React.FC = () => {
               <h4 className="font-bold text-sm text-slate-900 font-['Outfit',sans-serif]">Company</h4>
               <ul className="space-y-2 text-slate-600">
                 <li><a href="#about" className="hover:text-[#393df0] transition-colors">About us</a></li>
+                <li><Link to="/pricing" className="hover:text-[#393df0] transition-colors">Fleet Pricing</Link></li>
                 <li><a href="#faq" className="hover:text-[#393df0] transition-colors">Enterprise FAQ</a></li>
               </ul>
             </div>
