@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import api from '../../api/client';
 import { DashboardStats } from '../../types';
 import { StatCard } from '../common/StatCard';
+import { Header } from '../common/Header';
 import { BarChart3, Truck, Wrench, AlertTriangle, Receipt, Download, FileSpreadsheet } from 'lucide-react';
 
 export const ReportsView: React.FC = () => {
@@ -49,25 +50,20 @@ export const ReportsView: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900 font-['Outfit',sans-serif]">
-            Reports & Fleet Analytics
-          </h1>
-          <p className="text-xs text-slate-500 mt-1">
-            Aggregated audit logs, compliance posture, and operating expenditure summaries.
-          </p>
-        </div>
-
-        <button
-          onClick={handleExportCSV}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-medium text-xs rounded-xl transition-colors shadow-2xs"
-        >
-          <Download className="w-4 h-4 text-[#2335f2]" />
-          <span>Export Summary CSV</span>
-        </button>
-      </div>
+    <div className="space-y-4 md:space-y-5 animate-in fade-in duration-200">
+      <Header
+        title="Reports & Fleet Analytics"
+        description="Aggregated audit logs, compliance posture, and operating expenditure summaries."
+        actions={
+          <button
+            onClick={handleExportCSV}
+            className="inline-flex items-center gap-1.5 h-9 px-4 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-medium text-xs rounded-lg transition-colors shadow-2xs"
+          >
+            <Download className="w-3.5 h-3.5 text-[#2335f2]" />
+            <span>Export Summary CSV</span>
+          </button>
+        }
+      />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard

@@ -3,6 +3,7 @@ import api from '../../api/client';
 import { Expense, Vehicle } from '../../types';
 import { Modal } from '../common/Modal';
 import { EmptyState } from '../common/EmptyState';
+import { Header } from '../common/Header';
 import { Receipt, Plus, ShieldAlert, Fuel, Wrench, IndianRupee } from 'lucide-react';
 
 export const ExpensesView: React.FC = () => {
@@ -77,28 +78,23 @@ export const ExpensesView: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900 font-['Outfit',sans-serif]">
-            Fleet Operating Expenses
-          </h1>
-          <p className="text-xs text-slate-500 mt-1">
-            Fuel logs, toll receipts, periodic servicing invoices, and operating expenditure.
-          </p>
-        </div>
-
-        <button
-          onClick={() => {
-            setError(null);
-            setIsModalOpen(true);
-          }}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#2335f2] hover:bg-blue-700 text-white font-medium text-xs rounded-xl transition-colors shadow-md shadow-blue-500/20"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Record Expense</span>
-        </button>
-      </div>
+    <div className="space-y-4 md:space-y-5 animate-in fade-in duration-200">
+      <Header
+        title="Fleet Operating Expenses"
+        description="Fuel logs, toll receipts, periodic servicing invoices, and operating expenditure."
+        actions={
+          <button
+            onClick={() => {
+              setError(null);
+              setIsModalOpen(true);
+            }}
+            className="inline-flex items-center gap-1.5 h-9 px-4 bg-[#2335f2] hover:bg-blue-700 text-white font-medium text-xs rounded-lg transition-colors shadow-sm"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>+ Record Expense</span>
+          </button>
+        }
+      />
 
       {/* Summary KPI Banner */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

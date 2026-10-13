@@ -1,6 +1,7 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useDashboard } from '../../context/DashboardContext';
 import {
   LayoutDashboard,
   Users2,
@@ -12,15 +13,22 @@ import {
   FileText,
   BarChart3,
   Settings,
+  HelpCircle,
+  LogOut,
+  ChevronLeft,
+  ChevronRight,
   Download,
+  X,
 } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const { isCollapsed, toggleSidebar, isMobileOpen, closeMobileNav } = useDashboard();
+  const location = useLocation();
   const isAdmin = user?.role === 'admin';
   const basePath = isAdmin ? '/admin' : '/manager';
 
-  const navItems = [
+  const workspaceItems = [
     {
       name: 'Dashboard',
       path: `${basePath}/dashboard`,
@@ -31,7 +39,7 @@ export const Sidebar: React.FC = () => {
       name: 'Fleet Managers',
       path: '/admin/fleet-managers',
       icon: Users2,
-      roles: ['admin'], // Strictly Admin only!
+      roles: ['admin'],
     },
     {
       name: 'Drivers',
@@ -75,61 +83,188 @@ export const Sidebar: React.FC = () => {
       icon: BarChart3,
       roles: ['admin', 'fleet_manager'],
     },
+  ];
+
+  const generalItems = [
+    ...(isAdmin
+      ? [
+          {
+            name: 'Company Settings',
+            path: '/admin/settings',
+            icon: Settings,
+          },
+        ]
+      : []),
     {
-      name: 'Company Settings',
-      path: '/admin/settings',
-      icon: Settings,
-      roles: ['admin'], // Strictly Admin only!
+      name: 'My Profile',
+      path: `${basePath}/profile`,
+      icon: UserCheck,
+    },
+    {
+      name: 'Driver App (APK)',
+      path: '/download-app',
+      icon: Download,
     },
   ];
 
-  const visibleItems = navItems.filter((item) =>
+  const visibleWorkspaceItems = workspaceItems.filter((item) =>
     user ? item.roles.includes(user.role) : false
   );
 
-  return (
-    <aside className="w-64 border-r border-slate-200 bg-white flex flex-col justify-between shrink-0 min-h-[calc(100vh-4rem)] p-4 shadow-2xs">
-      <div className="space-y-1">
-        <div className="px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-slate-400">
-          Navigation
-        </div>
-        {visibleItems.map((item) => {
-          const Icon = item.icon;
-          return (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                  isActive
-                    ? 'bg-blue-50 text-[#2335f2] border border-blue-200/90 font-semibold shadow-2xs'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 border border-transparent'
-                }`
-              }
-            >
-              <Icon className="w-4 h-4 shrink-0" />
-              <span>{item.name}</span>
+  const sidebarContent = (collapsed: boolean, isMobile: boolean = false) => (
+    <div className={`p-4 flex flex-col justify-between min-h-full ${collapsed ? 'px-2' : ''}`}>
+      <div>
+        {/* Header brand + collapse toggle */}
+        <div className={`mb-6 flex items-center ${collapsed ? 'justify-center' : 'justify-between'}`}>
+          {!collapsed && (
+            <NavLink to={`${basePath}/dashboard`} className="flex items-center gap-2 group">
+              <div className="w-8 h-8 rounded-lg bg-[#2335f2] text-white flex items-center justify-center font-black text-sm shadow-sm group-hover:scale-105 transition-transform">
+                S
+              </div>
+              <span className="text-base font-bold text-slate-900 tracking-tight font-['Outfit',sans-serif]">
+                SERVIQ
+              </span>
             </NavLink>
-          );
-        })}
-      </div>
+          )}
 
-      {/* Driver APK Download Banner */}
-      <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-left">
-        <div className="flex items-center gap-2 text-[#2335f2] text-xs font-semibold">
-          <Download className="w-3.5 h-3.5" />
-          Driver Android APK
+          {collapsed && (
+            <div className="w-8 h-8 rounded-lg bg-[#2335f2] text-white flex items-center justify-center font-black text-sm shadow-sm">
+              S
+            </div>
+          )}
+
+          {isMobile ? (
+            <button
+              onClick={closeMobileNav}
+              className="h-7 w-7 rounded-lg hover:bg-slate-100 flex items-center justify-center text-slate-500 hover:text-slate-900 transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          ) : (
+            <button
+              onClick={toggleSidebar}
+              className={`h-7 w-7 rounded-lg hover:bg-slate-100 flex items-center justify-center text-slate-500 hover:text-slate-900 transition-colors ${
+                collapsed ? 'mx-auto mt-2' : ''
+              }`}
+              title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            >
+              {collapsed ? (
+                <ChevronRight className="w-3.5 h-3.5" />
+              ) : (
+                <ChevronLeft className="w-3.5 h-3.5" />
+              )}
+            </button>
+          )}
         </div>
-        <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">
-          Standalone driver app for mobile devices.
-        </p>
-        <a
-          href="/driver/home"
-          className="mt-2.5 block text-center py-1.5 px-3 rounded-lg bg-[#2335f2] hover:bg-[#1a29cc] text-white text-xs font-medium transition-colors shadow-xs"
-        >
-          Open Driver View
-        </a>
+
+        {/* Navigation Sections */}
+        <div className="space-y-5">
+          {/* Workspace */}
+          <div>
+            {!collapsed && (
+              <p className="text-[10px] font-semibold text-slate-400 mb-2 uppercase tracking-wide px-2">
+                WORKSPACE
+              </p>
+            )}
+            <nav className="space-y-0.5">
+              {visibleWorkspaceItems.map((item) => {
+                const isActive = location.pathname === item.path || location.pathname.startsWith(`${item.path}/`);
+                const Icon = item.icon;
+                return (
+                  <NavLink
+                    key={item.path}
+                    to={item.path}
+                    onClick={() => isMobile && closeMobileNav()}
+                    title={collapsed ? item.name : undefined}
+                    className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-colors ${
+                      isActive
+                        ? 'bg-[#2335f2]/10 text-[#2335f2] font-semibold'
+                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-normal'
+                    } ${collapsed ? 'justify-center' : ''}`}
+                  >
+                    <Icon className={`w-4 h-4 shrink-0 ${collapsed ? 'w-5 h-5' : ''}`} />
+                    {!collapsed && (
+                      <span className="text-sm truncate">{item.name}</span>
+                    )}
+                  </NavLink>
+                );
+              })}
+            </nav>
+          </div>
+
+          {/* General */}
+          <div>
+            {!collapsed && (
+              <p className="text-[10px] font-semibold text-slate-400 mb-2 uppercase tracking-wide px-2">
+                GENERAL
+              </p>
+            )}
+            <nav className="space-y-0.5">
+              {generalItems.map((item) => {
+                const isActive = location.pathname === item.path;
+                const Icon = item.icon;
+                return (
+                  <NavLink
+                    key={item.path}
+                    to={item.path}
+                    onClick={() => isMobile && closeMobileNav()}
+                    title={collapsed ? item.name : undefined}
+                    className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-colors ${
+                      isActive
+                        ? 'bg-[#2335f2]/10 text-[#2335f2] font-semibold'
+                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-normal'
+                    } ${collapsed ? 'justify-center' : ''}`}
+                  >
+                    <Icon className={`w-4 h-4 shrink-0 ${collapsed ? 'w-5 h-5' : ''}`} />
+                    {!collapsed && <span className="text-sm truncate">{item.name}</span>}
+                  </NavLink>
+                );
+              })}
+
+              {/* Logout Button */}
+              <button
+                onClick={() => {
+                  if (isMobile) closeMobileNav();
+                  logout();
+                }}
+                title={collapsed ? 'Logout' : undefined}
+                className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-colors text-rose-600 hover:bg-rose-50 font-normal ${
+                  collapsed ? 'justify-center' : ''
+                }`}
+              >
+                <LogOut className={`w-4 h-4 shrink-0 ${collapsed ? 'w-5 h-5' : ''}`} />
+                {!collapsed && <span className="text-sm truncate">Logout</span>}
+              </button>
+            </nav>
+          </div>
+        </div>
       </div>
-    </aside>
+    </div>
+  );
+
+  return (
+    <>
+      {/* Desktop Persistent Fixed Sidebar */}
+      <aside
+        className={`hidden lg:block fixed top-0 left-0 bg-white border-r border-slate-200 h-screen overflow-y-auto transition-all duration-300 ease-in-out z-30 ${
+          isCollapsed ? 'w-16' : 'w-60'
+        }`}
+      >
+        {sidebarContent(isCollapsed, false)}
+      </aside>
+
+      {/* Mobile Slide-Over Drawer */}
+      {isMobileOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <div
+            className="fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity"
+            onClick={closeMobileNav}
+          />
+          <aside className="fixed top-0 left-0 bottom-0 w-64 bg-white border-r border-slate-200 overflow-y-auto shadow-xl z-50 animate-in slide-in-from-left duration-200">
+            {sidebarContent(false, true)}
+          </aside>
+        </div>
+      )}
+    </>
   );
 };

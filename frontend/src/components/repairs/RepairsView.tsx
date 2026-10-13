@@ -4,6 +4,7 @@ import { Repair, Vehicle } from '../../types';
 import { Badge } from '../common/Badge';
 import { Modal } from '../common/Modal';
 import { EmptyState } from '../common/EmptyState';
+import { Header } from '../common/Header';
 import { AlertTriangle, Plus, CheckCircle, Clock, ShieldAlert, Truck, User } from 'lucide-react';
 
 export const RepairsView: React.FC = () => {
@@ -96,28 +97,23 @@ export const RepairsView: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900 font-['Outfit',sans-serif]">
-            Repairs & Breakdown Tickets
-          </h1>
-          <p className="text-xs text-slate-500 mt-1">
-            Real-time incident reports from drivers and workshop repair progress.
-          </p>
-        </div>
-
-        <button
-          onClick={() => {
-            setError(null);
-            setIsReportModalOpen(true);
-          }}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-medium text-xs rounded-xl transition-colors shadow-md shadow-rose-500/20"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Report Breakdown</span>
-        </button>
-      </div>
+    <div className="space-y-4 md:space-y-5 animate-in fade-in duration-200">
+      <Header
+        title="Repairs & Breakdown Tickets"
+        description="Real-time incident reports from drivers and workshop repair progress."
+        actions={
+          <button
+            onClick={() => {
+              setError(null);
+              setIsReportModalOpen(true);
+            }}
+            className="inline-flex items-center gap-1.5 h-9 px-4 bg-rose-600 hover:bg-rose-700 text-white font-medium text-xs rounded-lg transition-colors shadow-sm"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>+ Report Breakdown</span>
+          </button>
+        }
+      />
 
       {loading ? (
         <div className="p-12 text-center text-slate-400 text-sm">Loading Tickets...</div>

@@ -4,6 +4,7 @@ import { Vehicle, Driver } from '../../types';
 import { Badge } from '../common/Badge';
 import { Modal } from '../common/Modal';
 import { EmptyState } from '../common/EmptyState';
+import { Header } from '../common/Header';
 import { Truck, Plus, Search, Gauge, User, ShieldAlert, Calendar, Fuel } from 'lucide-react';
 
 export const VehiclesView: React.FC = () => {
@@ -112,30 +113,23 @@ export const VehiclesView: React.FC = () => {
   });
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900 font-['Outfit',sans-serif]">
-            Vehicle Fleet Registry
-          </h1>
-          <p className="text-xs text-slate-500 mt-1">
-            Registered commercial haulers, buses, trucks, and driver assignments.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2.5">
+    <div className="space-y-4 md:space-y-5 animate-in fade-in duration-200">
+      <Header
+        title="Vehicle Fleet Registry"
+        description="Registered commercial haulers, buses, trucks, and driver assignments."
+        actions={
           <button
             onClick={() => {
               setError(null);
               setIsAddModalOpen(true);
             }}
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#2335f2] hover:bg-blue-700 text-white font-medium text-xs rounded-xl transition-colors shadow-md shadow-blue-500/20"
+            className="inline-flex items-center gap-1.5 h-9 px-4 bg-[#2335f2] hover:bg-blue-700 text-white font-medium text-xs rounded-lg transition-colors shadow-sm"
           >
-            <Plus className="w-4 h-4" />
-            <span>Add Fleet Asset</span>
+            <Plus className="w-3.5 h-3.5" />
+            <span>+ Add Fleet Asset</span>
           </button>
-        </div>
-      </div>
+        }
+      />
 
       {/* Search Bar */}
       <div className="flex items-center gap-4 bg-white border border-slate-200 p-3 rounded-2xl shadow-2xs">

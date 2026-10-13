@@ -5,7 +5,6 @@ import { SocketProvider } from './context/SocketContext';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 
 // Common
-import { Navbar } from './components/common/Navbar';
 import { Sidebar } from './components/common/Sidebar';
 
 // Auth
@@ -40,17 +39,30 @@ import { LegalPage } from './components/legal/LegalPage';
 import { DownloadAppPage } from './components/download/DownloadAppPage';
 import { PricingPage } from './components/pricing/PricingPage';
 
+import { DashboardProvider, useDashboard } from './context/DashboardContext';
+
+const DashboardLayoutContent: React.FC = () => {
+  const { isCollapsed } = useDashboard();
+
+  return (
+    <div className="flex min-h-screen bg-slate-50/60 text-slate-900 font-['Plus_Jakarta_Sans',sans-serif]">
+      <Sidebar />
+      <main
+        className={`flex-1 p-4 md:p-5 lg:p-6 transition-all duration-300 w-full overflow-y-auto ${
+          isCollapsed ? 'lg:ml-16' : 'lg:ml-60'
+        }`}
+      >
+        <Outlet />
+      </main>
+    </div>
+  );
+};
+
 const DashboardLayout: React.FC = () => {
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-['Plus_Jakarta_Sans',sans-serif]">
-      <Navbar />
-      <div className="flex flex-1">
-        <Sidebar />
-        <main className="flex-1 p-6 md:p-8 max-w-7xl mx-auto w-full overflow-y-auto">
-          <Outlet />
-        </main>
-      </div>
-    </div>
+    <DashboardProvider>
+      <DashboardLayoutContent />
+    </DashboardProvider>
   );
 };
 

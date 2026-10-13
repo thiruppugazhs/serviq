@@ -22,6 +22,7 @@ import {
   KeyRound,
   BadgeCheck,
 } from 'lucide-react';
+import { Header } from '../common/Header';
 
 export const ProfileView: React.FC = () => {
   const { user, refreshUser, logout } = useAuth();
@@ -214,15 +215,10 @@ export const ProfileView: React.FC = () => {
 
   return (
     <div className="max-w-5xl mx-auto space-y-6 text-slate-800 font-['Plus_Jakarta_Sans',sans-serif] animate-in fade-in duration-200">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-['Outfit',sans-serif] tracking-tight">
-          Profile Management
-        </h1>
-        <p className="text-xs sm:text-sm text-slate-500 mt-1">
-          Manage your organization details, commercial fleet identity, and administrator credentials.
-        </p>
-      </div>
+      <Header
+        title="Profile Management"
+        description="Manage your organization details, commercial fleet identity, and administrator credentials."
+      />
 
       {/* Submodule Navigation Tabs */}
       <div className="flex items-center gap-2 p-1.5 bg-slate-100 rounded-2xl w-fit border border-slate-200/80 shadow-2xs">

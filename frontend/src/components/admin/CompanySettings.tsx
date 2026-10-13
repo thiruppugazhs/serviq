@@ -13,6 +13,7 @@ import {
   Loader2,
   Lock,
 } from 'lucide-react';
+import { Header } from '../common/Header';
 
 export const CompanySettings: React.FC = () => {
   const { user, logout } = useAuth();
@@ -91,15 +92,11 @@ export const CompanySettings: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl space-y-8 animate-in fade-in duration-200">
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 font-['Outfit',sans-serif]">
-          Company & Organization Settings
-        </h1>
-        <p className="text-xs sm:text-sm text-slate-500 mt-1">
-          Manage your organization profile, enterprise fleet tier, and high-security account settings.
-        </p>
-      </div>
+    <div className="max-w-4xl space-y-6 animate-in fade-in duration-200">
+      <Header
+        title="Company & Organization Settings"
+        description="Manage your organization profile, enterprise fleet tier, and high-security account settings."
+      />
 
       {/* Organization Identity Panel */}
       <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-200 bg-white shadow-2xs space-y-6">

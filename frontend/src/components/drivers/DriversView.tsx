@@ -5,6 +5,7 @@ import { Driver, Vehicle } from '../../types';
 import { Badge } from '../common/Badge';
 import { Modal } from '../common/Modal';
 import { EmptyState } from '../common/EmptyState';
+import { Header } from '../common/Header';
 import { UserCheck, Plus, Search, Phone, Mail, Truck, ShieldAlert, FileText, ChevronRight } from 'lucide-react';
 
 export const DriversView: React.FC = () => {
@@ -99,28 +100,23 @@ export const DriversView: React.FC = () => {
   });
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900 font-['Outfit',sans-serif]">
-            Driver Management
-          </h1>
-          <p className="text-xs text-slate-500 mt-1">
-            Registered commercial drivers, licences, emergency contacts, and vehicle assignments.
-          </p>
-        </div>
-
-        <button
-          onClick={() => {
-            setError(null);
-            setIsModalOpen(true);
-          }}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#2335f2] hover:bg-blue-700 text-white font-medium text-xs rounded-xl transition-colors shadow-md shadow-blue-500/20"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Add New Driver</span>
-        </button>
-      </div>
+    <div className="space-y-4 md:space-y-5 animate-in fade-in duration-200">
+      <Header
+        title="Driver Management"
+        description="Registered commercial drivers, licences, emergency contacts, and vehicle assignments."
+        actions={
+          <button
+            onClick={() => {
+              setError(null);
+              setIsModalOpen(true);
+            }}
+            className="inline-flex items-center gap-1.5 h-9 px-4 bg-[#2335f2] hover:bg-blue-700 text-white font-medium text-xs rounded-lg transition-colors shadow-sm"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>+ Add New Driver</span>
+          </button>
+        }
+      />
 
       {/* Filter Bar */}
       <div className="flex items-center gap-4 bg-white border border-slate-200 p-3 rounded-2xl shadow-2xs">
