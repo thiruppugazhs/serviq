@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ChevronDown, ShieldCheck, FileText, ArrowLeft, X, MessageSquare } from 'lucide-react';
+import { ChevronDown, FileText, ArrowLeft, X, MessageSquare } from 'lucide-react';
 import { HelpFeedbackModal } from '../support/HelpFeedbackModal';
 
 interface PolicyData {
@@ -368,12 +368,8 @@ export const LegalPage: React.FC<{ policyKey?: string }> = ({ policyKey: propPol
           PAGE 1 (FULL VIEWPORT): BIG BOLD TITLE ON GRADIENT BACKGROUND
       ========================================================================= */}
       <section className="min-h-screen relative flex flex-col justify-between items-center text-center px-4 sm:px-6 pt-24 pb-12 overflow-hidden bg-studio-blue">
-        
-        {/* Subtle decorative shield icon badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold uppercase tracking-wider text-white/90 animate-in fade-in duration-300">
-          <ShieldCheck className="w-4 h-4 text-emerald-400" />
-          <span>SERVIQ Legal & Compliance</span>
-        </div>
+        {/* Top spacer to balance layout */}
+        <div className="h-6" />
 
         {/* Center Big Bold Title filling first page */}
         <div className="max-w-5xl mx-auto my-auto py-8">
@@ -383,14 +379,6 @@ export const LegalPage: React.FC<{ policyKey?: string }> = ({ policyKey: propPol
           >
             {policy.title}
           </h1>
-
-          <p className="font-neue-haas-medium text-white/90 text-base sm:text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mt-4 sm:mt-6 px-4">
-            {policy.subtitle}
-          </p>
-
-          <div className="mt-6 text-xs text-white/70 font-mono tracking-wide">
-            Effective: {policy.effectiveDate} | SERVIQ By Orcescale
-          </div>
         </div>
 
         {/* Animated Scroll Down Indicator */}
