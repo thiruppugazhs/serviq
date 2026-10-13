@@ -144,11 +144,6 @@ export const Sidebar: React.FC = () => {
         <div className="space-y-5">
           {/* Workspace */}
           <div>
-            {!collapsed && (
-              <p className="text-[10px] font-semibold text-slate-400 mb-2 uppercase tracking-wide px-2">
-                WORKSPACE
-              </p>
-            )}
             <nav className="space-y-0.5">
               {visibleWorkspaceItems.map((item) => {
                 const isActive = location.pathname === item.path || location.pathname.startsWith(`${item.path}/`);
