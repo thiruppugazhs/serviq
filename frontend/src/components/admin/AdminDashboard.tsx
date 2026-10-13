@@ -6,7 +6,6 @@ import { StatsCards } from '../dashboard/StatsCards';
 import { ProjectAnalytics } from '../dashboard/ProjectAnalytics';
 import { TeamCollaboration } from '../dashboard/TeamCollaboration';
 import { Reminders } from '../dashboard/Reminders';
-import { ProjectProgress } from '../dashboard/ProjectProgress';
 import { ProjectList } from '../dashboard/ProjectList';
 import { Download } from 'lucide-react';
 
@@ -72,7 +71,6 @@ export const AdminDashboard: React.FC = () => {
 
           <div className="space-y-4">
             <Reminders />
-            <ProjectProgress />
           </div>
         </div>
 

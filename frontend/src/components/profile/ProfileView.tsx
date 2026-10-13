@@ -269,10 +269,6 @@ export const ProfileView: React.FC = () => {
                   )}
                 </div>
                 <div>
-                  <div className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-full mb-1">
-                    <Building2 className="w-3 h-3" />
-                    Registered Company
-                  </div>
                   <h2 className="text-xl sm:text-2xl font-bold text-slate-900 font-['Anek_Latin',sans-serif]">
                     {companyForm.name || 'Your Company'}
                   </h2>
@@ -539,13 +535,6 @@ export const ProfileView: React.FC = () => {
                     {companyForm.address || 'No physical headquarters address configured'}
                   </span>
                 </div>
-
-                <div className="p-4 rounded-2xl bg-blue-50 border border-blue-200 text-xs flex items-center gap-3">
-                  <ShieldCheck className="w-5 h-5 text-blue-600 shrink-0" />
-                  <span className="text-blue-900 font-medium">
-                    Operating under <strong>SERVIQ Cloud Enterprise Tier</strong> with verified SSL encryption and dedicated fleet database.
-                  </span>
-                </div>
               </div>
             )}
           </div>
@@ -592,10 +581,6 @@ export const ProfileView: React.FC = () => {
                   {userForm.name?.charAt(0).toUpperCase() || 'A'}
                 </div>
                 <div>
-                  <div className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full mb-1">
-                    <BadgeCheck className="w-3 h-3 text-emerald-600" />
-                    {user?.role === 'admin' ? 'Organization Administrator' : 'Fleet Controller'}
-                  </div>
                   <h2 className="text-xl sm:text-2xl font-bold text-slate-900 font-['Anek_Latin',sans-serif]">
                     {userForm.name || user?.name}
                   </h2>
@@ -827,26 +812,6 @@ export const ProfileView: React.FC = () => {
                   <span className="text-xs sm:text-sm font-semibold text-slate-800 block">
                     {userForm.address || 'No residential address configured'}
                   </span>
-                </div>
-
-                <div className="p-4 rounded-2xl bg-slate-50/80 border border-slate-200/80 flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 font-bold">
-                      <Lock className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <span className="font-bold text-slate-900 block">Password & Security</span>
-                      <span className="text-slate-500 block text-[11px]">
-                        Account protected by bcrypt hash with Google OAuth compatibility.
-                      </span>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => setIsEditingUser(true)}
-                    className="text-blue-600 hover:text-blue-700 font-bold text-xs"
-                  >
-                    Change Password
-                  </button>
                 </div>
               </div>
             )}
