@@ -6,7 +6,6 @@ import {
   Truck,
   PhoneCall,
   ArrowRight,
-  Sparkles,
   Building2,
   Users2,
   Cpu,
@@ -112,12 +111,8 @@ export const PricingPage: React.FC = () => {
 
       {/* Main Container */}
       <main className="flex-1 max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
-        {/* Topic: Transparent Pricing */}
+        {/* Main Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
-          <span className="text-xs sm:text-sm font-extrabold tracking-[0.25em] text-[#2335f2] uppercase block font-mono mb-3">
-            TRANSPARENT PRICING
-          </span>
-
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 font-serif tracking-tight leading-tight">
             Enterprise Fleet Package
           </h1>
@@ -130,44 +125,11 @@ export const PricingPage: React.FC = () => {
 
         {/* Single Enterprise Package Card */}
         <div className="relative rounded-3xl bg-white border-2 border-[#2335f2] shadow-2xl shadow-[#2335f2]/10 p-8 sm:p-12 transition-all duration-300">
-          {/* Floating Pill on Top Border */}
-          <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-            <span className="px-5 py-1 rounded-full text-xs font-bold text-white bg-[#2335f2] shadow-md shadow-blue-500/25 uppercase tracking-wider flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 fill-current" />
-              All-Inclusive Enterprise Suite
-            </span>
-          </div>
-
-          {/* Card Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100">
-            <div>
-              <h2 className="text-2xl sm:text-3xl font-bold font-serif text-slate-900 tracking-tight">
-                Enterprise Logistics Package
-              </h2>
-              <div className="mt-2 flex flex-wrap items-center gap-2.5">
-                <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-[#2335f2] border border-blue-200/80">
-                  Full Fleet Deployment
-                </span>
-                <span className="text-xs text-slate-500 font-medium">
-                  Typical setup: Custom deployment & onboarding SLA
-                </span>
-              </div>
-            </div>
-
-            <div className="sm:text-right">
-              <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
-                <Check className="w-3.5 h-3.5 stroke-[2.5]" />
-                Custom Fleet Tailoring
-              </span>
-            </div>
-          </div>
-
           {/* What's Included */}
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
             {ENTERPRISE_FEATURES.map((group, gIdx) => (
               <div key={gIdx} className="space-y-3.5">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 font-mono flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#2335f2]" />
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 font-mono">
                   {group.category}
                 </h3>
                 <ul className="space-y-3">
