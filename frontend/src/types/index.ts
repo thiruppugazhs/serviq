@@ -39,6 +39,7 @@ export interface Driver {
   drivingLicenceNumber: string;
   licenceExpiry: string;
   dateOfBirth?: string;
+  gender?: string;
   emergencyContact?: {
     name?: string;
     phone?: string;

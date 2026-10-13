@@ -25,16 +25,21 @@ const driverSchema = new mongoose.Schema(
     },
     drivingLicenceNumber: {
       type: String,
-      required: [true, 'Driving licence number is required'],
+      default: 'N/A',
       trim: true,
       uppercase: true,
     },
     licenceExpiry: {
       type: Date,
-      required: [true, 'Licence expiry date is required'],
+      default: () => new Date(Date.now() + 5 * 365 * 24 * 60 * 60 * 1000),
     },
     dateOfBirth: {
       type: Date,
+    },
+    gender: {
+      type: String,
+      default: '',
+      trim: true,
     },
     emergencyContact: {
       name: { type: String, trim: true },

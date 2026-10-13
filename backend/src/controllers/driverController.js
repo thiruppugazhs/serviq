@@ -19,6 +19,9 @@ exports.createDriver = async (req, res, next) => {
       drivingLicenceNumber,
       licenceExpiry,
       dateOfBirth,
+      dob,
+      gender,
+      mobile,
       emergencyContact,
       employmentStatus,
       employmentType,
@@ -29,14 +32,25 @@ exports.createDriver = async (req, res, next) => {
 
     const fullName = (firstName && lastName)
       ? `${firstName} ${lastName}`.trim()
-      : (firstName || name || '').trim();
+      : (name || firstName || '').trim();
 
-    if (!fullName || !email || !password || !driverId || !drivingLicenceNumber || !licenceExpiry) {
+    const contactMobile = (mobile || phone || '').trim();
+
+    if (!fullName || !email || !contactMobile) {
       return res.status(400).json({
         success: false,
-        message: 'First/Last name, email, password, Driver ID, licence number, and expiry date are required',
+        message: 'Full name, email, and mobile number are required',
       });
     }
+
+    const resolvedDriverId = driverId
+      ? driverId.trim().toUpperCase()
+      : `DRV-${Math.floor(1000 + Math.random() * 9000)}`;
+
+    const resolvedPassword = password || contactMobile || 'Driver@123';
+    const resolvedLicenceNo = (drivingLicenceNumber || 'N/A').trim().toUpperCase();
+    const resolvedLicenceExpiry = licenceExpiry || new Date(Date.now() + 5 * 365 * 24 * 60 * 60 * 1000);
+    const resolvedDOB = dateOfBirth || dob || null;
 
     const existingUser = await User.findOne({ email: email.toLowerCase().trim() });
     if (existingUser) {
@@ -48,9 +62,9 @@ exports.createDriver = async (req, res, next) => {
 
     const existingDriverId = await Driver.findOne({
       organization: req.organizationId,
-      driverId: driverId.trim().toUpperCase(),
+      driverId: resolvedDriverId,
     });
-    if (existingDriverId) {
+    if (existingDriverId && driverId) {
       return res.status(400).json({
         success: false,
         message: 'A driver with this Driver ID already exists in your organization',
@@ -60,13 +74,13 @@ exports.createDriver = async (req, res, next) => {
     // Create User record
     const user = await User.create({
       name: fullName,
-      firstName: firstName ? firstName.trim() : '',
-      lastName: lastName ? lastName.trim() : '',
+      firstName: firstName ? firstName.trim() : fullName.split(' ')[0],
+      lastName: lastName ? lastName.trim() : (fullName.split(' ').slice(1).join(' ') || ''),
       email: email.toLowerCase().trim(),
-      password,
+      password: resolvedPassword,
       role: 'driver',
       organization: req.organizationId,
-      phone: phone || '',
+      phone: contactMobile,
       address: address || '',
       status: 'active',
     });
@@ -78,11 +92,12 @@ exports.createDriver = async (req, res, next) => {
     const driver = await Driver.create({
       user: user._id,
       organization: req.organizationId,
-      driverId: driverId.trim().toUpperCase(),
+      driverId: resolvedDriverId,
       profilePhoto: req.file ? `/uploads/${req.file.filename}` : '',
-      drivingLicenceNumber: drivingLicenceNumber.trim().toUpperCase(),
-      licenceExpiry,
-      dateOfBirth: dateOfBirth || null,
+      drivingLicenceNumber: resolvedLicenceNo,
+      licenceExpiry: resolvedLicenceExpiry,
+      dateOfBirth: resolvedDOB,
+      gender: gender || '',
       emergencyContact: emergencyContact || {},
       employmentStatus: resolvedEmploymentStatus,
       joiningDate: joiningDate || Date.now(),
