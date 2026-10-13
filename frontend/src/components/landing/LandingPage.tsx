@@ -31,7 +31,6 @@ import {
 import { HelpFeedbackModal } from '../support/HelpFeedbackModal';
 import { RoadFeaturesSection } from './RoadFeaturesSection';
 import { PricingSection } from './PricingSection';
-import { ContactForm } from '../common/ContactForm';
 
 const WORKFLOW_PILLS = [
   { label: 'Vehicle visibility', icon: Eye },
@@ -626,22 +625,9 @@ export const LandingPage: React.FC = () => {
       </section>
 
       {/* =========================================================================
-          CONTACT SECTION: TALK TO US (MATCHING REFERENCE IMAGE 2)
-      ========================================================================= */}
-      <section
-        id="contact"
-        data-bg="white"
-        className="bg-white text-slate-900 py-20 sm:py-28 px-4 sm:px-6 lg:px-8 relative overflow-hidden border-t border-slate-100 shadow-xs"
-      >
-        <div className="max-w-4xl mx-auto flex flex-col items-center">
-          <ContactForm />
-        </div>
-      </section>
-
-      {/* =========================================================================
           PAGE 14 (EVEN): FOOTER — WHITE BACKGROUND
       ========================================================================= */}
-      <footer className="bg-white text-slate-800 pt-16 pb-10 px-4 sm:px-6 lg:px-8 relative overflow-hidden text-left border-t border-slate-100">
+      <footer id="contact" className="bg-white text-slate-800 pt-16 pb-10 px-4 sm:px-6 lg:px-8 relative overflow-hidden text-left border-t border-slate-100">
         <div className="max-w-7xl mx-auto">
           
           {/* Top Logo and Tagline matching Image 2 */}
