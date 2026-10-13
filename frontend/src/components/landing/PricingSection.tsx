@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Check, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Check, ArrowRight, Sparkles } from 'lucide-react';
 import { ContactModal } from '../common/ContactModal';
 
 export const PricingSection: React.FC = () => {
+  const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
   const [contactModalOpen, setContactModalOpen] = useState(false);
 
   const ENTERPRISE_FEATURES = [
@@ -54,28 +56,103 @@ export const PricingSection: React.FC = () => {
         {/* =========================================================================
             HEADER (SERVIQ DEFAULT ANEK LATIN / SANS TYPOGRAPHY)
         ========================================================================= */}
-        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
-          {/* Headline */}
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 text-[#2335f2] border border-blue-200/80 text-xs font-bold uppercase tracking-wider mb-4">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Transparent Single Package</span>
+          </div>
+
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 font-anek-latin tracking-tight leading-tight">
-            Enterprise Fleet Package
+            Single Fleet Package
           </h2>
 
-          {/* Subtitle */}
           <p className="mt-3.5 text-sm sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            A comprehensive, all-inclusive package designed for commercial carriers and organizations.
-            All modules, driver mobile apps, and dedicated coordinator support are included. No hidden fees.
+            Create an account to start with <strong className="text-slate-900 font-bold">1 month completely free</strong>.
+            After 1 month, continue with flexible monthly or discounted yearly billing.
           </p>
         </div>
 
         {/* =========================================================================
-            SINGLE ENTERPRISE PACKAGE CARD
+            SINGLE PRICE PACKAGE CARD
         ========================================================================= */}
         <div
           id="enterprise"
-          className="relative rounded-3xl bg-white border-2 border-[#2335f2] shadow-2xl shadow-[#2335f2]/10 p-8 sm:p-12 transition-all duration-300"
+          className="relative rounded-3xl bg-white border-2 border-[#2335f2] shadow-2xl shadow-[#2335f2]/10 p-6 sm:p-10 md:p-12 transition-all duration-300"
         >
+          {/* Card Top: Plan Title, Billing Switcher & Pricing */}
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-8 border-b border-slate-100">
+            <div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 mb-3">
+                <Check className="w-3.5 h-3.5 stroke-[3]" />
+                <span>First 1 Month Free Upon Registration</span>
+              </div>
+
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-anek-latin tracking-tight">
+                All-in-One Fleet Package
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-md leading-relaxed">
+                Complete access to all fleet modules, unlimited vehicles, driver app, and live dispatch.
+              </p>
+
+              {/* Billing Cycle Switcher */}
+              <div className="mt-5 inline-flex p-1 bg-slate-100 rounded-full border border-slate-200">
+                <button
+                  type="button"
+                  onClick={() => setBillingCycle('monthly')}
+                  className={`px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                    billingCycle === 'monthly'
+                      ? 'bg-[#2335f2] text-white shadow-sm'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  Monthly Payment
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setBillingCycle('yearly')}
+                  className={`px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                    billingCycle === 'yearly'
+                      ? 'bg-[#2335f2] text-white shadow-sm'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  <span>Yearly Subscription</span>
+                  <span
+                    className={`text-[10px] font-extrabold px-1.5 py-0.5 rounded-full ${
+                      billingCycle === 'yearly'
+                        ? 'bg-amber-400 text-slate-950'
+                        : 'bg-emerald-100 text-emerald-700'
+                    }`}
+                  >
+                    SAVE ₹2,000
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            {/* Price Box */}
+            <div className="bg-slate-50/90 rounded-2xl p-5 sm:p-6 border border-slate-200/90 text-left lg:text-right shrink-0">
+              <span className="inline-block text-xs font-bold text-emerald-600 uppercase tracking-wider mb-1">
+                Month 1: Free (₹0)
+              </span>
+              <div className="flex items-baseline lg:justify-end gap-1.5">
+                <span className="text-4xl sm:text-5xl font-black text-slate-900 font-anek-latin tracking-tight">
+                  {billingCycle === 'monthly' ? '₹1,000' : '₹10,000'}
+                </span>
+                <span className="text-slate-500 font-semibold text-sm">
+                  {billingCycle === 'monthly' ? '/ month' : '/ year'}
+                </span>
+              </div>
+              <p className="mt-1.5 text-xs text-slate-500 max-w-[260px] lg:ml-auto">
+                {billingCycle === 'monthly'
+                  ? 'After 1 free month, ₹1,000 charged monthly. Cancel anytime.'
+                  : 'After 1 free month, ₹10,000 charged yearly (₹833/mo equivalent).'}
+              </p>
+            </div>
+          </div>
+
           {/* What's Included in this Package (Grouped 2-Column Grid) */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
             {ENTERPRISE_FEATURES.map((group, gIdx) => (
               <div key={gIdx} className="space-y-3.5">
                 <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 font-anek-latin">
@@ -95,27 +172,36 @@ export const PricingSection: React.FC = () => {
             ))}
           </div>
 
-          {/* Divider line matching reference */}
+          {/* Divider line & Actions */}
           <div className="mt-10 pt-6 border-t border-slate-200/80">
-            {/* Italic Note from reference */}
             <p className="text-xs sm:text-sm text-slate-500 italic leading-relaxed mb-6">
               Engineered for commercial freight carriers, interstate logistics, bus & municipal operators, and regional fleets requiring end-to-end operational governance.
             </p>
 
-            {/* Action Button: Get Cost Estimate */}
+            {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="text-xs text-slate-500 text-center sm:text-left">
-                Ready for tailored pricing? Reach our enterprise fleet team directly.
+                <span className="font-semibold text-slate-800 block">First 30 days are 100% free upon account creation.</span>
+                Choose monthly (₹1,000) or yearly (₹10,000) billing anytime.
               </div>
 
-              <button
-                type="button"
-                onClick={() => setContactModalOpen(true)}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-10 py-4 rounded-full font-bold text-sm sm:text-base bg-[#f59e0b] hover:bg-[#d97706] active:scale-98 text-slate-950 transition-all shadow-lg hover:shadow-xl hover:shadow-amber-500/20 cursor-pointer"
-              >
-                <span>Get Cost Estimate</span>
-                <ArrowRight className="w-4 h-4 stroke-[2.5]" />
-              </button>
+              <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+                <Link
+                  to="/register"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full font-bold text-sm sm:text-base bg-[#2335f2] hover:bg-[#1a2bd6] active:scale-98 text-white transition-all shadow-lg hover:shadow-blue-600/25 cursor-pointer text-center"
+                >
+                  <span>Start 1 Month Free</span>
+                  <ArrowRight className="w-4 h-4 stroke-[2.5]" />
+                </Link>
+
+                <button
+                  type="button"
+                  onClick={() => setContactModalOpen(true)}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-bold text-sm bg-slate-100 hover:bg-slate-200 active:scale-98 text-slate-800 transition-all cursor-pointer"
+                >
+                  <span>Get Cost Estimate</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
