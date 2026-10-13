@@ -3,7 +3,6 @@ import { useAuth } from '../../context/AuthContext';
 import {
   LayoutGrid,
   AlertTriangle,
-  MapPin,
   BookOpen,
   ChevronDown,
   LogOut,
@@ -127,15 +126,6 @@ export const Navbar: React.FC = () => {
             </div>
           )}
         </div>
-
-        {/* Map / Location Pin Icon Button */}
-        <Link
-          to={`${basePath}/tracking`}
-          className="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-800 transition-colors"
-          title="Live Fleet GPS Tracking Map"
-        >
-          <MapPin className="w-4 h-4 text-slate-900 stroke-[2.2]" />
-        </Link>
 
         {/* Help / Docs Icon Button */}
         <div className="relative" ref={helpRef}>

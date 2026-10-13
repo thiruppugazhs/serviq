@@ -6,7 +6,6 @@ import {
   Users2,
   UserCheck,
   Truck,
-  MapPin,
   Wrench,
   AlertTriangle,
   Receipt,
@@ -44,12 +43,6 @@ export const Sidebar: React.FC = () => {
       name: 'Vehicles',
       path: `${basePath}/vehicles`,
       icon: Truck,
-      roles: ['admin', 'fleet_manager'],
-    },
-    {
-      name: 'Live Tracking',
-      path: `${basePath}/tracking`,
-      icon: MapPin,
       roles: ['admin', 'fleet_manager'],
     },
     {
