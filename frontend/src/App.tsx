@@ -38,6 +38,7 @@ import { LandingPage } from './components/landing/LandingPage';
 import { LegalPage } from './components/legal/LegalPage';
 import { DownloadAppPage } from './components/download/DownloadAppPage';
 import { PricingPage } from './components/pricing/PricingPage';
+import { TopHeader } from './components/common/TopHeader';
 
 import { DashboardProvider, useDashboard } from './context/DashboardContext';
 
@@ -45,15 +46,20 @@ const DashboardLayoutContent: React.FC = () => {
   const { isCollapsed } = useDashboard();
 
   return (
-    <div className="flex min-h-screen bg-slate-50/60 text-slate-900 font-['Plus_Jakarta_Sans',sans-serif]">
-      <Sidebar />
-      <main
-        className={`flex-1 p-4 md:p-5 lg:p-6 transition-all duration-300 w-full overflow-y-auto ${
-          isCollapsed ? 'lg:ml-16' : 'lg:ml-60'
-        }`}
-      >
-        <Outlet />
-      </main>
+    <div className="min-h-screen bg-slate-50/60 text-slate-900 font-['Plus_Jakarta_Sans',sans-serif]">
+      {/* Fixed Header */}
+      <TopHeader />
+
+      <div className="flex pt-16 min-h-[calc(100vh-4rem)]">
+        <Sidebar />
+        <main
+          className={`flex-1 p-4 md:p-5 lg:p-6 transition-all duration-300 w-full overflow-y-auto ${
+            isCollapsed ? 'lg:ml-16' : 'lg:ml-60'
+          }`}
+        >
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 };

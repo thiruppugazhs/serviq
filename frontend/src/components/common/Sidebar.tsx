@@ -108,23 +108,12 @@ export const Sidebar: React.FC = () => {
   const sidebarContent = (collapsed: boolean, isMobile: boolean = false) => (
     <div className={`p-4 flex flex-col justify-between min-h-full ${collapsed ? 'px-2' : ''}`}>
       <div>
-        {/* Header brand + collapse toggle */}
-        <div className={`mb-6 flex items-center ${collapsed ? 'justify-center' : 'justify-between'}`}>
+        {/* Collapse toggle & navigation label */}
+        <div className={`mb-4 flex items-center ${collapsed ? 'justify-center' : 'justify-between'}`}>
           {!collapsed && (
-            <NavLink to={`${basePath}/dashboard`} className="flex items-center gap-2 group">
-              <div className="w-8 h-8 rounded-lg bg-[#2335f2] text-white flex items-center justify-center font-black text-sm shadow-sm group-hover:scale-105 transition-transform">
-                S
-              </div>
-              <span className="text-base font-bold text-slate-900 tracking-tight font-['Outfit',sans-serif]">
-                SERVIQ
-              </span>
-            </NavLink>
-          )}
-
-          {collapsed && (
-            <div className="w-8 h-8 rounded-lg bg-[#2335f2] text-white flex items-center justify-center font-black text-sm shadow-sm">
-              S
-            </div>
+            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-2">
+              Navigation
+            </span>
           )}
 
           {isMobile ? (
@@ -138,7 +127,7 @@ export const Sidebar: React.FC = () => {
             <button
               onClick={toggleSidebar}
               className={`h-7 w-7 rounded-lg hover:bg-slate-100 flex items-center justify-center text-slate-500 hover:text-slate-900 transition-colors ${
-                collapsed ? 'mx-auto mt-2' : ''
+                collapsed ? 'mx-auto' : ''
               }`}
               title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
             >
@@ -240,7 +229,7 @@ export const Sidebar: React.FC = () => {
     <>
       {/* Desktop Persistent Fixed Sidebar */}
       <aside
-        className={`hidden lg:block fixed top-0 left-0 bg-white border-r border-slate-200 h-screen overflow-y-auto transition-all duration-300 ease-in-out z-30 ${
+        className={`hidden lg:block fixed top-16 left-0 bg-white border-r border-slate-200 h-[calc(100vh-4rem)] overflow-y-auto transition-all duration-300 ease-in-out z-30 ${
           isCollapsed ? 'w-16' : 'w-60'
         }`}
       >
