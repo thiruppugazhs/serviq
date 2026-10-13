@@ -51,6 +51,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    stationAddress: {
+      type: String,
+      trim: true,
+    },
     status: {
       type: String,
       enum: ['active', 'inactive'],

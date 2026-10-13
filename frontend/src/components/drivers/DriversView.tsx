@@ -23,15 +23,15 @@ export const DriversView: React.FC = () => {
 
   // Add Driver Form state
   const [formData, setFormData] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
+    driverId: '',
     email: '',
     password: '',
     phone: '',
-    address: '',
-    driverId: '',
+    employmentType: 'Full Time',
     drivingLicenceNumber: '',
     licenceExpiry: '',
-    employmentStatus: 'full_time',
     assignedVehicleId: '',
   });
 
@@ -42,8 +42,8 @@ export const DriversView: React.FC = () => {
         api.get('/drivers'),
         api.get('/vehicles'),
       ]);
-      if (driversRes.data.success) setDrivers(driversRes.data.drivers);
-      if (vehiclesRes.data.success) setVehicles(vehiclesRes.data.vehicles);
+      if (driversRes.data.success) setDrivers(driversRes.data.drivers || []);
+      if (vehiclesRes.data.success) setVehicles(vehiclesRes.data.vehicles || []);
     } catch (err: any) {
       console.error('Failed to load drivers:', err);
     } finally {
@@ -65,18 +65,32 @@ export const DriversView: React.FC = () => {
     setSubmitLoading(true);
 
     try {
-      await api.post('/drivers', formData);
+      await api.post('/drivers', {
+        firstName: formData.firstName.trim(),
+        lastName: formData.lastName.trim(),
+        name: `${formData.firstName.trim()} ${formData.lastName.trim()}`.trim(),
+        driverId: formData.driverId.trim(),
+        email: formData.email.trim(),
+        password: formData.password,
+        phone: formData.phone.trim(),
+        employmentType: formData.employmentType,
+        employmentStatus: formData.employmentType.toLowerCase().replace(' ', '_'),
+        drivingLicenceNumber: formData.drivingLicenceNumber.trim(),
+        licenceExpiry: formData.licenceExpiry,
+        assignedVehicleId: formData.assignedVehicleId || null,
+        assignedVehicle: formData.assignedVehicleId || null,
+      });
       setIsModalOpen(false);
       setFormData({
-        name: '',
+        firstName: '',
+        lastName: '',
+        driverId: '',
         email: '',
         password: '',
         phone: '',
-        address: '',
-        driverId: '',
+        employmentType: 'Full Time',
         drivingLicenceNumber: '',
         licenceExpiry: '',
-        employmentStatus: 'full_time',
         assignedVehicleId: '',
       });
       fetchData();
@@ -232,19 +246,36 @@ export const DriversView: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block font-semibold text-slate-700 mb-1">
-                Driver Full Name <span className="text-rose-500">*</span>
+                Driver First Name <span className="text-rose-500">*</span>
               </label>
               <input
                 type="text"
-                name="name"
+                name="firstName"
                 required
-                value={formData.name}
+                value={formData.firstName}
                 onChange={handleChange}
-                placeholder="e.g. John Kumar"
+                placeholder="e.g. John"
                 className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
               />
             </div>
 
+            <div>
+              <label className="block font-semibold text-slate-700 mb-1">
+                Driver Last Name <span className="text-rose-500">*</span>
+              </label>
+              <input
+                type="text"
+                name="lastName"
+                required
+                value={formData.lastName}
+                onChange={handleChange}
+                placeholder="e.g. Kumar"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block font-semibold text-slate-700 mb-1">
                 Driver ID <span className="text-rose-500">*</span>
@@ -259,12 +290,10 @@ export const DriversView: React.FC = () => {
                 className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none uppercase font-mono"
               />
             </div>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block font-semibold text-slate-700 mb-1">
-                Login Email Address <span className="text-rose-500">*</span>
+                Mail Address <span className="text-rose-500">*</span>
               </label>
               <input
                 type="email"
@@ -272,22 +301,7 @@ export const DriversView: React.FC = () => {
                 required
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="john@company.com"
-                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
-              />
-            </div>
-
-            <div>
-              <label className="block font-semibold text-slate-700 mb-1">
-                App Password <span className="text-rose-500">*</span>
-              </label>
-              <input
-                type="password"
-                name="password"
-                required
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Min 6 characters"
+                placeholder="driver@serviq.com"
                 className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
               />
             </div>
@@ -296,32 +310,50 @@ export const DriversView: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block font-semibold text-slate-700 mb-1">
-                Phone Number
+                Password <span className="text-rose-500">*</span>
               </label>
               <input
-                type="tel"
-                name="phone"
-                value={formData.phone}
+                type="password"
+                name="password"
+                required
+                value={formData.password}
                 onChange={handleChange}
-                placeholder="+91 XXXXX XXXXX"
+                placeholder="Set driver password"
                 className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
               />
             </div>
 
             <div>
               <label className="block font-semibold text-slate-700 mb-1">
-                Employment Type
+                Phone Number <span className="text-rose-500">*</span>
+              </label>
+              <input
+                type="tel"
+                name="phone"
+                required
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="+91 98765 43210"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="block font-semibold text-slate-700 mb-1">
+                Employment Type <span className="text-rose-500">*</span>
               </label>
               <select
-                name="employmentStatus"
-                value={formData.employmentStatus}
+                name="employmentType"
+                value={formData.employmentType}
                 onChange={handleChange}
                 className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
               >
-                <option value="full_time">Full Time</option>
-                <option value="contract">Contract</option>
-                <option value="probation">Probation</option>
-                <option value="part_time">Part Time</option>
+                <option value="Full Time">Full Time</option>
+                <option value="Contract">Contract</option>
+                <option value="Probation">Probation</option>
+                <option value="Part Time">Part Time</option>
               </select>
             </div>
           </div>

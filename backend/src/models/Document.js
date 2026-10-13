@@ -25,11 +25,15 @@ const documentSchema = new mongoose.Schema(
     documentType: {
       type: String,
       enum: [
+        'Registration (RC)',
+        'RC Book',
+        'Fitness Certificate (FC)',
+        'Commercial Permit',
+        'Interstate Permit',
+        'Inter-district Permit',
         'Insurance',
         'PUC Certificate',
-        'Registration (RC)',
         'Road Fitness',
-        'Commercial Permit',
         'Driving Licence',
         'Tax Receipt',
         'Other',

@@ -5,14 +5,40 @@ const User = require('../models/User');
 // @access  Private (Admin only)
 exports.createFleetManager = async (req, res, next) => {
   try {
-    const { name, email, phone, employeeId, address, password } = req.body;
+    const {
+      name,
+      firstName,
+      lastName,
+      email,
+      phone,
+      employeeId,
+      address,
+      stationAddress,
+      password: customPassword,
+    } = req.body;
 
-    if (!name || !email || !password) {
+    const fullName = (firstName && lastName)
+      ? `${firstName} ${lastName}`.trim()
+      : (firstName || name || '').trim();
+
+    if (!fullName || !email) {
       return res.status(400).json({
         success: false,
-        message: 'Name, email, and password are required for creating a Fleet Manager',
+        message: 'Name (or first/last name) and email are required for creating a Fleet Manager',
       });
     }
+
+    if (!employeeId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Employee ID is required for creating a Fleet Manager',
+      });
+    }
+
+    // Default password to Employee ID if not provided
+    const password = (customPassword && customPassword.trim().length >= 6)
+      ? customPassword.trim()
+      : employeeId.trim();
 
     const existingUser = await User.findOne({ email: email.toLowerCase().trim() });
     if (existingUser) {
@@ -22,15 +48,20 @@ exports.createFleetManager = async (req, res, next) => {
       });
     }
 
+    const resolvedStation = stationAddress || address || '';
+
     const fleetManager = await User.create({
-      name: name.trim(),
+      name: fullName,
+      firstName: firstName ? firstName.trim() : '',
+      lastName: lastName ? lastName.trim() : '',
       email: email.toLowerCase().trim(),
       password,
       role: 'fleet_manager',
       organization: req.organizationId,
-      phone: phone || '',
-      employeeId: employeeId || '',
-      address: address || '',
+      phone: phone ? phone.trim() : '',
+      employeeId: employeeId ? employeeId.trim() : '',
+      address: resolvedStation,
+      stationAddress: resolvedStation,
       status: 'active',
     });
 
@@ -39,11 +70,15 @@ exports.createFleetManager = async (req, res, next) => {
       message: 'Fleet Manager created successfully',
       fleetManager: {
         id: fleetManager._id,
+        _id: fleetManager._id,
         name: fleetManager.name,
+        firstName: fleetManager.firstName,
+        lastName: fleetManager.lastName,
         email: fleetManager.email,
         phone: fleetManager.phone,
         employeeId: fleetManager.employeeId,
         address: fleetManager.address,
+        stationAddress: fleetManager.stationAddress,
         status: fleetManager.status,
         createdAt: fleetManager.createdAt,
       },

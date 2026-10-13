@@ -9,6 +9,8 @@ exports.createDriver = async (req, res, next) => {
   try {
     const {
       name,
+      firstName,
+      lastName,
       email,
       password,
       phone,
@@ -19,14 +21,20 @@ exports.createDriver = async (req, res, next) => {
       dateOfBirth,
       emergencyContact,
       employmentStatus,
+      employmentType,
       assignedVehicleId,
+      assignedVehicle,
       joiningDate,
     } = req.body;
 
-    if (!name || !email || !password || !driverId || !drivingLicenceNumber || !licenceExpiry) {
+    const fullName = (firstName && lastName)
+      ? `${firstName} ${lastName}`.trim()
+      : (firstName || name || '').trim();
+
+    if (!fullName || !email || !password || !driverId || !drivingLicenceNumber || !licenceExpiry) {
       return res.status(400).json({
         success: false,
-        message: 'Name, email, password, Driver ID, licence number, and expiry date are required',
+        message: 'First/Last name, email, password, Driver ID, licence number, and expiry date are required',
       });
     }
 
@@ -51,7 +59,9 @@ exports.createDriver = async (req, res, next) => {
 
     // Create User record
     const user = await User.create({
-      name: name.trim(),
+      name: fullName,
+      firstName: firstName ? firstName.trim() : '',
+      lastName: lastName ? lastName.trim() : '',
       email: email.toLowerCase().trim(),
       password,
       role: 'driver',
@@ -60,6 +70,9 @@ exports.createDriver = async (req, res, next) => {
       address: address || '',
       status: 'active',
     });
+
+    const targetVehicleId = assignedVehicleId || assignedVehicle || null;
+    const resolvedEmploymentStatus = employmentStatus || employmentType || 'full_time';
 
     // Create Driver profile
     const driver = await Driver.create({
@@ -71,15 +84,15 @@ exports.createDriver = async (req, res, next) => {
       licenceExpiry,
       dateOfBirth: dateOfBirth || null,
       emergencyContact: emergencyContact || {},
-      employmentStatus: employmentStatus || 'full_time',
+      employmentStatus: resolvedEmploymentStatus,
       joiningDate: joiningDate || Date.now(),
-      assignedVehicle: assignedVehicleId || null,
+      assignedVehicle: targetVehicleId,
       status: 'active',
     });
 
     // If a vehicle was assigned, link the vehicle to this driver
-    if (assignedVehicleId) {
-      await Vehicle.findByIdAndUpdate(assignedVehicleId, {
+    if (targetVehicleId) {
+      await Vehicle.findByIdAndUpdate(targetVehicleId, {
         assignedDriver: driver._id,
       });
     }

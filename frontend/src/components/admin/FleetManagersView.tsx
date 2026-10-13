@@ -5,7 +5,7 @@ import { Badge } from '../common/Badge';
 import { Modal } from '../common/Modal';
 import { EmptyState } from '../common/EmptyState';
 import { Header } from '../common/Header';
-import { Users2, Plus, Mail, Phone, MapPin, BadgeCheck, ShieldAlert, KeyRound } from 'lucide-react';
+import { Users2, Plus, Mail, Phone, MapPin, ShieldAlert, KeyRound, Building2 } from 'lucide-react';
 
 export const FleetManagersView: React.FC = () => {
   const [managers, setManagers] = useState<User[]>([]);
@@ -14,22 +14,23 @@ export const FleetManagersView: React.FC = () => {
   const [submitLoading, setSubmitLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Form state
+  // Form state according to exact requirements:
+  // First Name, Last Name, Email, Employee ID, Phone Number, Password (defaults to Employee ID), Station Address
   const [formData, setFormData] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
-    phone: '',
     employeeId: '',
-    address: '',
-    password: '',
+    phone: '',
+    stationAddress: '',
   });
 
   const fetchManagers = async () => {
     try {
       setLoading(true);
       const res = await api.get('/fleet-managers');
-      if (res.data.success) {
-        setManagers(res.data.fleetManagers);
+      if (res.data?.success) {
+        setManagers(res.data.fleetManagers || []);
       }
     } catch (err: any) {
       console.error('Failed to load fleet managers:', err);
@@ -49,18 +50,36 @@ export const FleetManagersView: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    if (!formData.employeeId.trim()) {
+      setError('Employee ID is required (it serves as their default login password).');
+      return;
+    }
+
     setSubmitLoading(true);
 
     try {
-      await api.post('/fleet-managers', formData);
+      // Send required fields
+      await api.post('/fleet-managers', {
+        firstName: formData.firstName.trim(),
+        lastName: formData.lastName.trim(),
+        name: `${formData.firstName.trim()} ${formData.lastName.trim()}`.trim(),
+        email: formData.email.trim(),
+        employeeId: formData.employeeId.trim(),
+        phone: formData.phone.trim(),
+        stationAddress: formData.stationAddress.trim(),
+        address: formData.stationAddress.trim(),
+        password: formData.employeeId.trim(), // Default password is employee ID
+      });
+
       setIsModalOpen(false);
       setFormData({
-        name: '',
+        firstName: '',
+        lastName: '',
         email: '',
-        phone: '',
         employeeId: '',
-        address: '',
-        password: '',
+        phone: '',
+        stationAddress: '',
       });
       fetchManagers();
     } catch (err: any) {
@@ -83,14 +102,14 @@ export const FleetManagersView: React.FC = () => {
     <div className="space-y-4 md:space-y-5 animate-in fade-in duration-200">
       <Header
         title="Fleet Managers"
-        description="Authorize and manage operational fleet managers for your organization."
+        description="Authorize and manage station fleet managers with automated employee credentials."
         actions={
           <button
             onClick={() => {
               setError(null);
               setIsModalOpen(true);
             }}
-            className="inline-flex items-center gap-1.5 h-9 px-4 bg-[#2335f2] hover:bg-blue-700 text-white font-medium text-xs rounded-lg transition-colors shadow-sm"
+            className="inline-flex items-center gap-1.5 h-9 px-4 bg-[#2335f2] hover:bg-blue-700 text-white font-medium text-xs rounded-lg transition-colors shadow-sm cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>+ Add Fleet Manager</span>
@@ -104,8 +123,8 @@ export const FleetManagersView: React.FC = () => {
         <EmptyState
           icon={Users2}
           title="No Fleet Managers Assigned Yet"
-          description="Only Organization Admins can create Fleet Managers. Assign managers to oversee drivers, inspect maintenance schedules, and monitor repairs."
-          actionText="Add First Fleet Manager"
+          description="Register station fleet managers to oversee vehicle assignments, approve driver maintenance requests, and track expenses."
+          actionText="Add Fleet Manager"
           onAction={() => setIsModalOpen(true)}
         />
       ) : (
@@ -116,12 +135,12 @@ export const FleetManagersView: React.FC = () => {
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center font-bold text-[#2335f2]">
-                      {mgr.name.charAt(0).toUpperCase()}
+                      {(mgr.name || 'F').charAt(0).toUpperCase()}
                     </div>
                     <div>
                       <h3 className="font-bold text-sm text-slate-900">{mgr.name}</h3>
                       <p className="text-[11px] font-mono text-[#2335f2] font-semibold">
-                        {mgr.employeeId ? `Emp ID: ${mgr.employeeId}` : 'Fleet Manager'}
+                        {mgr.employeeId ? `Employee ID: ${mgr.employeeId}` : 'Fleet Manager'}
                       </p>
                     </div>
                   </div>
@@ -130,19 +149,19 @@ export const FleetManagersView: React.FC = () => {
 
                 <div className="mt-4 space-y-2 text-xs text-slate-600">
                   <div className="flex items-center gap-2">
-                    <Mail className="w-3.5 h-3.5 text-slate-400" />
-                    <span>{mgr.email}</span>
+                    <Mail className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                    <span className="truncate">{mgr.email}</span>
                   </div>
                   {mgr.phone && (
                     <div className="flex items-center gap-2">
-                      <Phone className="w-3.5 h-3.5 text-slate-400" />
+                      <Phone className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                       <span>{mgr.phone}</span>
                     </div>
                   )}
-                  {mgr.address && (
-                    <div className="flex items-center gap-2">
-                      <MapPin className="w-3.5 h-3.5 text-slate-400" />
-                      <span className="truncate">{mgr.address}</span>
+                  {(mgr.stationAddress || mgr.address) && (
+                    <div className="flex items-start gap-2">
+                      <Building2 className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
+                      <span className="truncate">Station: {mgr.stationAddress || mgr.address}</span>
                     </div>
                   )}
                 </div>
@@ -150,11 +169,11 @@ export const FleetManagersView: React.FC = () => {
 
               <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between">
                 <span className="text-[11px] text-slate-400">
-                  Role: Organization Controller
+                  Default Pass: Employee ID
                 </span>
                 <button
                   onClick={() => handleToggleStatus(mgr._id || mgr.id)}
-                  className={`text-xs px-2.5 py-1 rounded-lg font-medium transition-colors border ${
+                  className={`text-xs px-2.5 py-1 rounded-lg font-medium transition-colors border cursor-pointer ${
                     mgr.status === 'active'
                       ? 'border-rose-200 text-rose-600 hover:bg-rose-50'
                       : 'border-emerald-200 text-emerald-600 hover:bg-emerald-50'
@@ -172,7 +191,7 @@ export const FleetManagersView: React.FC = () => {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="Create Fleet Manager Account"
+        title="Add Fleet Manager"
       >
         {error && (
           <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
@@ -182,25 +201,42 @@ export const FleetManagersView: React.FC = () => {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
-          <div>
-            <label className="block font-semibold text-slate-700 mb-1">
-              Full Name <span className="text-rose-500">*</span>
-            </label>
-            <input
-              type="text"
-              name="name"
-              required
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="e.g. Ramesh Babu"
-              className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
-            />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="block font-semibold text-slate-700 mb-1">
+                First Name <span className="text-rose-500">*</span>
+              </label>
+              <input
+                type="text"
+                name="firstName"
+                required
+                value={formData.firstName}
+                onChange={handleChange}
+                placeholder="e.g. Ramesh"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block font-semibold text-slate-700 mb-1">
+                Last Name <span className="text-rose-500">*</span>
+              </label>
+              <input
+                type="text"
+                name="lastName"
+                required
+                value={formData.lastName}
+                onChange={handleChange}
+                placeholder="e.g. Babu"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block font-semibold text-slate-700 mb-1">
-                Official Email <span className="text-rose-500">*</span>
+                Email Address <span className="text-rose-500">*</span>
               </label>
               <input
                 type="email"
@@ -208,18 +244,19 @@ export const FleetManagersView: React.FC = () => {
                 required
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="manager@company.com"
+                placeholder="manager@serviq.com"
                 className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
               />
             </div>
 
             <div>
               <label className="block font-semibold text-slate-700 mb-1">
-                Employee ID
+                Employee ID <span className="text-rose-500">*</span>
               </label>
               <input
                 type="text"
                 name="employeeId"
+                required
                 value={formData.employeeId}
                 onChange={handleChange}
                 placeholder="e.g. FM-104"
@@ -228,65 +265,63 @@ export const FleetManagersView: React.FC = () => {
             </div>
           </div>
 
+          {/* Password info banner */}
+          <div className="p-3 bg-blue-50/70 border border-blue-200/80 rounded-xl text-blue-900 text-xs flex items-center gap-2.5">
+            <KeyRound className="w-4 h-4 text-[#2335f2] shrink-0" />
+            <div>
+              <p className="font-semibold text-blue-800">Password Policy</p>
+              <p className="text-[11px] text-blue-700">
+                The Fleet Manager's <strong>Employee ID</strong> ({formData.employeeId || 'e.g. FM-104'}) will automatically be configured as their default login password.
+              </p>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block font-semibold text-slate-700 mb-1">
-                Phone Number
+                Phone Number <span className="text-rose-500">*</span>
               </label>
               <input
                 type="tel"
                 name="phone"
+                required
                 value={formData.phone}
                 onChange={handleChange}
-                placeholder="+91 XXXXX XXXXX"
+                placeholder="+91 98765 43210"
                 className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
               />
             </div>
 
             <div>
               <label className="block font-semibold text-slate-700 mb-1">
-                Login Password <span className="text-rose-500">*</span>
+                Station Address <span className="text-rose-500">*</span>
               </label>
               <input
-                type="password"
-                name="password"
+                type="text"
+                name="stationAddress"
                 required
-                value={formData.password}
+                value={formData.stationAddress}
                 onChange={handleChange}
-                placeholder="Min 6 characters"
+                placeholder="e.g. North Terminal Hub, Chennai"
                 className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
               />
             </div>
           </div>
 
-          <div>
-            <label className="block font-semibold text-slate-700 mb-1">
-              Station / Address
-            </label>
-            <textarea
-              name="address"
-              rows={2}
-              value={formData.address}
-              onChange={handleChange}
-              placeholder="Depot or Regional office address"
-              className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none resize-none"
-            />
-          </div>
-
-          <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
+          <div className="pt-2 flex justify-end gap-2">
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium transition-colors"
+              className="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={submitLoading}
-              className="px-4 py-2 rounded-xl bg-[#2335f2] hover:bg-blue-700 disabled:opacity-50 text-white font-medium transition-colors shadow-md shadow-blue-500/20"
+              className="px-5 py-2 bg-[#2335f2] hover:bg-blue-700 text-white font-medium rounded-xl transition-colors shadow-sm disabled:opacity-60 cursor-pointer"
             >
-              {submitLoading ? 'Creating Manager...' : 'Confirm Account Creation'}
+              {submitLoading ? 'Registering...' : 'Create Fleet Manager'}
             </button>
           </div>
         </form>

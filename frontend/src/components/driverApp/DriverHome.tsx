@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../api/client';
 import { useAuth } from '../../context/AuthContext';
-import { Vehicle, Repair } from '../../types';
+import { Vehicle, Repair, Maintenance } from '../../types';
 import { Badge } from '../common/Badge';
 import { Modal } from '../common/Modal';
 import {
@@ -17,46 +17,101 @@ import {
   Camera,
   PhoneCall,
   Clock,
-  Sparkles,
+  Wrench,
+  Receipt,
+  Upload,
+  Check,
+  MapPin,
+  Calendar,
 } from 'lucide-react';
 
 export const DriverHome: React.FC = () => {
   const { user, logout } = useAuth();
   const [vehicle, setVehicle] = useState<Vehicle | null>(null);
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [myRepairs, setMyRepairs] = useState<Repair[]>([]);
+  const [myMaintenance, setMyMaintenance] = useState<Maintenance[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'home' | 'vehicle' | 'report' | 'repairs' | 'profile'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'activity' | 'vehicle' | 'profile'>('home');
 
   // Modals
+  const [isMaintenanceModalOpen, setIsMaintenanceModalOpen] = useState(false);
+  const [isRepairModalOpen, setIsRepairModalOpen] = useState(false);
+  const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
   const [isOdoModalOpen, setIsOdoModalOpen] = useState(false);
-  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
-  const [newOdometer, setNewOdometer] = useState<string | number>('');
+
   const [submitLoading, setSubmitLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // Issue report form
-  const [reportData, setReportData] = useState({
-    issueType: 'Engine',
+  // Odometer State
+  const [newOdometer, setNewOdometer] = useState<string | number>('');
+
+  // Maintenance Request Form State
+  const [maintData, setMaintData] = useState({
+    vehicleId: '',
+    serviceType: '',
+    currentOdometer: '',
+    runningKmInterval: '10000',
+    serviceCenter: '',
+    notes: '',
+  });
+
+  // Repair Request Form State (with photo proof)
+  const [repairData, setRepairData] = useState({
+    vehicleId: '',
+    repairWhat: '',
+    reasonWhy: '',
     description: '',
-    priority: 'medium',
     odometerAtIncident: '',
   });
+  const [repairPhotoFile, setRepairPhotoFile] = useState<File | null>(null);
+
+  // Expense Form State (with receipt)
+  const [expenseData, setExpenseData] = useState({
+    vehicleId: '',
+    category: 'Maintenance',
+    amount: '',
+    odometer: '',
+    notes: '',
+  });
+  const [expenseReceiptFile, setExpenseReceiptFile] = useState<File | null>(null);
 
   const fetchDriverData = async () => {
     try {
       setLoading(true);
-      const [vehRes, repRes] = await Promise.all([
+      const [vehRes, repRes, maintRes] = await Promise.all([
         api.get('/vehicles'),
         api.get('/repairs'),
+        api.get('/maintenance'),
       ]);
 
-      if (vehRes.data.success && vehRes.data.vehicles.length > 0) {
-        setVehicle(vehRes.data.vehicles[0]);
-        setNewOdometer(vehRes.data.vehicles[0].odometer);
+      if (vehRes.data?.success && vehRes.data.vehicles.length > 0) {
+        setVehicles(vehRes.data.vehicles);
+        const assigned = vehRes.data.vehicles[0];
+        setVehicle(assigned);
+        setNewOdometer(assigned.odometer);
+        setMaintData((prev) => ({
+          ...prev,
+          vehicleId: assigned._id,
+          currentOdometer: String(assigned.odometer),
+        }));
+        setRepairData((prev) => ({
+          ...prev,
+          vehicleId: assigned._id,
+          odometerAtIncident: String(assigned.odometer),
+        }));
+        setExpenseData((prev) => ({
+          ...prev,
+          vehicleId: assigned._id,
+          odometer: String(assigned.odometer),
+        }));
       }
-      if (repRes.data.success) {
-        setMyRepairs(repRes.data.repairs);
+      if (repRes.data?.success) {
+        setMyRepairs(repRes.data.repairs || []);
+      }
+      if (maintRes.data?.success) {
+        setMyMaintenance(maintRes.data.maintenance || []);
       }
     } catch (err) {
       console.error('Failed to load driver assigned data:', err);
@@ -80,8 +135,8 @@ export const DriverHome: React.FC = () => {
         newOdometer: Number(newOdometer),
       });
       setIsOdoModalOpen(false);
-      setSuccessMessage('Odometer updated successfully');
-      setTimeout(() => setSuccessMessage(null), 3000);
+      setSuccessMessage('Vehicle odometer updated successfully');
+      setTimeout(() => setSuccessMessage(null), 3500);
       fetchDriverData();
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to update odometer');
@@ -90,33 +145,109 @@ export const DriverHome: React.FC = () => {
     }
   };
 
-  const handleReportIssue = async (e: React.FormEvent) => {
+  // 1. Submit Maintenance Request
+  const handleMaintenanceRequest = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!vehicle) return;
     setError(null);
     setSubmitLoading(true);
 
     try {
-      await api.post('/repairs', {
-        vehicleId: vehicle._id,
-        issueType: reportData.issueType,
-        description: reportData.description,
-        priority: reportData.priority,
-        odometerAtIncident: reportData.odometerAtIncident || vehicle.odometer,
+      await api.post('/maintenance/request', maintData);
+      setIsMaintenanceModalOpen(false);
+      setSuccessMessage('Maintenance request submitted! Awaiting Fleet Manager / Admin approval.');
+      setTimeout(() => setSuccessMessage(null), 4500);
+      setMaintData({
+        vehicleId: vehicle?._id || '',
+        serviceType: '',
+        currentOdometer: vehicle ? String(vehicle.odometer) : '',
+        runningKmInterval: '10000',
+        serviceCenter: '',
+        notes: '',
       });
-
-      setIsReportModalOpen(false);
-      setReportData({
-        issueType: 'Engine',
-        description: '',
-        priority: 'medium',
-        odometerAtIncident: '',
-      });
-      setSuccessMessage('Issue reported to Fleet Manager!');
-      setTimeout(() => setSuccessMessage(null), 4000);
       fetchDriverData();
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to submit report');
+      setError(err.response?.data?.message || 'Failed to submit maintenance request');
+    } finally {
+      setSubmitLoading(false);
+    }
+  };
+
+  // 2. Submit Repair Request with Photo Proof
+  const handleRepairRequest = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setSubmitLoading(true);
+
+    try {
+      const form = new FormData();
+      form.append('vehicleId', repairData.vehicleId || (vehicle?._id ?? ''));
+      form.append('repairWhat', repairData.repairWhat);
+      form.append('reasonWhy', repairData.reasonWhy);
+      form.append('description', repairData.description || `${repairData.repairWhat} - ${repairData.reasonWhy}`);
+      form.append('odometerAtIncident', String(repairData.odometerAtIncident || vehicle?.odometer || 0));
+
+      if (repairPhotoFile) {
+        form.append('photos', repairPhotoFile);
+      }
+
+      await api.post('/repairs', form, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      setIsRepairModalOpen(false);
+      setRepairPhotoFile(null);
+      setSuccessMessage('Breakdown & repair report submitted with photo proof! Fleet manager will review.');
+      setTimeout(() => setSuccessMessage(null), 4500);
+      setRepairData({
+        vehicleId: vehicle?._id || '',
+        repairWhat: '',
+        reasonWhy: '',
+        description: '',
+        odometerAtIncident: vehicle ? String(vehicle.odometer) : '',
+      });
+      fetchDriverData();
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Failed to submit repair request');
+    } finally {
+      setSubmitLoading(false);
+    }
+  };
+
+  // 3. Log Expense during Service / Repair
+  const handleExpenseSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setSubmitLoading(true);
+
+    try {
+      const form = new FormData();
+      form.append('vehicleId', expenseData.vehicleId || (vehicle?._id ?? ''));
+      form.append('category', expenseData.category);
+      form.append('amount', expenseData.amount);
+      form.append('odometer', String(expenseData.odometer || vehicle?.odometer || 0));
+      form.append('notes', expenseData.notes);
+      if (expenseReceiptFile) {
+        form.append('receipt', expenseReceiptFile);
+      }
+
+      await api.post('/expenses', form, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      setIsExpenseModalOpen(false);
+      setExpenseReceiptFile(null);
+      setSuccessMessage('Expense logged! Updated in Fleet Manager and Admin dashboard.');
+      setTimeout(() => setSuccessMessage(null), 4000);
+      setExpenseData({
+        vehicleId: vehicle?._id || '',
+        category: 'Maintenance',
+        amount: '',
+        odometer: vehicle ? String(vehicle.odometer) : '',
+        notes: '',
+      });
+      fetchDriverData();
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Failed to record expense');
     } finally {
       setSubmitLoading(false);
     }
@@ -125,7 +256,7 @@ export const DriverHome: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-950 pb-20 max-w-md mx-auto relative border-x border-slate-900 shadow-2xl flex flex-col justify-between">
       {/* Mobile Top Header */}
-      <div className="bg-slate-900/90 backdrop-blur-md sticky top-0 z-30 p-4 border-b border-slate-800 flex items-center justify-between">
+      <div className="bg-slate-900/95 backdrop-blur-md sticky top-0 z-30 p-4 border-b border-slate-800 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <img src="/logo-blue.png" alt="SERVIQ" className="w-8 h-8 object-contain" />
           <div>
@@ -140,7 +271,7 @@ export const DriverHome: React.FC = () => {
 
         <button
           onClick={logout}
-          className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors"
+          className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors cursor-pointer"
           title="Sign Out"
         >
           <LogOut className="w-4 h-4" />
@@ -148,10 +279,10 @@ export const DriverHome: React.FC = () => {
       </div>
 
       {/* Main Content Area */}
-      <div className="p-4 space-y-5 flex-1">
+      <div className="p-4 space-y-4 flex-1">
         {successMessage && (
-          <div className="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs flex items-center gap-2 animate-in fade-in">
-            <CheckCircle2 className="w-4 h-4 shrink-0" />
+          <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2 animate-in fade-in">
+            <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
             <span>{successMessage}</span>
           </div>
         )}
@@ -160,15 +291,15 @@ export const DriverHome: React.FC = () => {
         {activeTab === 'home' && (
           <div className="space-y-4">
             {/* Driver Greeting Card */}
-            <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-emerald-950/40 border border-slate-800 shadow-lg">
-              <span className="text-[10px] uppercase font-bold text-emerald-400 tracking-wider">
+            <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-blue-950/40 border border-slate-800 shadow-lg">
+              <span className="text-[10px] uppercase font-bold text-blue-400 tracking-wider">
                 Driver on Duty
               </span>
               <h2 className="text-xl font-extrabold text-white font-['Outfit',sans-serif] mt-0.5">
                 Hi, {user?.name}
               </h2>
               <p className="text-xs text-slate-400 mt-0.5">
-                Vehicle road-readiness and active trip log.
+                Apply for maintenance or report vehicle repairs with proof.
               </p>
             </div>
 
@@ -178,7 +309,7 @@ export const DriverHome: React.FC = () => {
                 <div className="flex items-start justify-between">
                   <div>
                     <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
-                      My Assigned Asset
+                      Assigned Vehicle
                     </span>
                     <h3 className="text-2xl font-extrabold font-mono text-white tracking-wider mt-0.5">
                       {vehicle.vehicleNumber}
@@ -191,44 +322,91 @@ export const DriverHome: React.FC = () => {
                 </div>
 
                 {/* Odometer readout */}
-                <div className="p-3.5 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+                <div className="p-3 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Gauge className="w-4 h-4 text-emerald-400" />
-                    <span className="text-xs text-slate-400">Current Odo:</span>
+                    <span className="text-xs text-slate-400">Current Odometer:</span>
                   </div>
                   <span className="font-mono font-bold text-base text-white">
                     {vehicle.odometer.toLocaleString()} km
                   </span>
                 </div>
 
-                {/* Quick Touch Actions */}
-                <div className="grid grid-cols-2 gap-3 pt-1">
+                {/* 4 Quick Touch Action Buttons */}
+                <div className="grid grid-cols-2 gap-2.5 pt-1">
+                  {/* Button 1: Apply for Maintenance */}
+                  <button
+                    onClick={() => {
+                      setError(null);
+                      setMaintData((prev) => ({
+                        ...prev,
+                        vehicleId: vehicle._id,
+                        currentOdometer: String(vehicle.odometer),
+                      }));
+                      setIsMaintenanceModalOpen(true);
+                    }}
+                    className="p-3 rounded-2xl bg-blue-600/15 hover:bg-blue-600/25 border border-blue-500/30 text-left transition-colors flex flex-col justify-between cursor-pointer"
+                  >
+                    <Wrench className="w-5 h-5 text-blue-400 mb-2" />
+                    <div>
+                      <div className="text-xs font-bold text-white">Apply Maintenance</div>
+                      <div className="text-[10px] text-blue-300/80">Request service</div>
+                    </div>
+                  </button>
+
+                  {/* Button 2: Report Breakdown / Repair */}
+                  <button
+                    onClick={() => {
+                      setError(null);
+                      setRepairData((prev) => ({
+                        ...prev,
+                        vehicleId: vehicle._id,
+                        odometerAtIncident: String(vehicle.odometer),
+                      }));
+                      setIsRepairModalOpen(true);
+                    }}
+                    className="p-3 rounded-2xl bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-left transition-colors flex flex-col justify-between cursor-pointer"
+                  >
+                    <AlertTriangle className="w-5 h-5 text-rose-400 mb-2" />
+                    <div>
+                      <div className="text-xs font-bold text-rose-200">Report Repair</div>
+                      <div className="text-[10px] text-rose-400/80">Submit with proof</div>
+                    </div>
+                  </button>
+
+                  {/* Button 3: Log Expense */}
+                  <button
+                    onClick={() => {
+                      setError(null);
+                      setExpenseData((prev) => ({
+                        ...prev,
+                        vehicleId: vehicle._id,
+                        odometer: String(vehicle.odometer),
+                      }));
+                      setIsExpenseModalOpen(true);
+                    }}
+                    className="p-3 rounded-2xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/30 text-left transition-colors flex flex-col justify-between cursor-pointer"
+                  >
+                    <Receipt className="w-5 h-5 text-amber-400 mb-2" />
+                    <div>
+                      <div className="text-xs font-bold text-white">Log Expense</div>
+                      <div className="text-[10px] text-amber-300/80">Fuel, parts, tolls</div>
+                    </div>
+                  </button>
+
+                  {/* Button 4: Log Odometer */}
                   <button
                     onClick={() => {
                       setNewOdometer(vehicle.odometer);
                       setError(null);
                       setIsOdoModalOpen(true);
                     }}
-                    className="p-3 rounded-2xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-left transition-colors flex flex-col justify-between"
+                    className="p-3 rounded-2xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-left transition-colors flex flex-col justify-between cursor-pointer"
                   >
                     <Gauge className="w-5 h-5 text-emerald-400 mb-2" />
                     <div>
-                      <div className="text-xs font-bold text-white">Log Odometer</div>
-                      <div className="text-[10px] text-slate-400">Update mileage</div>
-                    </div>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setError(null);
-                      setIsReportModalOpen(true);
-                    }}
-                    className="p-3 rounded-2xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-left transition-colors flex flex-col justify-between"
-                  >
-                    <AlertTriangle className="w-5 h-5 text-rose-400 mb-2" />
-                    <div>
-                      <div className="text-xs font-bold text-rose-300">Report Issue</div>
-                      <div className="text-[10px] text-rose-400/80">Roadside breakdown</div>
+                      <div className="text-xs font-bold text-white">Log Mileage</div>
+                      <div className="text-[10px] text-slate-400">Update odometer</div>
                     </div>
                   </button>
                 </div>
@@ -238,44 +416,132 @@ export const DriverHome: React.FC = () => {
                 <Truck className="w-8 h-8 text-slate-500 mx-auto mb-2" />
                 <h3 className="font-bold text-sm text-white">No Vehicle Assigned</h3>
                 <p className="text-xs text-slate-400 mt-1">
-                  Contact your Fleet Manager or Organization Admin to link your commercial asset.
+                  Contact your Fleet Manager to assign your commercial vehicle plate.
                 </p>
               </div>
             )}
 
-            {/* Recent breakdown tickets filed by driver */}
+            {/* Approval Status Feed (Pending / Approved) */}
             <div className="space-y-2 pt-2">
               <div className="flex items-center justify-between px-1">
                 <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                  Recent Ticket History
+                  My Requests & Approvals
                 </h4>
-                <span className="text-[10px] text-emerald-400 font-semibold font-mono">
-                  {myRepairs.length} filed
+                <span className="text-[10px] text-blue-400 font-semibold font-mono">
+                  {myRepairs.length + myMaintenance.length} requests
                 </span>
               </div>
 
-              {myRepairs.length === 0 ? (
+              {myRepairs.length === 0 && myMaintenance.length === 0 ? (
                 <div className="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 text-center text-xs text-slate-500">
-                  No breakdown reports filed yet. All systems road-ready!
+                  No maintenance requests or repairs filed yet.
                 </div>
               ) : (
-                myRepairs.slice(0, 3).map((r) => (
-                  <div
-                    key={r._id}
-                    className="p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 text-xs flex items-center justify-between gap-3"
-                  >
-                    <div>
-                      <div className="font-bold text-white flex items-center gap-2">
-                        <span>{r.issueType}</span>
+                <div className="space-y-2">
+                  {/* Maintenance Requests */}
+                  {myMaintenance.slice(0, 2).map((m) => (
+                    <div
+                      key={m._id}
+                      className="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800 text-xs flex flex-col gap-1.5"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-blue-400 font-semibold flex items-center gap-1.5">
+                          <Wrench className="w-3.5 h-3.5" />
+                          <span>{m.serviceType}</span>
+                        </span>
+                        <Badge status={m.status} size="sm" />
+                      </div>
+                      <p className="text-[11px] text-slate-400">
+                        Center: {m.serviceCenter || 'Depot'} • Interval: {m.runningKmInterval || 10000} km
+                      </p>
+                      {m.status === 'approved' && (
+                        <p className="text-[11px] text-emerald-400 font-semibold">
+                          ✓ Approved by Manager! Proceed with maintenance.
+                        </p>
+                      )}
+                    </div>
+                  ))}
+
+                  {/* Repair Requests */}
+                  {myRepairs.slice(0, 2).map((r) => (
+                    <div
+                      key={r._id}
+                      className="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800 text-xs flex flex-col gap-1.5"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-rose-400 font-semibold flex items-center gap-1.5">
+                          <AlertTriangle className="w-3.5 h-3.5" />
+                          <span>{r.repairWhat || r.issueType}</span>
+                        </span>
                         <Badge status={r.status} size="sm" />
                       </div>
-                      <p className="text-[11px] text-slate-400 truncate max-w-[200px] mt-0.5">
-                        {r.description}
+                      <p className="text-[11px] text-slate-400 truncate">
+                        Reason: {r.reasonWhy || r.description}
                       </p>
+                      {r.status === 'approved' && (
+                        <p className="text-[11px] text-emerald-400 font-semibold">
+                          ✓ Approved! Assigned workshop: {r.assignedWorkshop || 'Authorized Center'}
+                        </p>
+                      )}
                     </div>
-                    <span className="text-[10px] text-slate-500 shrink-0 font-mono">
-                      {new Date(r.createdAt || Date.now()).toLocaleDateString()}
-                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Tab 2: ACTIVITY HISTORY */}
+        {activeTab === 'activity' && (
+          <div className="space-y-4">
+            <h2 className="text-lg font-bold text-white font-['Outfit',sans-serif]">
+              Request & Service History
+            </h2>
+
+            <div className="space-y-3">
+              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                Maintenance Requests ({myMaintenance.length})
+              </h3>
+              {myMaintenance.length === 0 ? (
+                <div className="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 text-center text-xs text-slate-500">
+                  No maintenance requests submitted.
+                </div>
+              ) : (
+                myMaintenance.map((m) => (
+                  <div key={m._id} className="p-3.5 rounded-2xl bg-slate-900 border border-slate-800 text-xs space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-white">{m.serviceType}</span>
+                      <Badge status={m.status} size="sm" />
+                    </div>
+                    <p className="text-slate-400 text-[11px]">Center: {m.serviceCenter || 'Unspecified'}</p>
+                    <p className="text-slate-500 text-[10px] font-mono">
+                      Logged Odometer: {m.currentOdometer || m.lastServiceOdometer || 0} km
+                    </p>
+                  </div>
+                ))
+              )}
+
+              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider pt-2">
+                Repairs & Breakdowns ({myRepairs.length})
+              </h3>
+              {myRepairs.length === 0 ? (
+                <div className="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 text-center text-xs text-slate-500">
+                  No repair reports submitted.
+                </div>
+              ) : (
+                myRepairs.map((r) => (
+                  <div key={r._id} className="p-3.5 rounded-2xl bg-slate-900 border border-slate-800 text-xs space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-white">{r.repairWhat || r.issueType}</span>
+                      <Badge status={r.status} size="sm" />
+                    </div>
+                    {r.reasonWhy && <p className="text-slate-400 text-[11px]">Why: {r.reasonWhy}</p>}
+                    <p className="text-slate-300 text-[11px]">{r.description}</p>
+                    {r.photos && r.photos.length > 0 && (
+                      <span className="text-[10px] text-blue-400 font-semibold block pt-1">
+                        📷 {r.photos.length} Photo Proof(s) Attached
+                      </span>
+                    )}
                   </div>
                 ))
               )}
@@ -283,11 +549,11 @@ export const DriverHome: React.FC = () => {
           </div>
         )}
 
-        {/* Tab 2: MY VEHICLE */}
+        {/* Tab 3: VEHICLE DETAILS */}
         {activeTab === 'vehicle' && (
           <div className="space-y-4">
             <h2 className="text-lg font-bold text-white font-['Outfit',sans-serif]">
-              Vehicle Health & Specs
+              Vehicle Specifications & FC
             </h2>
             {vehicle ? (
               <div className="glass-panel p-5 rounded-3xl border border-slate-800 space-y-4">
@@ -300,121 +566,108 @@ export const DriverHome: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 text-xs">
-                  <div className="p-3 rounded-xl bg-slate-900">
-                    <span className="text-slate-400 block text-[10px]">Type</span>
-                    <span className="font-semibold text-white">{vehicle.vehicleType}</span>
+                <div className="space-y-2.5 text-xs text-slate-300">
+                  <div className="flex items-center justify-between py-1 border-b border-slate-800/60">
+                    <span className="text-slate-400">Vehicle Type:</span>
+                    <span className="font-bold text-white">{vehicle.vehicleType}</span>
                   </div>
-                  <div className="p-3 rounded-xl bg-slate-900">
-                    <span className="text-slate-400 block text-[10px]">Year</span>
-                    <span className="font-semibold text-white">{vehicle.year}</span>
+                  <div className="flex items-center justify-between py-1 border-b border-slate-800/60">
+                    <span className="text-slate-400">Current Odometer:</span>
+                    <span className="font-bold text-white font-mono">{vehicle.odometer.toLocaleString()} km</span>
                   </div>
-                  <div className="p-3 rounded-xl bg-slate-900">
-                    <span className="text-slate-400 block text-[10px]">Fuel Type</span>
-                    <span className="font-semibold text-white">{vehicle.fuelType}</span>
-                  </div>
-                  <div className="p-3 rounded-xl bg-slate-900">
-                    <span className="text-slate-400 block text-[10px]">Odometer</span>
-                    <span className="font-semibold text-white font-mono">{vehicle.odometer.toLocaleString()} km</span>
+                  {(vehicle.fcBook || vehicle.fcExpiryDate || vehicle.fitnessExpiry) && (
+                    <div className="flex items-center justify-between py-1 border-b border-slate-800/60">
+                      <span className="text-slate-400">FC Book / Expiry:</span>
+                      <span className="font-bold text-emerald-400 font-mono">
+                        {vehicle.fcBook ? `${vehicle.fcBook} • ` : ''}
+                        {new Date(vehicle.fcExpiryDate || vehicle.fitnessExpiry || '').toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      </span>
+                    </div>
+                  )}
+                  <div className="flex items-center justify-between py-1">
+                    <span className="text-slate-400">Operating Status:</span>
+                    <Badge status={vehicle.status} size="sm" />
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="p-6 text-center text-xs text-slate-400">No vehicle assigned</div>
+              <p className="text-slate-500 text-xs">No vehicle assigned.</p>
             )}
           </div>
         )}
 
-        {/* Tab 3: PROFILE */}
+        {/* Tab 4: PROFILE */}
         {activeTab === 'profile' && (
           <div className="space-y-4">
             <h2 className="text-lg font-bold text-white font-['Outfit',sans-serif]">
               Driver Profile
             </h2>
-            <div className="glass-panel p-6 rounded-3xl border border-slate-800 space-y-4 text-xs">
-              <div className="flex items-center gap-3 pb-4 border-b border-slate-800">
-                <div className="w-12 h-12 rounded-2xl bg-emerald-600 flex items-center justify-center text-white font-black text-lg">
+            <div className="glass-panel p-5 rounded-3xl border border-slate-800 space-y-4">
+              <div className="flex items-center gap-3 pb-3 border-b border-slate-800">
+                <div className="w-12 h-12 rounded-full bg-blue-600/20 border border-blue-500/30 flex items-center justify-center font-bold text-lg text-blue-400">
                   {user?.name?.charAt(0).toUpperCase()}
                 </div>
                 <div>
-                  <h3 className="font-bold text-sm text-white">{user?.name}</h3>
-                  <p className="text-slate-400">{user?.email}</p>
+                  <h3 className="font-bold text-base text-white">{user?.name}</h3>
+                  <p className="text-xs text-slate-400 font-mono">{user?.email}</p>
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <div className="flex justify-between py-1.5 border-b border-slate-800/60">
-                  <span className="text-slate-400">Phone</span>
-                  <span className="text-white font-medium">{user?.phone || 'N/A'}</span>
+              <div className="space-y-2 text-xs text-slate-400">
+                <div className="flex justify-between">
+                  <span>Phone:</span>
+                  <span className="text-white font-semibold">{user?.phone || 'Not recorded'}</span>
                 </div>
-                <div className="flex justify-between py-1.5 border-b border-slate-800/60">
-                  <span className="text-slate-400">Role</span>
+                <div className="flex justify-between">
+                  <span>Role:</span>
                   <span className="text-emerald-400 font-semibold uppercase">Commercial Driver</span>
                 </div>
               </div>
 
               <button
                 onClick={logout}
-                className="w-full mt-4 py-2.5 bg-rose-600/10 hover:bg-rose-600/20 text-rose-400 border border-rose-500/30 font-semibold rounded-xl transition-colors"
+                className="w-full py-2.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 font-semibold text-xs transition-colors cursor-pointer"
               >
-                Sign Out
+                Sign Out from Driver App
               </button>
             </div>
           </div>
         )}
       </div>
 
-      {/* Touch-First Mobile Bottom Navigation Bar */}
-      <div className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-slate-950/95 backdrop-blur-lg border-t border-slate-800 px-6 py-2 flex items-center justify-between z-40">
+      {/* Bottom Tab Navigation */}
+      <div className="bg-slate-900/95 backdrop-blur-md sticky bottom-0 z-30 border-t border-slate-800 flex items-center justify-around py-2.5 px-3">
         <button
           onClick={() => setActiveTab('home')}
-          className={`flex flex-col items-center gap-1 text-[10px] font-semibold transition-colors ${
-            activeTab === 'home' ? 'text-emerald-400' : 'text-slate-500 hover:text-slate-300'
+          className={`flex flex-col items-center gap-1 text-[10px] font-semibold transition-colors cursor-pointer ${
+            activeTab === 'home' ? 'text-blue-400' : 'text-slate-400 hover:text-slate-200'
           }`}
         >
           <Truck className="w-5 h-5" />
           <span>Home</span>
         </button>
-
+        <button
+          onClick={() => setActiveTab('activity')}
+          className={`flex flex-col items-center gap-1 text-[10px] font-semibold transition-colors cursor-pointer ${
+            activeTab === 'activity' ? 'text-blue-400' : 'text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          <Clock className="w-5 h-5" />
+          <span>Requests</span>
+        </button>
         <button
           onClick={() => setActiveTab('vehicle')}
-          className={`flex flex-col items-center gap-1 text-[10px] font-semibold transition-colors ${
-            activeTab === 'vehicle' ? 'text-emerald-400' : 'text-slate-500 hover:text-slate-300'
+          className={`flex flex-col items-center gap-1 text-[10px] font-semibold transition-colors cursor-pointer ${
+            activeTab === 'vehicle' ? 'text-blue-400' : 'text-slate-400 hover:text-slate-200'
           }`}
         >
           <Gauge className="w-5 h-5" />
           <span>Vehicle</span>
         </button>
-
-        {/* Central Floating "Report Issue" Button */}
-        <button
-          onClick={() => {
-            setError(null);
-            setIsReportModalOpen(true);
-          }}
-          className="w-12 h-12 -mt-5 rounded-full bg-rose-600 hover:bg-rose-500 text-white flex items-center justify-center shadow-lg shadow-rose-950/60 transition-transform active:scale-95"
-          title="Report Breakdown"
-        >
-          <AlertTriangle className="w-6 h-6" />
-        </button>
-
-        <button
-          onClick={() => {
-            if (vehicle) {
-              setNewOdometer(vehicle.odometer);
-              setIsOdoModalOpen(true);
-            }
-          }}
-          className="flex flex-col items-center gap-1 text-[10px] font-semibold text-slate-500 hover:text-slate-300 transition-colors"
-        >
-          <Clock className="w-5 h-5" />
-          <span>Log Odo</span>
-        </button>
-
         <button
           onClick={() => setActiveTab('profile')}
-          className={`flex flex-col items-center gap-1 text-[10px] font-semibold transition-colors ${
-            activeTab === 'profile' ? 'text-emerald-400' : 'text-slate-500 hover:text-slate-300'
+          className={`flex flex-col items-center gap-1 text-[10px] font-semibold transition-colors cursor-pointer ${
+            activeTab === 'profile' ? 'text-blue-400' : 'text-slate-400 hover:text-slate-200'
           }`}
         >
           <User className="w-5 h-5" />
@@ -422,126 +675,395 @@ export const DriverHome: React.FC = () => {
         </button>
       </div>
 
-      {/* Log Odometer Modal */}
+      {/* MODAL 1: Apply for Maintenance */}
       <Modal
-        isOpen={isOdoModalOpen}
-        onClose={() => setIsOdoModalOpen(false)}
-        title="Update Trip Odometer"
-        maxWidth="sm"
+        isOpen={isMaintenanceModalOpen}
+        onClose={() => setIsMaintenanceModalOpen(false)}
+        title="Apply for Maintenance"
       >
         {error && (
-          <div className="mb-3 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs">
-            {error}
+          <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4 shrink-0" />
+            <span>{error}</span>
           </div>
         )}
-        <form onSubmit={handleUpdateOdometer} className="space-y-4 text-xs">
+
+        <form onSubmit={handleMaintenanceRequest} className="space-y-4 text-xs">
           <div>
-            <label className="block font-semibold text-slate-300 mb-1">
-              New Odometer (km)
+            <label className="block font-semibold text-slate-700 mb-1">
+              Current Vehicle Number <span className="text-rose-500">*</span>
             </label>
-            <input
-              type="number"
+            <select
+              value={maintData.vehicleId}
               required
-              min={vehicle?.odometer || 0}
-              value={newOdometer}
-              onChange={(e) => setNewOdometer(e.target.value)}
-              className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-3 text-white font-mono text-base outline-none"
-            />
-            <p className="text-[11px] text-slate-500 mt-1">
-              Last saved: {vehicle?.odometer.toLocaleString()} km
-            </p>
+              onChange={(e) => setMaintData({ ...maintData, vehicleId: e.target.value })}
+              className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none font-mono"
+            >
+              {vehicles.map((v) => (
+                <option key={v._id} value={v._id}>
+                  {v.vehicleNumber} ({v.manufacturer} {v.model})
+                </option>
+              ))}
+            </select>
           </div>
 
-          <div className="flex justify-end gap-2 pt-2">
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">
+              Service Type (What type of service) <span className="text-rose-500">*</span>
+            </label>
+            <input
+              type="text"
+              required
+              value={maintData.serviceType}
+              onChange={(e) => setMaintData({ ...maintData, serviceType: e.target.value })}
+              placeholder="e.g. Engine Oil, Brake Inspection, Clutch Servicing"
+              className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block font-semibold text-slate-700 mb-1">
+                Current Odometer (km) <span className="text-rose-500">*</span>
+              </label>
+              <input
+                type="number"
+                required
+                value={maintData.currentOdometer}
+                onChange={(e) => setMaintData({ ...maintData, currentOdometer: e.target.value })}
+                placeholder="Kilometers"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none font-mono"
+              />
+            </div>
+
+            <div>
+              <label className="block font-semibold text-slate-700 mb-1">
+                Running Km Interval <span className="text-rose-500">*</span>
+              </label>
+              <input
+                type="number"
+                required
+                value={maintData.runningKmInterval}
+                onChange={(e) => setMaintData({ ...maintData, runningKmInterval: e.target.value })}
+                placeholder="10000"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none font-mono"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">
+              Service Center (Where will service take place) <span className="text-rose-500">*</span>
+            </label>
+            <input
+              type="text"
+              required
+              value={maintData.serviceCenter}
+              onChange={(e) => setMaintData({ ...maintData, serviceCenter: e.target.value })}
+              placeholder="e.g. Authorized Ashok Leyland Hub, Chennai"
+              className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">
+              Additional Notes / Observations
+            </label>
+            <textarea
+              rows={2}
+              value={maintData.notes}
+              onChange={(e) => setMaintData({ ...maintData, notes: e.target.value })}
+              placeholder="Any specific noise, vibration, or parts needed..."
+              className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
+            />
+          </div>
+
+          <div className="pt-2 flex justify-end gap-2">
             <button
               type="button"
-              onClick={() => setIsOdoModalOpen(false)}
-              className="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl"
+              onClick={() => setIsMaintenanceModalOpen(false)}
+              className="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-xl cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={submitLoading}
-              className="px-4 py-2 bg-emerald-600 text-white rounded-xl font-bold"
+              className="px-5 py-2 bg-[#2335f2] hover:bg-blue-700 text-white font-medium rounded-xl shadow-sm disabled:opacity-50 cursor-pointer"
             >
-              {submitLoading ? 'Saving...' : 'Submit'}
+              {submitLoading ? 'Submitting...' : 'Request Maintenance'}
             </button>
           </div>
         </form>
       </Modal>
 
-      {/* Report Vehicle Issue Modal (Exact wireframe match) */}
+      {/* MODAL 2: Report Repair / Breakdown with Photo Proof */}
       <Modal
-        isOpen={isReportModalOpen}
-        onClose={() => setIsReportModalOpen(false)}
-        title="Report Vehicle Issue"
+        isOpen={isRepairModalOpen}
+        onClose={() => setIsRepairModalOpen(false)}
+        title="Report Breakdown / Repair"
       >
         {error && (
-          <div className="mb-3 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs">
-            {error}
+          <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4 shrink-0" />
+            <span>{error}</span>
           </div>
         )}
-        <form onSubmit={handleReportIssue} className="space-y-4 text-xs">
-          <div>
-            <label className="block font-semibold text-slate-400 mb-1">Vehicle</label>
-            <div className="p-2.5 rounded-xl bg-slate-800 font-mono font-bold text-white text-sm">
-              {vehicle ? vehicle.vehicleNumber : 'No vehicle assigned'}
-            </div>
-          </div>
 
+        <form onSubmit={handleRepairRequest} className="space-y-4 text-xs">
           <div>
-            <label className="block font-semibold text-slate-300 mb-1">
-              Issue Type
+            <label className="block font-semibold text-slate-700 mb-1">
+              Vehicle Number <span className="text-rose-500">*</span>
             </label>
             <select
-              value={reportData.issueType}
-              onChange={(e) => setReportData({ ...reportData, issueType: e.target.value })}
-              className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white outline-none"
+              value={repairData.vehicleId}
+              required
+              onChange={(e) => setRepairData({ ...repairData, vehicleId: e.target.value })}
+              className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none font-mono"
             >
-              <option value="Engine">Engine</option>
-              <option value="Brakes">Brakes</option>
-              <option value="Transmission">Transmission</option>
-              <option value="Electrical">Electrical</option>
-              <option value="Tire">Tire</option>
-              <option value="Body">Body</option>
-              <option value="Suspension">Suspension</option>
-              <option value="Air Conditioning">Air Conditioning</option>
-              <option value="Other">Other</option>
+              {vehicles.map((v) => (
+                <option key={v._id} value={v._id}>
+                  {v.vehicleNumber} ({v.manufacturer} {v.model})
+                </option>
+              ))}
             </select>
           </div>
 
           <div>
-            <label className="block font-semibold text-slate-300 mb-1">
-              Description
+            <label className="block font-semibold text-slate-700 mb-1">
+              What the Repair is <span className="text-rose-500">*</span>
             </label>
-            <textarea
-              rows={3}
+            <input
+              type="text"
               required
-              value={reportData.description}
-              onChange={(e) => setReportData({ ...reportData, description: e.target.value })}
-              placeholder="e.g. Engine making unusual noise, knocking sound under acceleration"
-              className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2 text-white outline-none resize-none"
+              value={repairData.repairWhat}
+              onChange={(e) => setRepairData({ ...repairData, repairWhat: e.target.value })}
+              placeholder="e.g. Front Right Tire Puncture / Radiator Overheat"
+              className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
             />
           </div>
 
           <div>
-            <label className="block font-semibold text-slate-300 mb-1">
-              Add Photo (Optional)
+            <label className="block font-semibold text-slate-700 mb-1">
+              Why the Repair Happened <span className="text-rose-500">*</span>
             </label>
-            <div className="border border-dashed border-slate-700 rounded-2xl p-4 text-center cursor-pointer hover:border-slate-500">
-              <Camera className="w-6 h-6 text-slate-400 mx-auto mb-1" />
-              <span className="text-[11px] text-slate-400">+ Attach roadside snapshot</span>
+            <input
+              type="text"
+              required
+              value={repairData.reasonWhy}
+              onChange={(e) => setRepairData({ ...repairData, reasonWhy: e.target.value })}
+              placeholder="e.g. Sharp iron object on highway / Coolant hose leak"
+              className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">
+              Upload Photo Proof (Take photo / file) <span className="text-rose-500">*</span>
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              required
+              onChange={(e) => setRepairPhotoFile(e.target.files ? e.target.files[0] : null)}
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-slate-900 outline-none"
+            />
+            {repairPhotoFile && (
+              <p className="text-[11px] text-emerald-600 font-semibold mt-1">
+                ✓ Photo selected: {repairPhotoFile.name}
+              </p>
+            )}
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block font-semibold text-slate-700 mb-1">
+                Odometer at Breakdown
+              </label>
+              <input
+                type="number"
+                value={repairData.odometerAtIncident}
+                onChange={(e) => setRepairData({ ...repairData, odometerAtIncident: e.target.value })}
+                placeholder="Current km"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none font-mono"
+              />
             </div>
           </div>
 
-          <div className="pt-2">
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">
+              Additional Description
+            </label>
+            <textarea
+              rows={2}
+              value={repairData.description}
+              onChange={(e) => setRepairData({ ...repairData, description: e.target.value })}
+              placeholder="Immediate vehicle location and roadside condition..."
+              className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
+            />
+          </div>
+
+          <div className="pt-2 flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => setIsRepairModalOpen(false)}
+              className="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-xl cursor-pointer"
+            >
+              Cancel
+            </button>
             <button
               type="submit"
-              disabled={submitLoading || !vehicle}
-              className="w-full py-3 bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white font-bold rounded-xl text-sm transition-colors shadow-lg shadow-rose-950/50"
+              disabled={submitLoading}
+              className="px-5 py-2 bg-rose-600 hover:bg-rose-700 text-white font-medium rounded-xl shadow-sm disabled:opacity-50 cursor-pointer"
             >
-              {submitLoading ? 'Transmitting to Fleet Manager...' : 'SUBMIT'}
+              {submitLoading ? 'Submitting...' : 'Submit with Proof'}
+            </button>
+          </div>
+        </form>
+      </Modal>
+
+      {/* MODAL 3: Log Expense during Service / Repair */}
+      <Modal
+        isOpen={isExpenseModalOpen}
+        onClose={() => setIsExpenseModalOpen(false)}
+        title="Log Service / Repair Expense"
+      >
+        {error && (
+          <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4 shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
+
+        <form onSubmit={handleExpenseSubmit} className="space-y-4 text-xs">
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">
+              Vehicle Number <span className="text-rose-500">*</span>
+            </label>
+            <select
+              value={expenseData.vehicleId}
+              required
+              onChange={(e) => setExpenseData({ ...expenseData, vehicleId: e.target.value })}
+              className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none font-mono"
+            >
+              {vehicles.map((v) => (
+                <option key={v._id} value={v._id}>
+                  {v.vehicleNumber} ({v.manufacturer} {v.model})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block font-semibold text-slate-700 mb-1">
+                Category <span className="text-rose-500">*</span>
+              </label>
+              <select
+                value={expenseData.category}
+                onChange={(e) => setExpenseData({ ...expenseData, category: e.target.value })}
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
+              >
+                <option value="Maintenance">Maintenance</option>
+                <option value="Fuel">Fuel</option>
+                <option value="Toll">Toll Fee</option>
+                <option value="Parking">Parking</option>
+                <option value="Other">Other Parts</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block font-semibold text-slate-700 mb-1">
+                Amount (₹) <span className="text-rose-500">*</span>
+              </label>
+              <input
+                type="number"
+                required
+                value={expenseData.amount}
+                onChange={(e) => setExpenseData({ ...expenseData, amount: e.target.value })}
+                placeholder="e.g. 1500"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none font-mono"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">
+              Receipt / Bill Photo
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setExpenseReceiptFile(e.target.files ? e.target.files[0] : null)}
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-slate-900 outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">
+              Expense Description / Notes
+            </label>
+            <textarea
+              rows={2}
+              value={expenseData.notes}
+              onChange={(e) => setExpenseData({ ...expenseData, notes: e.target.value })}
+              placeholder="e.g. Emergency spare clamp purchase during roadside repair"
+              className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
+            />
+          </div>
+
+          <div className="pt-2 flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => setIsExpenseModalOpen(false)}
+              className="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-xl cursor-pointer"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={submitLoading}
+              className="px-5 py-2 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-xl shadow-sm disabled:opacity-50 cursor-pointer"
+            >
+              {submitLoading ? 'Recording...' : 'Save Expense'}
+            </button>
+          </div>
+        </form>
+      </Modal>
+
+      {/* MODAL 4: Update Odometer */}
+      <Modal
+        isOpen={isOdoModalOpen}
+        onClose={() => setIsOdoModalOpen(false)}
+        title="Update Odometer Mileage"
+      >
+        <form onSubmit={handleUpdateOdometer} className="space-y-4 text-xs">
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">
+              New Odometer Value (km) <span className="text-rose-500">*</span>
+            </label>
+            <input
+              type="number"
+              required
+              value={newOdometer}
+              onChange={(e) => setNewOdometer(e.target.value)}
+              className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none font-mono"
+            />
+          </div>
+          <div className="pt-2 flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => setIsOdoModalOpen(false)}
+              className="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-xl cursor-pointer"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={submitLoading}
+              className="px-5 py-2 bg-[#2335f2] hover:bg-blue-700 text-white font-medium rounded-xl shadow-sm cursor-pointer"
+            >
+              Update Mileage
             </button>
           </div>
         </form>

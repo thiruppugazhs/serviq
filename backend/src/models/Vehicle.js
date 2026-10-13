@@ -67,6 +67,14 @@ const vehicleSchema = new mongoose.Schema(
     fitnessExpiry: {
       type: Date,
     },
+    fcExpiryDate: {
+      type: Date,
+    },
+    fcBook: {
+      type: String,
+      trim: true,
+      default: '',
+    },
     pucExpiry: {
       type: Date,
     },

@@ -19,8 +19,17 @@ const repairSchema = new mongoose.Schema(
     },
     issueType: {
       type: String,
-      enum: ['Engine', 'Brakes', 'Transmission', 'Electrical', 'Tire', 'Body', 'Suspension', 'Air Conditioning', 'Oil / Fluids', 'Other'],
-      required: [true, 'Issue type is required'],
+      default: 'General Repair',
+    },
+    repairWhat: {
+      type: String,
+      trim: true,
+      default: '',
+    },
+    reasonWhy: {
+      type: String,
+      trim: true,
+      default: '',
     },
     description: {
       type: String,
@@ -39,8 +48,23 @@ const repairSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['reported', 'in_progress', 'completed', 'rejected'],
-      default: 'reported',
+      enum: ['pending_approval', 'reported', 'approved', 'in_progress', 'completed', 'rejected'],
+      default: 'pending_approval',
+    },
+    approvedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      default: null,
+    },
+    approvalNotes: {
+      type: String,
+      trim: true,
+      default: '',
+    },
+    rejectionReason: {
+      type: String,
+      trim: true,
+      default: '',
     },
     odometerAtIncident: {
       type: Number,

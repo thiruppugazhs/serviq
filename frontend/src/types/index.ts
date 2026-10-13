@@ -17,11 +17,14 @@ export interface User {
   id: string;
   _id?: string;
   name: string;
+  firstName?: string;
+  lastName?: string;
   email: string;
   role: UserRole;
   phone?: string;
   employeeId?: string;
   address?: string;
+  stationAddress?: string;
   status: 'active' | 'inactive';
   organization: Organization | string;
   driverProfile?: Driver;
@@ -41,7 +44,8 @@ export interface Driver {
     phone?: string;
     relationship?: string;
   };
-  employmentStatus: 'full_time' | 'contract' | 'probation' | 'part_time';
+  employmentStatus?: 'full_time' | 'contract' | 'probation' | 'part_time';
+  employmentType?: string;
   joiningDate?: string;
   assignedVehicle?: Vehicle | string | null;
   status: 'active' | 'inactive' | 'on_duty' | 'off_duty';
@@ -63,6 +67,8 @@ export interface Vehicle {
   rcNumber?: string;
   insuranceExpiry?: string;
   fitnessExpiry?: string;
+  fcBook?: string;
+  fcExpiryDate?: string;
   pucExpiry?: string;
   createdAt?: string;
 }
@@ -71,29 +77,43 @@ export interface Maintenance {
   _id: string;
   vehicle: Vehicle;
   serviceType: string;
-  intervalMonths: number;
-  intervalKm: number;
+  intervalMonths?: number;
+  intervalKm?: number;
+  runningKmInterval?: number;
+  currentOdometer?: number;
   lastServiceDate?: string;
-  lastServiceOdometer: number;
+  lastServiceOdometer?: number;
+  scheduledStartDate?: string;
+  scheduledEndDate?: string;
   nextDueDate?: string;
   nextDueOdometer?: number;
-  cost: number;
-  status: 'good' | 'due_soon' | 'overdue' | 'completed';
+  cost?: number;
+  status: 'pending_approval' | 'approved' | 'rejected' | 'scheduled' | 'in_progress' | 'completed' | 'good' | 'due_soon' | 'overdue';
   serviceCenter?: string;
+  requestedBy?: User;
+  approvedBy?: User;
+  rejectionReason?: string;
+  approvalNotes?: string;
   notes?: string;
+  createdAt?: string;
 }
 
 export interface Repair {
   _id: string;
   vehicle: Vehicle;
   reportedBy: User;
-  issueType: 'Engine' | 'Brakes' | 'Transmission' | 'Electrical' | 'Tire' | 'Body' | 'Suspension' | 'Air Conditioning' | 'Oil / Fluids' | 'Other';
+  issueType?: string;
+  repairWhat?: string;
+  reasonWhy?: string;
   description: string;
   photos: string[];
-  priority: 'low' | 'medium' | 'high' | 'critical';
-  status: 'reported' | 'in_progress' | 'completed' | 'rejected';
-  odometerAtIncident: number;
+  priority?: 'low' | 'medium' | 'high' | 'critical';
+  status: 'pending_approval' | 'reported' | 'approved' | 'in_progress' | 'completed' | 'rejected';
+  odometerAtIncident?: number;
   assignedWorkshop?: string;
+  approvedBy?: User;
+  approvalNotes?: string;
+  rejectionReason?: string;
   cost?: number;
   completedAt?: string;
   notes?: string;

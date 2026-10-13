@@ -17,6 +17,24 @@ const maintenanceSchema = new mongoose.Schema(
       required: [true, 'Service type is required'],
       trim: true,
     },
+    requestedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      default: null,
+    },
+    approvedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      default: null,
+    },
+    currentOdometer: {
+      type: Number,
+      default: 0,
+    },
+    runningKmInterval: {
+      type: Number,
+      default: 0,
+    },
     intervalMonths: {
       type: Number,
       default: 6,
@@ -32,6 +50,12 @@ const maintenanceSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    scheduledStartDate: {
+      type: Date,
+    },
+    scheduledEndDate: {
+      type: Date,
+    },
     nextDueDate: {
       type: Date,
     },
@@ -44,8 +68,18 @@ const maintenanceSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['good', 'due_soon', 'overdue', 'completed'],
-      default: 'good',
+      enum: ['pending_approval', 'approved', 'rejected', 'scheduled', 'in_progress', 'completed', 'good', 'due_soon', 'overdue'],
+      default: 'pending_approval',
+    },
+    rejectionReason: {
+      type: String,
+      trim: true,
+      default: '',
+    },
+    approvalNotes: {
+      type: String,
+      trim: true,
+      default: '',
     },
     serviceCenter: {
       type: String,

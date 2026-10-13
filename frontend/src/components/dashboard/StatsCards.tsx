@@ -6,28 +6,36 @@ interface StatsCardsProps {
 }
 
 export const StatsCards: React.FC<StatsCardsProps> = ({ stats }) => {
+  const totalVehicles = stats?.vehicles?.total ?? 0;
+  const availableVehicles = stats?.vehicles?.available ?? 0;
+  const totalDrivers = stats?.drivers?.total ?? 0;
+  const activeDrivers = stats?.drivers?.active ?? 0;
+  const totalSpent = stats?.expenses?.totalSpent ?? 0;
+
+  const complianceRate = totalVehicles > 0
+    ? Math.round((availableVehicles / totalVehicles) * 100)
+    : 100;
+
   const cardData = [
     {
       title: 'Active Fleet Assets',
-      value: String(stats?.vehicles?.total ?? 28),
-      subtitle: `${stats?.vehicles?.available ?? 24} ready for dispatch`,
+      value: String(totalVehicles),
+      subtitle: `${availableVehicles} ready for dispatch`,
     },
     {
       title: 'Total Personnel & Drivers',
-      value: String(stats?.drivers?.total ?? 34),
-      subtitle: `${stats?.drivers?.active ?? 31} active on schedule`,
+      value: String(totalDrivers),
+      subtitle: `${activeDrivers} active on schedule`,
     },
     {
       title: 'Fleet Health & Compliance',
-      value: `${stats?.vehicles?.total ? Math.round(((stats.vehicles.available || 1) / stats.vehicles.total) * 100) : 96.4}%`,
-      subtitle: 'Zero compliance blockers',
+      value: `${complianceRate}%`,
+      subtitle: totalVehicles === 0 ? 'No vehicles registered' : 'Compliance operational',
     },
     {
       title: 'Monthly Maintenance Spend',
-      value: stats?.expenses?.totalSpent
-        ? `₹${(stats.expenses.totalSpent / 1000).toFixed(1)}k`
-        : '₹84.5k',
-      subtitle: 'Tracked against quarterly cap',
+      value: `₹${totalSpent.toLocaleString()}`,
+      subtitle: 'Recorded fleet operating expenses',
     },
   ];
 

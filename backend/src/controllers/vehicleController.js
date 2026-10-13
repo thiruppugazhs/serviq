@@ -17,11 +17,14 @@ exports.createVehicle = async (req, res, next) => {
       fuelType,
       odometer,
       assignedDriverId,
+      assignedDriver,
       status,
       vin,
       rcNumber,
       insuranceExpiry,
       fitnessExpiry,
+      fcExpiryDate,
+      fcBook,
       pucExpiry,
     } = req.body;
 
@@ -45,6 +48,9 @@ exports.createVehicle = async (req, res, next) => {
       });
     }
 
+    const targetDriverId = assignedDriverId || assignedDriver || null;
+    const resolvedFitness = fcExpiryDate || fitnessExpiry || null;
+
     const vehicle = await Vehicle.create({
       organization: req.organizationId,
       vehicleNumber: normalizedPlate,
@@ -54,18 +60,20 @@ exports.createVehicle = async (req, res, next) => {
       year: Number(year),
       fuelType: fuelType || 'Diesel',
       odometer: Number(odometer) || 0,
-      assignedDriver: assignedDriverId || null,
+      assignedDriver: targetDriverId,
       status: status || 'available',
       vin: vin ? vin.trim().toUpperCase() : '',
       rcNumber: rcNumber ? rcNumber.trim() : '',
       insuranceExpiry: insuranceExpiry || null,
-      fitnessExpiry: fitnessExpiry || null,
+      fitnessExpiry: resolvedFitness,
+      fcExpiryDate: resolvedFitness,
+      fcBook: fcBook ? fcBook.trim() : '',
       pucExpiry: pucExpiry || null,
     });
 
-    // If assignedDriverId provided, update driver record
-    if (assignedDriverId) {
-      await Driver.findByIdAndUpdate(assignedDriverId, {
+    // If targetDriverId provided, update driver record
+    if (targetDriverId) {
+      await Driver.findByIdAndUpdate(targetDriverId, {
         assignedVehicle: vehicle._id,
       });
     }

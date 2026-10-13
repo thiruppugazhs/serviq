@@ -29,6 +29,8 @@ export const VehiclesView: React.FC = () => {
     fuelType: 'Diesel',
     odometer: 0,
     assignedDriverId: '',
+    fcBook: '',
+    fcExpiryDate: '',
     status: 'available',
   });
 
@@ -39,8 +41,8 @@ export const VehiclesView: React.FC = () => {
         api.get('/vehicles'),
         api.get('/drivers'),
       ]);
-      if (vehRes.data.success) setVehicles(vehRes.data.vehicles);
-      if (drvRes.data.success) setDrivers(drvRes.data.drivers);
+      if (vehRes.data.success) setVehicles(vehRes.data.vehicles || []);
+      if (drvRes.data.success) setDrivers(drvRes.data.drivers || []);
     } catch (err: any) {
       console.error('Failed to load fleet assets:', err);
     } finally {
@@ -62,7 +64,20 @@ export const VehiclesView: React.FC = () => {
     setSubmitLoading(true);
 
     try {
-      await api.post('/vehicles', formData);
+      await api.post('/vehicles', {
+        vehicleNumber: formData.vehicleNumber.trim(),
+        vehicleType: formData.vehicleType,
+        manufacturer: formData.manufacturer.trim(),
+        model: formData.model.trim(),
+        year: Number(formData.year),
+        fuelType: formData.fuelType,
+        odometer: Number(formData.odometer) || 0,
+        assignedDriverId: formData.assignedDriverId || null,
+        assignedDriver: formData.assignedDriverId || null,
+        fcBook: formData.fcBook.trim(),
+        fcExpiryDate: formData.fcExpiryDate || null,
+        status: formData.status,
+      });
       setIsAddModalOpen(false);
       setFormData({
         vehicleNumber: '',
@@ -73,6 +88,8 @@ export const VehiclesView: React.FC = () => {
         fuelType: 'Diesel',
         odometer: 0,
         assignedDriverId: '',
+        fcBook: '',
+        fcExpiryDate: '',
         status: 'available',
       });
       fetchData();
@@ -214,6 +231,19 @@ export const VehiclesView: React.FC = () => {
                       {driverUser ? `${driverUser.name} (${driver?.driverId})` : 'Unassigned'}
                     </span>
                   </div>
+
+                  {/* FC Details */}
+                  {(vehicle.fcBook || vehicle.fcExpiryDate || vehicle.fitnessExpiry) && (
+                    <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-600">
+                      <div className="flex items-center gap-1.5 text-slate-500">
+                        <Calendar className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
+                        <span>FC Book: <strong className="text-slate-800">{vehicle.fcBook || 'Verified'}</strong></span>
+                      </div>
+                      <span className="text-[11px] font-medium text-slate-500">
+                        Expires: {new Date(vehicle.fcExpiryDate || vehicle.fitnessExpiry || '').toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
@@ -377,6 +407,37 @@ export const VehiclesView: React.FC = () => {
                   );
                 })}
               </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="block font-semibold text-slate-700 mb-1">
+                Vehicle FC Book <span className="text-rose-500">*</span>
+              </label>
+              <input
+                type="text"
+                name="fcBook"
+                required
+                value={formData.fcBook}
+                onChange={handleChange}
+                placeholder="e.g. FC-BK-99214 or Certificate No."
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none font-mono"
+              />
+            </div>
+
+            <div>
+              <label className="block font-semibold text-slate-700 mb-1">
+                Vehicle FC Expiry Date <span className="text-rose-500">*</span>
+              </label>
+              <input
+                type="date"
+                name="fcExpiryDate"
+                required
+                value={formData.fcExpiryDate}
+                onChange={handleChange}
+                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
+              />
             </div>
           </div>
 

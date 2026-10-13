@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   BarChart,
   Bar,
@@ -8,21 +8,37 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
-
-const chartData = [
-  { day: 'S', value: 45, label: 'Sunday' },
-  { day: 'M', value: 78, label: 'Monday' },
-  { day: 'T', value: 84, label: 'Tuesday' },
-  { day: 'W', value: 92, label: 'Wednesday' },
-  { day: 'T', value: 68, label: 'Thursday' },
-  { day: 'F', value: 80, label: 'Friday' },
-  { day: 'S', value: 55, label: 'Saturday' },
-];
+import api from '../../api/client';
 
 export const ProjectAnalytics: React.FC = () => {
-  const [hoveredBar, setHoveredBar] = useState<number | null>(null);
-  const maxValue = Math.max(...chartData.map((d) => d.value));
-  const average = Math.round(chartData.reduce((acc, d) => acc + d.value, 0) / chartData.length);
+  const [data, setData] = useState([
+    { day: 'Sun', value: 0, label: 'Sunday' },
+    { day: 'Mon', value: 0, label: 'Monday' },
+    { day: 'Tue', value: 0, label: 'Tuesday' },
+    { day: 'Wed', value: 0, label: 'Wednesday' },
+    { day: 'Thu', value: 0, label: 'Thursday' },
+    { day: 'Fri', value: 0, label: 'Friday' },
+    { day: 'Sat', value: 0, label: 'Saturday' },
+  ]);
+  const [hasActivity, setHasActivity] = useState(false);
+
+  useEffect(() => {
+    const fetchActivity = async () => {
+      try {
+        const res = await api.get('/reports/dashboard-stats');
+        if (res.data?.success && res.data.stats?.trips?.completed) {
+          // If real activity is present
+          setHasActivity(true);
+        }
+      } catch (err) {
+        console.warn('Analytics warning:', err);
+      }
+    };
+    fetchActivity();
+  }, []);
+
+  const maxValue = Math.max(...data.map((d) => d.value));
+  const average = Math.round(data.reduce((acc, d) => acc + d.value, 0) / data.length);
 
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
@@ -50,7 +66,7 @@ export const ProjectAnalytics: React.FC = () => {
 
       <div className="h-60 mb-3 relative">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={chartData} margin={{ top: 15, right: 10, left: -20, bottom: 0 }}>
+          <BarChart data={data} margin={{ top: 15, right: 10, left: -20, bottom: 0 }}>
             <defs>
               <linearGradient id="fleetBarGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#2335f2" />
@@ -76,8 +92,6 @@ export const ProjectAnalytics: React.FC = () => {
               fill="url(#fleetBarGradient)"
               radius={[10, 10, 10, 10]}
               maxBarSize={52}
-              onMouseEnter={(_, index) => setHoveredBar(index)}
-              onMouseLeave={() => setHoveredBar(null)}
             />
           </BarChart>
         </ResponsiveContainer>
@@ -92,8 +106,8 @@ export const ProjectAnalytics: React.FC = () => {
         </div>
         <div className="text-right">
           <span className="text-slate-400 font-medium block">Peak Dispatch Day</span>
-          <span className="text-base font-bold text-emerald-600 font-['Outfit',sans-serif]">
-            Wednesday ({maxValue}%)
+          <span className="text-base font-bold text-slate-700 font-['Outfit',sans-serif]">
+            {maxValue > 0 ? `Peak (${maxValue}%)` : 'No dispatches recorded'}
           </span>
         </div>
       </div>
