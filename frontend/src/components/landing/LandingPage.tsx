@@ -30,7 +30,6 @@ import {
 
 import { HelpFeedbackModal } from '../support/HelpFeedbackModal';
 import { RoadFeaturesSection } from './RoadFeaturesSection';
-import { PlatformEcosystemSection } from './PlatformEcosystemSection';
 
 const WORKFLOW_PILLS = [
   { label: 'Vehicle visibility', icon: Eye },
@@ -378,6 +377,13 @@ export const LandingPage: React.FC = () => {
             >
               About Us
             </a>
+            <a
+              href="#features"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-[72px] font-bold text-white/70 hover:text-white leading-[1.12] tracking-tight block transition-colors select-none"
+            >
+              Features
+            </a>
             <Link
               to="/download"
               onClick={() => setMobileMenuOpen(false)}
@@ -385,6 +391,13 @@ export const LandingPage: React.FC = () => {
             >
               Download App
             </Link>
+            <a
+              href="#faq"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-[72px] font-bold text-white/70 hover:text-white leading-[1.12] tracking-tight block transition-colors select-none"
+            >
+              Enterprise FAQ
+            </a>
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
@@ -394,34 +407,6 @@ export const LandingPage: React.FC = () => {
             >
               Help & Feedback
             </button>
-            <a
-              href="#about"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-[72px] font-bold text-white/70 hover:text-white leading-[1.12] tracking-tight block transition-colors select-none"
-            >
-              About Us
-            </a>
-            <a
-              href="#features"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-[72px] font-bold text-white/70 hover:text-white leading-[1.12] tracking-tight block transition-colors select-none"
-            >
-              Features
-            </a>
-            <a
-              href="#platform"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-[72px] font-bold text-white/70 hover:text-white leading-[1.12] tracking-tight block transition-colors select-none"
-            >
-              Apps & Platform
-            </a>
-            <a
-              href="#faq"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-[72px] font-bold text-white/70 hover:text-white leading-[1.12] tracking-tight block transition-colors select-none"
-            >
-              Enterprise FAQ
-            </a>
             <a
               href="#contact"
               onClick={() => setMobileMenuOpen(false)}
@@ -537,10 +522,6 @@ export const LandingPage: React.FC = () => {
       ========================================================================= */}
       <RoadFeaturesSection />
 
-      {/* =========================================================================
-          PAGE 4: PURPOSE-BUILT ECOSYSTEM (WEB APP FOR ADMIN & MOBILE FOR DRIVER)
-      ========================================================================= */}
-      <PlatformEcosystemSection />
 
       {/* =========================================================================
           FAQS SECTION — BLUE BACKGROUND WITH 10 ACCORDION CARDS
