@@ -532,7 +532,7 @@ export const DriversView: React.FC = () => {
                   <input
                     ref={fileInputRef}
                     type="file"
-                    accept="image/jpeg,image/png,image/webp"
+                    accept="image/*"
                     className="hidden"
                     onChange={handlePhotoSelect}
                   />

@@ -16,6 +16,9 @@ import {
   Clock,
   Download,
   ExternalLink,
+  Camera,
+  Image as ImageIcon,
+  X,
 } from 'lucide-react';
 
 const DOCUMENT_TYPES = [
@@ -40,6 +43,11 @@ export const DocumentsView: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [filePreview, setFilePreview] = useState<string | null>(null);
+  const [previewModalUrl, setPreviewModalUrl] = useState<string | null>(null);
+  const [previewModalTitle, setPreviewModalTitle] = useState<string>('');
 
   const [formData, setFormData] = useState({
     vehicleId: '',
@@ -80,13 +88,58 @@ export const DocumentsView: React.FC = () => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setSelectedFile(file);
+      if (file.type.startsWith('image/')) {
+        setFilePreview(URL.createObjectURL(file));
+      } else {
+        setFilePreview(null);
+      }
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      const file = e.dataTransfer.files[0];
+      setSelectedFile(file);
+      if (file.type.startsWith('image/')) {
+        setFilePreview(URL.createObjectURL(file));
+      } else {
+        setFilePreview(null);
+      }
+    }
+  };
+
+  const removeSelectedFile = () => {
+    setSelectedFile(null);
+    setFilePreview(null);
+  };
+
   const handleAddDocument = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setSubmitLoading(true);
 
     try {
-      await api.post('/documents', formData);
+      const formPayload = new FormData();
+      formPayload.append('vehicleId', formData.vehicleId || selectedVehicleId || '');
+      formPayload.append('documentType', formData.documentType);
+      formPayload.append('documentNumber', formData.documentNumber);
+      formPayload.append('issueDate', formData.issueDate);
+      formPayload.append('expiryDate', formData.expiryDate);
+      formPayload.append('notes', formData.notes);
+
+      if (selectedFile) {
+        formPayload.append('document', selectedFile);
+      }
+
+      await api.post('/documents', formPayload, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
       setIsModalOpen(false);
       setFormData({
         vehicleId: selectedVehicleId || '',
@@ -96,6 +149,8 @@ export const DocumentsView: React.FC = () => {
         expiryDate: '',
         notes: '',
       });
+      setSelectedFile(null);
+      setFilePreview(null);
       fetchData();
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to add document');
@@ -321,15 +376,28 @@ export const DocumentsView: React.FC = () => {
                               SERVIQ Verified
                             </span>
                             {doc.fileUrl ? (
-                              <a
-                                href={doc.fileUrl}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="text-xs text-[#2335f2] hover:underline font-semibold flex items-center gap-1"
-                              >
-                                <ExternalLink className="w-3 h-3" />
-                                <span>View File</span>
-                              </a>
+                              <div className="flex items-center gap-2">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setPreviewModalUrl(doc.fileUrl || null);
+                                    setPreviewModalTitle(`${doc.documentType} - ${doc.documentNumber || 'Photo'}`);
+                                  }}
+                                  className="text-xs text-[#2335f2] hover:text-blue-700 font-semibold flex items-center gap-1 cursor-pointer bg-blue-50 px-2 py-1 rounded-md border border-blue-200/60"
+                                >
+                                  <Camera className="w-3.5 h-3.5" />
+                                  <span>View Photo</span>
+                                </button>
+                                <a
+                                  href={doc.fileUrl}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="text-slate-400 hover:text-slate-600 p-1"
+                                  title="Open in new tab"
+                                >
+                                  <ExternalLink className="w-3.5 h-3.5" />
+                                </a>
+                              </div>
                             ) : (
                               <span className="text-[11px] text-slate-400">Record Only</span>
                             )}
@@ -454,6 +522,70 @@ export const DocumentsView: React.FC = () => {
             />
           </div>
 
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">
+              Document Photography / Scan (RC, FC, Insurance, Permit)
+            </label>
+            <div
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={handleDrop}
+              className="border-2 border-dashed border-slate-200 hover:border-[#2335f2] rounded-xl p-4 text-center cursor-pointer transition-colors bg-slate-50/50 group"
+              onClick={() => document.getElementById('doc-file-input')?.click()}
+            >
+              <input
+                id="doc-file-input"
+                type="file"
+                accept="image/*,application/pdf"
+                className="hidden"
+                onChange={handleFileChange}
+              />
+
+              {selectedFile ? (
+                <div className="flex flex-col items-center">
+                  {filePreview ? (
+                    <img
+                      src={filePreview}
+                      alt="Document photography preview"
+                      className="max-h-36 rounded-lg object-contain border border-slate-200 mb-2 shadow-xs"
+                    />
+                  ) : (
+                    <div className="w-12 h-12 rounded-xl bg-blue-50 text-[#2335f2] flex items-center justify-center mb-2">
+                      <FileText className="w-6 h-6" />
+                    </div>
+                  )}
+                  <p className="text-xs font-semibold text-slate-800 truncate max-w-xs">
+                    {selectedFile.name}
+                  </p>
+                  <p className="text-[11px] text-slate-400">
+                    {(selectedFile.size / 1024).toFixed(1)} KB · Click to change
+                  </p>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeSelectedFile();
+                    }}
+                    className="mt-2 text-rose-500 hover:text-rose-600 text-[11px] font-semibold inline-flex items-center gap-1 cursor-pointer"
+                  >
+                    <X className="w-3 h-3" /> Remove photo
+                  </button>
+                </div>
+              ) : (
+                <div className="py-2">
+                  <div className="w-10 h-10 rounded-full bg-blue-50 text-[#2335f2] flex items-center justify-center mx-auto mb-2 group-hover:scale-105 transition-transform">
+                    <Camera className="w-5 h-5 text-[#2335f2]" />
+                  </div>
+                  <p className="text-xs font-semibold text-slate-800">
+                    Take a photo or upload document copy
+                  </p>
+                  <p className="text-[11px] text-slate-400 mt-0.5">
+                    Supports camera photos, JPG, PNG, WebP or PDF · max 10MB
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+
           <div className="flex justify-end gap-3 pt-3 border-t border-slate-100">
             <button
               type="button"
@@ -472,6 +604,53 @@ export const DocumentsView: React.FC = () => {
           </div>
         </form>
       </Modal>
+
+      {/* Photography Preview Lightbox Modal */}
+      {previewModalUrl && (
+        <Modal
+          isOpen={!!previewModalUrl}
+          onClose={() => setPreviewModalUrl(null)}
+          title={previewModalTitle || 'Document Photography'}
+        >
+          <div className="flex flex-col items-center justify-center p-2">
+            {previewModalUrl.toLowerCase().endsWith('.pdf') ? (
+              <div className="w-full text-center py-8">
+                <FileText className="w-16 h-16 text-[#2335f2] mx-auto mb-3" />
+                <p className="text-sm font-semibold text-slate-800 mb-3">PDF Document File</p>
+                <a
+                  href={previewModalUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#2335f2] hover:bg-blue-700 text-white rounded-xl text-xs font-semibold cursor-pointer shadow-sm"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  <span>Open PDF in Browser</span>
+                </a>
+              </div>
+            ) : (
+              <div className="w-full flex flex-col items-center">
+                <img
+                  src={previewModalUrl}
+                  alt={previewModalTitle}
+                  className="max-h-[70vh] w-auto max-w-full rounded-xl object-contain border border-slate-200 shadow-md"
+                />
+                <div className="mt-3 flex items-center justify-between w-full pt-2 border-t border-slate-100">
+                  <span className="text-xs text-slate-500 font-mono">Original Document Photograph</span>
+                  <a
+                    href={previewModalUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-xs text-[#2335f2] hover:underline font-semibold flex items-center gap-1"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    <span>Open full resolution</span>
+                  </a>
+                </div>
+              </div>
+            )}
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };

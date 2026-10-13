@@ -17,6 +17,9 @@ import {
   User,
   Image as ImageIcon,
   CheckCircle,
+  Camera,
+  X,
+  ExternalLink,
 } from 'lucide-react';
 
 export const ExpensesView: React.FC = () => {
@@ -27,6 +30,11 @@ export const ExpensesView: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const [selectedReceipt, setSelectedReceipt] = useState<File | null>(null);
+  const [receiptPreview, setReceiptPreview] = useState<string | null>(null);
+  const [previewBillUrl, setPreviewBillUrl] = useState<string | null>(null);
+  const [previewBillTitle, setPreviewBillTitle] = useState<string>('');
 
   const [formData, setFormData] = useState({
     vehicleId: '',
@@ -70,13 +78,59 @@ export const ExpensesView: React.FC = () => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  const handleReceiptChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setSelectedReceipt(file);
+      if (file.type.startsWith('image/')) {
+        setReceiptPreview(URL.createObjectURL(file));
+      } else {
+        setReceiptPreview(null);
+      }
+    }
+  };
+
+  const handleReceiptDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      const file = e.dataTransfer.files[0];
+      setSelectedReceipt(file);
+      if (file.type.startsWith('image/')) {
+        setReceiptPreview(URL.createObjectURL(file));
+      } else {
+        setReceiptPreview(null);
+      }
+    }
+  };
+
+  const removeSelectedReceipt = () => {
+    setSelectedReceipt(null);
+    setReceiptPreview(null);
+  };
+
   const handleAddExpense = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setSubmitLoading(true);
 
     try {
-      await api.post('/expenses', formData);
+      const formPayload = new FormData();
+      formPayload.append('vehicleId', formData.vehicleId || selectedVehicleId || '');
+      formPayload.append('category', formData.category);
+      formPayload.append('amount', formData.amount);
+      formPayload.append('date', formData.date);
+      if (formData.odometer) formPayload.append('odometer', formData.odometer);
+      if (formData.fuelLiters) formPayload.append('fuelLiters', formData.fuelLiters);
+      if (formData.notes) formPayload.append('notes', formData.notes);
+
+      if (selectedReceipt) {
+        formPayload.append('receipt', selectedReceipt);
+      }
+
+      await api.post('/expenses', formPayload, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
       setIsModalOpen(false);
       setFormData({
         vehicleId: selectedVehicleId || '',
@@ -87,6 +141,8 @@ export const ExpensesView: React.FC = () => {
         fuelLiters: '',
         notes: '',
       });
+      setSelectedReceipt(null);
+      setReceiptPreview(null);
       fetchData();
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to record expense');
@@ -295,17 +351,30 @@ export const ExpensesView: React.FC = () => {
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-4 sm:text-right">
+                        <div className="flex items-center gap-3 sm:text-right">
                           {exp.receiptUrl && (
-                            <a
-                              href={exp.receiptUrl}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="text-xs text-[#2335f2] hover:underline flex items-center gap-1 font-medium"
-                            >
-                              <ImageIcon className="w-3.5 h-3.5" />
-                              <span>Receipt Proof</span>
-                            </a>
+                            <div className="flex items-center gap-1.5">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setPreviewBillUrl(exp.receiptUrl || null);
+                                  setPreviewBillTitle(`${exp.category} Expense Bill - ₹${exp.amount.toLocaleString()}`);
+                                }}
+                                className="text-xs text-[#2335f2] hover:text-blue-700 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200/60 font-semibold flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                              >
+                                <Camera className="w-3.5 h-3.5" />
+                                <span>View Bill</span>
+                              </button>
+                              <a
+                                href={exp.receiptUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-slate-400 hover:text-slate-600 p-1"
+                                title="Open original in new tab"
+                              >
+                                <ExternalLink className="w-3.5 h-3.5" />
+                              </a>
+                            </div>
                           )}
                           <span className="font-mono text-base font-bold text-slate-900">
                             ₹{exp.amount.toLocaleString()}
@@ -436,6 +505,70 @@ export const ExpensesView: React.FC = () => {
             />
           </div>
 
+          <div>
+            <label className="block font-semibold text-slate-700 mb-1">
+              Photo of Bill / Fuel Slip / Invoice
+            </label>
+            <div
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={handleReceiptDrop}
+              className="border-2 border-dashed border-slate-200 hover:border-[#2335f2] rounded-xl p-4 text-center cursor-pointer transition-colors bg-slate-50/50 group"
+              onClick={() => document.getElementById('expense-receipt-input')?.click()}
+            >
+              <input
+                id="expense-receipt-input"
+                type="file"
+                accept="image/*,application/pdf"
+                className="hidden"
+                onChange={handleReceiptChange}
+              />
+
+              {selectedReceipt ? (
+                <div className="flex flex-col items-center">
+                  {receiptPreview ? (
+                    <img
+                      src={receiptPreview}
+                      alt="Bill receipt preview"
+                      className="max-h-36 rounded-lg object-contain border border-slate-200 mb-2 shadow-xs"
+                    />
+                  ) : (
+                    <div className="w-12 h-12 rounded-xl bg-blue-50 text-[#2335f2] flex items-center justify-center mb-2">
+                      <Receipt className="w-6 h-6" />
+                    </div>
+                  )}
+                  <p className="text-xs font-semibold text-slate-800 truncate max-w-xs">
+                    {selectedReceipt.name}
+                  </p>
+                  <p className="text-[11px] text-slate-400">
+                    {(selectedReceipt.size / 1024).toFixed(1)} KB · Click to change
+                  </p>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeSelectedReceipt();
+                    }}
+                    className="mt-2 text-rose-500 hover:text-rose-600 text-[11px] font-semibold inline-flex items-center gap-1 cursor-pointer"
+                  >
+                    <X className="w-3 h-3" /> Remove bill photo
+                  </button>
+                </div>
+              ) : (
+                <div className="py-2">
+                  <div className="w-10 h-10 rounded-full bg-blue-50 text-[#2335f2] flex items-center justify-center mx-auto mb-2 group-hover:scale-105 transition-transform">
+                    <Camera className="w-5 h-5 text-[#2335f2]" />
+                  </div>
+                  <p className="text-xs font-semibold text-slate-800">
+                    Take photo of bill or upload receipt
+                  </p>
+                  <p className="text-[11px] text-slate-400 mt-0.5">
+                    Supports camera capture, JPG, PNG, WebP or PDF · max 10MB
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+
           <div className="flex justify-end gap-3 pt-3 border-t border-slate-100">
             <button
               type="button"
@@ -454,6 +587,53 @@ export const ExpensesView: React.FC = () => {
           </div>
         </form>
       </Modal>
+
+      {/* Bill Photo Preview Lightbox Modal */}
+      {previewBillUrl && (
+        <Modal
+          isOpen={!!previewBillUrl}
+          onClose={() => setPreviewBillUrl(null)}
+          title={previewBillTitle || 'Expense Bill Photography'}
+        >
+          <div className="flex flex-col items-center justify-center p-2">
+            {previewBillUrl.toLowerCase().endsWith('.pdf') ? (
+              <div className="w-full text-center py-8">
+                <Receipt className="w-16 h-16 text-[#2335f2] mx-auto mb-3" />
+                <p className="text-sm font-semibold text-slate-800 mb-3">PDF Receipt Document</p>
+                <a
+                  href={previewBillUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#2335f2] hover:bg-blue-700 text-white rounded-xl text-xs font-semibold cursor-pointer shadow-sm"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  <span>Open PDF in Browser</span>
+                </a>
+              </div>
+            ) : (
+              <div className="w-full flex flex-col items-center">
+                <img
+                  src={previewBillUrl}
+                  alt={previewBillTitle}
+                  className="max-h-[70vh] w-auto max-w-full rounded-xl object-contain border border-slate-200 shadow-md"
+                />
+                <div className="mt-3 flex items-center justify-between w-full pt-2 border-t border-slate-100">
+                  <span className="text-xs text-slate-500 font-mono">Original Bill Receipt</span>
+                  <a
+                    href={previewBillUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-xs text-[#2335f2] hover:underline font-semibold flex items-center gap-1"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    <span>Open full resolution</span>
+                  </a>
+                </div>
+              </div>
+            )}
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };
