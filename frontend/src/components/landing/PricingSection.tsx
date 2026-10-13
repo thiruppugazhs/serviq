@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Check, ArrowRight, Sparkles } from 'lucide-react';
-import { ContactModal } from '../common/ContactModal';
+import { Check, ArrowRight } from 'lucide-react';
 
 export const PricingSection: React.FC = () => {
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
-  const [contactModalOpen, setContactModalOpen] = useState(false);
 
   const ENTERPRISE_FEATURES = [
     {
@@ -57,11 +55,6 @@ export const PricingSection: React.FC = () => {
             HEADER (SERVIQ DEFAULT ANEK LATIN / SANS TYPOGRAPHY)
         ========================================================================= */}
         <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 text-[#2335f2] border border-blue-200/80 text-xs font-bold uppercase tracking-wider mb-4">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Transparent Single Package</span>
-          </div>
-
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 font-anek-latin tracking-tight leading-tight">
             Single Fleet Package
           </h2>
@@ -82,11 +75,6 @@ export const PricingSection: React.FC = () => {
           {/* Card Top: Plan Title, Billing Switcher & Pricing */}
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-8 border-b border-slate-100">
             <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 mb-3">
-                <Check className="w-3.5 h-3.5 stroke-[3]" />
-                <span>First 1 Month Free Upon Registration</span>
-              </div>
-
               <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-anek-latin tracking-tight">
                 All-in-One Fleet Package
               </h3>
@@ -178,41 +166,19 @@ export const PricingSection: React.FC = () => {
               Engineered for commercial freight carriers, interstate logistics, bus & municipal operators, and regional fleets requiring end-to-end operational governance.
             </p>
 
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="text-xs text-slate-500 text-center sm:text-left">
-                <span className="font-semibold text-slate-800 block">First 30 days are 100% free upon account creation.</span>
-                Choose monthly (₹1,000) or yearly (₹10,000) billing anytime.
-              </div>
-
-              <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
-                <Link
-                  to="/register"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full font-bold text-sm sm:text-base bg-[#2335f2] hover:bg-[#1a2bd6] active:scale-98 text-white transition-all shadow-lg hover:shadow-blue-600/25 cursor-pointer text-center"
-                >
-                  <span>Start 1 Month Free</span>
-                  <ArrowRight className="w-4 h-4 stroke-[2.5]" />
-                </Link>
-
-                <button
-                  type="button"
-                  onClick={() => setContactModalOpen(true)}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-bold text-sm bg-slate-100 hover:bg-slate-200 active:scale-98 text-slate-800 transition-all cursor-pointer"
-                >
-                  <span>Get Cost Estimate</span>
-                </button>
-              </div>
+            {/* Action Button */}
+            <div className="flex flex-col sm:flex-row items-center justify-end">
+              <Link
+                to="/register"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-10 py-4 rounded-full font-bold text-sm sm:text-base bg-[#2335f2] hover:bg-[#1a2bd6] active:scale-98 text-white transition-all shadow-lg hover:shadow-blue-600/25 cursor-pointer text-center"
+              >
+                <span>Start 1 Month Free</span>
+                <ArrowRight className="w-4 h-4 stroke-[2.5]" />
+              </Link>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Talk To Us Contact Modal */}
-      <ContactModal
-        isOpen={contactModalOpen}
-        onClose={() => setContactModalOpen(false)}
-        defaultNeed="Commercial Fleet Management"
-      />
     </section>
   );
 };
