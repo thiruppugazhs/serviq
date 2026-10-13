@@ -17,7 +17,6 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
-  Download,
   X,
 } from 'lucide-react';
 
@@ -99,11 +98,6 @@ export const Sidebar: React.FC = () => {
       name: 'My Profile',
       path: `${basePath}/profile`,
       icon: UserCheck,
-    },
-    {
-      name: 'Driver App (APK)',
-      path: '/download-app',
-      icon: Download,
     },
   ];
 

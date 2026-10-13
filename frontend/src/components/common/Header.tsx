@@ -1,9 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, Mail, Bell, Menu, User, Settings, LogOut, CheckCircle2 } from 'lucide-react';
+import { Search, Bell, Menu, User, Settings, LogOut, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useDashboard } from '../../context/DashboardContext';
 import { useNavigate } from 'react-router-dom';
-import { HelpFeedbackModal } from '../support/HelpFeedbackModal';
 
 interface HeaderProps {
   title: string;
@@ -18,7 +17,6 @@ export const Header: React.FC<HeaderProps> = ({ title, description, actions }) =
 
   const [profileOpen, setProfileOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
-  const [supportModalOpen, setSupportModalOpen] = useState(false);
 
   const profileRef = useRef<HTMLDivElement>(null);
   const notifRef = useRef<HTMLDivElement>(null);
@@ -50,8 +48,7 @@ export const Header: React.FC<HeaderProps> = ({ title, description, actions }) =
     : 'SQ';
 
   return (
-    <>
-      <header className="space-y-4 mb-4 md:mb-5">
+    <header className="space-y-4 mb-4 md:mb-5">
         {/* Top utility row */}
         <div className="flex items-center justify-between gap-3">
           {/* Mobile hamburger + Search input */}
@@ -78,15 +75,6 @@ export const Header: React.FC<HeaderProps> = ({ title, description, actions }) =
 
           {/* Right action icons & User Profile pill */}
           <div className="flex items-center gap-2">
-            {/* Mail / Support icon button */}
-            <button
-              onClick={() => setSupportModalOpen(true)}
-              className="h-9 w-9 rounded-lg hover:bg-slate-100 flex items-center justify-center text-slate-600 hover:text-slate-900 transition-colors"
-              title="Help & Support Desk"
-            >
-              <Mail className="w-4 h-4" />
-            </button>
-
             {/* Bell Notifications */}
             <div className="relative" ref={notifRef}>
               <button
@@ -213,14 +201,5 @@ export const Header: React.FC<HeaderProps> = ({ title, description, actions }) =
           )}
         </div>
       </header>
-
-      {/* Help & Support Modal */}
-      {supportModalOpen && (
-        <HelpFeedbackModal
-          isOpen={supportModalOpen}
-          onClose={() => setSupportModalOpen(false)}
-        />
-      )}
-    </>
   );
 };

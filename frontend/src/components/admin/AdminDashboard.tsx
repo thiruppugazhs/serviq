@@ -8,8 +8,7 @@ import { TeamCollaboration } from '../dashboard/TeamCollaboration';
 import { Reminders } from '../dashboard/Reminders';
 import { ProjectProgress } from '../dashboard/ProjectProgress';
 import { ProjectList } from '../dashboard/ProjectList';
-import { Link } from 'react-router-dom';
-import { Plus, Download } from 'lucide-react';
+import { Download } from 'lucide-react';
 
 export const AdminDashboard: React.FC = () => {
   const [stats, setStats] = useState<DashboardStats | null>(null);
@@ -50,23 +49,13 @@ export const AdminDashboard: React.FC = () => {
         title="Fleet Operations Dashboard"
         description="Plan, execute, and monitor commercial vehicle fleet operations with data-driven insights."
         actions={
-          <>
-            <Link
-              to="../vehicles"
-              className="inline-flex items-center gap-1.5 h-9 px-4 text-xs font-semibold bg-[#2335f2] text-white hover:bg-blue-700 rounded-lg shadow-sm transition-all hover:scale-[1.01]"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              <span>+ New Fleet Asset</span>
-            </Link>
-
-            <button
-              onClick={handleExport}
-              className="inline-flex items-center gap-1.5 h-9 px-4 text-xs font-semibold rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-700 bg-white shadow-2xs transition-all cursor-pointer"
-            >
-              <Download className="w-3.5 h-3.5 text-slate-500" />
-              <span>Export Report</span>
-            </button>
-          </>
+          <button
+            onClick={handleExport}
+            className="inline-flex items-center gap-1.5 h-9 px-4 text-xs font-semibold rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-700 bg-white shadow-2xs transition-all cursor-pointer"
+          >
+            <Download className="w-3.5 h-3.5 text-slate-500" />
+            <span>Export Report</span>
+          </button>
         }
       />
 
