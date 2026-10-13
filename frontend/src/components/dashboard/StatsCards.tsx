@@ -47,7 +47,7 @@ export const StatsCards: React.FC<StatsCardsProps> = ({ stats }) => {
           className="bg-white border border-slate-200/90 p-4 rounded-xl shadow-2xs hover:shadow-xs transition-shadow"
         >
           <h3 className="text-xs text-slate-500 font-medium mb-3">{stat.title}</h3>
-          <p className="text-3xl font-bold text-slate-900 mb-1 font-['Outfit',sans-serif] tracking-tight">
+          <p className="text-3xl font-bold text-slate-900 mb-1 font-['Anek_Latin',sans-serif] tracking-tight">
             {stat.value}
           </p>
           <p className="text-xs text-slate-400 font-normal">{stat.subtitle}</p>

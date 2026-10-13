@@ -47,7 +47,7 @@ export const Modal: React.FC<ModalProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
-          <h2 className="text-lg font-bold text-slate-900 font-['Outfit',sans-serif]">{title}</h2>
+          <h2 className="text-lg font-bold text-slate-900 font-['Anek_Latin',sans-serif]">{title}</h2>
           <button
             onClick={onClose}
             className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"

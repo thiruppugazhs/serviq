@@ -159,7 +159,7 @@ export const VehiclesView: React.FC = () => {
       {/* Page Title & Add Button */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-extrabold text-slate-900 font-['Outfit',sans-serif] tracking-tight">
+          <h1 className="text-2xl font-extrabold text-slate-900 font-['Anek_Latin',sans-serif] tracking-tight">
             Vehicle Management
           </h1>
           <p className="text-xs text-slate-500 mt-0.5">
@@ -339,7 +339,7 @@ export const VehiclesView: React.FC = () => {
             {/* Modal Header */}
             <div className="flex items-start justify-between pb-4">
               <div>
-                <h2 className="text-xl font-bold text-slate-900 font-['Outfit',sans-serif]">
+                <h2 className="text-xl font-bold text-slate-900 font-['Anek_Latin',sans-serif]">
                   New Vehicle
                 </h2>
                 <p className="text-xs text-slate-500 mt-0.5">

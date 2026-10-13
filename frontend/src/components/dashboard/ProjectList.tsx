@@ -33,7 +33,7 @@ export const ProjectList: React.FC = () => {
     <div className="bg-white border border-slate-200/90 rounded-xl p-5 sm:p-6 shadow-2xs hover:shadow-xs transition-all">
       <div className="flex items-center justify-between mb-5">
         <div>
-          <h2 className="text-lg font-bold text-slate-900 font-['Outfit',sans-serif]">
+          <h2 className="text-lg font-bold text-slate-900 font-['Anek_Latin',sans-serif]">
             Active Fleet Registry Highlights
           </h2>
           <p className="text-xs text-slate-500 mt-0.5">

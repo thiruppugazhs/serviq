@@ -7,10 +7,12 @@ export default {
   theme: {
     extend: {
       fontFamily: {
+        sans: ["'Anek Latin'", "'AnekLatin'", 'sans-serif'],
+        serviq: ["'Anek Latin'", "'AnekLatin'", 'sans-serif'],
         'anek-latin': ["'Anek Latin'", "'AnekLatin'", 'sans-serif'],
         'anek': ["'Anek Latin'", "'AnekLatin'", 'sans-serif'],
-        'outfit': ["'Outfit'", 'sans-serif'],
-        'jakarta': ["'Plus Jakarta Sans'", 'sans-serif'],
+        'outfit': ["'Anek Latin'", "'AnekLatin'", 'sans-serif'],
+        'jakarta': ["'Anek Latin'", "'AnekLatin'", 'sans-serif'],
       },
       colors: {
         serviq: {

@@ -27,7 +27,7 @@ export const Reminders: React.FC = () => {
 
   return (
     <div className="bg-white border border-slate-200/90 rounded-xl p-5 sm:p-6 shadow-2xs hover:shadow-xs transition-all">
-      <h2 className="text-lg font-bold text-slate-900 font-['Outfit',sans-serif] mb-4">
+      <h2 className="text-lg font-bold text-slate-900 font-['Anek_Latin',sans-serif] mb-4">
         Upcoming Service Audits
       </h2>
 

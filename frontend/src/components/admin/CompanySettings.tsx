@@ -119,7 +119,7 @@ export const CompanySettings: React.FC = () => {
             <div className="text-xs font-semibold uppercase tracking-wider text-[#2335f2]">
               Registered Organization
             </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 font-['Outfit',sans-serif]">
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 font-['Anek_Latin',sans-serif]">
               {org?.name || 'Commercial Fleet'}
             </h2>
             <p className="text-xs text-slate-500">{org?.email || user?.email}</p>
@@ -170,7 +170,7 @@ export const CompanySettings: React.FC = () => {
             <AlertTriangle className="w-6 h-6 text-rose-600" />
           </div>
           <div className="space-y-1">
-            <h3 className="text-lg font-bold text-slate-900 font-['Outfit',sans-serif]">
+            <h3 className="text-lg font-bold text-slate-900 font-['Anek_Latin',sans-serif]">
               Danger Zone: Delete Fleet Account
             </h3>
             <p className="text-xs text-slate-600 leading-relaxed">
@@ -206,7 +206,7 @@ export const CompanySettings: React.FC = () => {
                 <Lock className="w-6 h-6 text-rose-600" />
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-bold text-slate-900 font-['Outfit',sans-serif]">
+                <h3 className="text-lg font-bold text-slate-900 font-['Anek_Latin',sans-serif]">
                   Authorize Permanent Deletion
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">
@@ -343,7 +343,7 @@ export const CompanySettings: React.FC = () => {
                 <div className="w-14 h-14 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center mx-auto">
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
-                <h4 className="text-lg font-bold text-slate-900 font-['Outfit',sans-serif]">
+                <h4 className="text-lg font-bold text-slate-900 font-['Anek_Latin',sans-serif]">
                   Account Successfully Purged
                 </h4>
                 <p className="text-xs text-slate-500">

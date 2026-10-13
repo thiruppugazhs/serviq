@@ -103,7 +103,7 @@ export const DriverProfileView: React.FC = () => {
               <div className="text-xs uppercase tracking-wider text-slate-500 font-semibold">
                 Driver Profile
               </div>
-              <h1 className="text-2xl font-extrabold text-slate-900 font-['Outfit',sans-serif]">
+              <h1 className="text-2xl font-extrabold text-slate-900 font-['Anek_Latin',sans-serif]">
                 {user?.name || 'Driver'}
               </h1>
               <div className="flex items-center gap-2 mt-1">

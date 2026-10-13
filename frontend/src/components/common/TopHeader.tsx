@@ -81,7 +81,7 @@ export const TopHeader: React.FC = () => {
           <div className="w-8 h-8 rounded-lg bg-[#2335f2] text-white flex items-center justify-center font-black text-sm shadow-xs group-hover:scale-105 transition-transform">
             S
           </div>
-          <span className="text-base font-extrabold text-slate-900 tracking-tight font-['Outfit',sans-serif] hidden sm:inline-block">
+          <span className="text-base font-extrabold text-slate-900 tracking-tight font-['Anek_Latin',sans-serif] hidden sm:inline-block">
             SERVIQ
           </span>
         </NavLink>
@@ -93,7 +93,7 @@ export const TopHeader: React.FC = () => {
         <div className="min-w-0">
           <span
             title={companyName}
-            className="text-slate-900 font-bold text-xs sm:text-sm md:text-base tracking-tight font-['Outfit',sans-serif] truncate block max-w-[150px] sm:max-w-xs md:max-w-md lg:max-w-lg"
+            className="text-slate-900 font-bold text-xs sm:text-sm md:text-base tracking-tight font-['Anek_Latin',sans-serif] truncate block max-w-[150px] sm:max-w-xs md:max-w-md lg:max-w-lg"
           >
             {companyName}
           </span>

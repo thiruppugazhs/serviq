@@ -260,7 +260,7 @@ export const DriverHome: React.FC = () => {
         <div className="flex items-center gap-2.5">
           <img src="/logo-blue.png" alt="SERVIQ" className="w-8 h-8 object-contain" />
           <div>
-            <div className="text-xs font-bold text-white uppercase tracking-wider font-['Outfit',sans-serif]">
+            <div className="text-xs font-bold text-white uppercase tracking-wider font-['Anek_Latin',sans-serif]">
               SERVIQ DRIVER
             </div>
             <div className="text-[10px] text-emerald-400 font-semibold">
@@ -295,7 +295,7 @@ export const DriverHome: React.FC = () => {
               <span className="text-[10px] uppercase font-bold text-blue-400 tracking-wider">
                 Driver on Duty
               </span>
-              <h2 className="text-xl font-extrabold text-white font-['Outfit',sans-serif] mt-0.5">
+              <h2 className="text-xl font-extrabold text-white font-['Anek_Latin',sans-serif] mt-0.5">
                 Hi, {user?.name}
               </h2>
               <p className="text-xs text-slate-400 mt-0.5">
@@ -494,7 +494,7 @@ export const DriverHome: React.FC = () => {
         {/* Tab 2: ACTIVITY HISTORY */}
         {activeTab === 'activity' && (
           <div className="space-y-4">
-            <h2 className="text-lg font-bold text-white font-['Outfit',sans-serif]">
+            <h2 className="text-lg font-bold text-white font-['Anek_Latin',sans-serif]">
               Request & Service History
             </h2>
 
@@ -552,7 +552,7 @@ export const DriverHome: React.FC = () => {
         {/* Tab 3: VEHICLE DETAILS */}
         {activeTab === 'vehicle' && (
           <div className="space-y-4">
-            <h2 className="text-lg font-bold text-white font-['Outfit',sans-serif]">
+            <h2 className="text-lg font-bold text-white font-['Anek_Latin',sans-serif]">
               Vehicle Specifications & FC
             </h2>
             {vehicle ? (
@@ -599,7 +599,7 @@ export const DriverHome: React.FC = () => {
         {/* Tab 4: PROFILE */}
         {activeTab === 'profile' && (
           <div className="space-y-4">
-            <h2 className="text-lg font-bold text-white font-['Outfit',sans-serif]">
+            <h2 className="text-lg font-bold text-white font-['Anek_Latin',sans-serif]">
               Driver Profile
             </h2>
             <div className="glass-panel p-5 rounded-3xl border border-slate-800 space-y-4">

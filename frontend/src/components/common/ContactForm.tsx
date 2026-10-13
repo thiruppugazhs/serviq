@@ -109,7 +109,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Header */}
           <div className="pr-10">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight font-['Outfit',sans-serif]">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight font-['Anek_Latin',sans-serif]">
               {title}
             </h2>
             <p className="mt-1.5 text-xs sm:text-sm text-slate-500 leading-relaxed">

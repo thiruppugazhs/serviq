@@ -190,7 +190,7 @@ export const CompanyRegistration: React.FC = () => {
 
           {/* Center Showcase Content */}
           <div className="z-10 my-auto py-4 text-center max-w-sm xl:max-w-md mx-auto w-full">
-            <h2 className="mb-2.5 text-3xl xl:text-4xl font-black text-white font-['Outfit',sans-serif] tracking-tight">
+            <h2 className="mb-2.5 text-3xl xl:text-4xl font-black text-white font-['Anek_Latin',sans-serif] tracking-tight">
               Get Started with Us
             </h2>
             <p className="mb-6 text-xs xl:text-sm text-blue-100/80 leading-relaxed">
@@ -296,7 +296,7 @@ export const CompanyRegistration: React.FC = () => {
           
           {/* Step Header */}
           <div className="mb-4">
-            <h1 className="text-2xl xl:text-3xl font-black text-slate-900 font-['Outfit',sans-serif] tracking-tight mb-1">
+            <h1 className="text-2xl xl:text-3xl font-black text-slate-900 font-['Anek_Latin',sans-serif] tracking-tight mb-1">
               {currentStep === 1 && 'Company Setup'}
               {currentStep === 2 && 'Admin Details'}
               {currentStep === 3 && 'Password Setting'}

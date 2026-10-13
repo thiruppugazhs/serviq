@@ -55,7 +55,7 @@ export const ProjectAnalytics: React.FC = () => {
   return (
     <div className="bg-white border border-slate-200/90 rounded-xl p-5 sm:p-6 shadow-2xs hover:shadow-xs transition-all">
       <div className="flex items-center justify-between mb-5">
-        <h2 className="text-lg font-bold text-slate-900 font-['Outfit',sans-serif]">
+        <h2 className="text-lg font-bold text-slate-900 font-['Anek_Latin',sans-serif]">
           Fleet Operational Activity
         </h2>
         <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
@@ -100,13 +100,13 @@ export const ProjectAnalytics: React.FC = () => {
       <div className="grid grid-cols-2 gap-3 pt-3 border-t border-slate-100 text-xs">
         <div>
           <span className="text-slate-400 font-medium block">Average Utilization</span>
-          <span className="text-base font-bold text-slate-800 font-['Outfit',sans-serif]">
+          <span className="text-base font-bold text-slate-800 font-['Anek_Latin',sans-serif]">
             {average}%
           </span>
         </div>
         <div className="text-right">
           <span className="text-slate-400 font-medium block">Peak Dispatch Day</span>
-          <span className="text-base font-bold text-slate-700 font-['Outfit',sans-serif]">
+          <span className="text-base font-bold text-slate-700 font-['Anek_Latin',sans-serif]">
             {maxValue > 0 ? `Peak (${maxValue}%)` : 'No dispatches recorded'}
           </span>
         </div>

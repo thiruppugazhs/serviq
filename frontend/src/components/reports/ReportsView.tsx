@@ -101,7 +101,7 @@ export const ReportsView: React.FC = () => {
       </div>
 
       <div className="glass-panel p-6 rounded-3xl border border-slate-200 bg-white shadow-2xs">
-        <h2 className="text-base font-bold text-slate-900 font-['Outfit',sans-serif] mb-2">
+        <h2 className="text-base font-bold text-slate-900 font-['Anek_Latin',sans-serif] mb-2">
           Fleet Health Overview
         </h2>
         <p className="text-xs text-slate-500 mb-6">

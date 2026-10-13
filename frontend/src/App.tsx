@@ -46,7 +46,7 @@ const DashboardLayoutContent: React.FC = () => {
   const { isCollapsed } = useDashboard();
 
   return (
-    <div className="min-h-screen bg-slate-50/60 text-slate-900 font-['Plus_Jakarta_Sans',sans-serif]">
+    <div className="min-h-screen bg-slate-50/60 text-slate-900 font-['Anek_Latin',sans-serif]">
       {/* Fixed Header */}
       <TopHeader />
 

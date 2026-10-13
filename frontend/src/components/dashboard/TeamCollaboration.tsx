@@ -27,7 +27,7 @@ export const TeamCollaboration: React.FC = () => {
   return (
     <div className="bg-white border border-slate-200/90 rounded-xl p-5 sm:p-6 shadow-2xs hover:shadow-xs transition-all">
       <div className="flex items-center justify-between mb-5">
-        <h2 className="text-lg font-bold text-slate-900 font-['Outfit',sans-serif]">
+        <h2 className="text-lg font-bold text-slate-900 font-['Anek_Latin',sans-serif]">
           Active Crew & Driver Assignments
         </h2>
         <Link

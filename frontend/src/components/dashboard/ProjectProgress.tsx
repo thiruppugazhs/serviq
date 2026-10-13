@@ -34,7 +34,7 @@ export const ProjectProgress: React.FC = () => {
 
   return (
     <div className="bg-white border border-slate-200/90 rounded-xl p-5 sm:p-6 shadow-2xs hover:shadow-xs transition-all overflow-hidden">
-      <h2 className="text-lg font-bold text-slate-900 font-['Outfit',sans-serif] mb-4">
+      <h2 className="text-lg font-bold text-slate-900 font-['Anek_Latin',sans-serif] mb-4">
         Fleet Service Compliance
       </h2>
 
@@ -72,7 +72,7 @@ export const ProjectProgress: React.FC = () => {
           </svg>
 
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-4xl font-extrabold text-slate-900 font-['Outfit',sans-serif]">
+            <span className="text-4xl font-extrabold text-slate-900 font-['Anek_Latin',sans-serif]">
               {counts.total === 0 ? '100' : progress}%
             </span>
             <span className="text-xs text-slate-400 font-medium mt-0.5">

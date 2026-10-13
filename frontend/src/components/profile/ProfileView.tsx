@@ -273,7 +273,7 @@ export const ProfileView: React.FC = () => {
                     <Building2 className="w-3 h-3" />
                     Registered Company
                   </div>
-                  <h2 className="text-xl sm:text-2xl font-bold text-slate-900 font-['Outfit',sans-serif]">
+                  <h2 className="text-xl sm:text-2xl font-bold text-slate-900 font-['Anek_Latin',sans-serif]">
                     {companyForm.name || 'Your Company'}
                   </h2>
                   <p className="text-xs text-slate-500">{companyForm.email || 'company@domain.com'}</p>
@@ -596,7 +596,7 @@ export const ProfileView: React.FC = () => {
                     <BadgeCheck className="w-3 h-3 text-emerald-600" />
                     {user?.role === 'admin' ? 'Organization Administrator' : 'Fleet Controller'}
                   </div>
-                  <h2 className="text-xl sm:text-2xl font-bold text-slate-900 font-['Outfit',sans-serif]">
+                  <h2 className="text-xl sm:text-2xl font-bold text-slate-900 font-['Anek_Latin',sans-serif]">
                     {userForm.name || user?.name}
                   </h2>
                   <p className="text-xs text-slate-500">{user?.email}</p>

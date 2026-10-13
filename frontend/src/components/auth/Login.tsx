@@ -71,7 +71,7 @@ export const Login: React.FC = () => {
 
           {/* Center Showcase Content */}
           <div className="z-10 my-auto py-4 text-center max-w-sm xl:max-w-md mx-auto w-full">
-            <h2 className="mb-2.5 text-3xl xl:text-4xl font-black text-white font-['Outfit',sans-serif] tracking-tight">
+            <h2 className="mb-2.5 text-3xl xl:text-4xl font-black text-white font-['Anek_Latin',sans-serif] tracking-tight">
               Welcome Back
             </h2>
             <p className="mb-6 text-xs xl:text-sm text-blue-100/90 leading-relaxed">
@@ -121,7 +121,7 @@ export const Login: React.FC = () => {
           
           {/* Form Title & Subtitle */}
           <div className="mb-5">
-            <h1 className="text-2xl xl:text-3xl font-black text-slate-900 font-['Outfit',sans-serif] tracking-tight mb-1">
+            <h1 className="text-2xl xl:text-3xl font-black text-slate-900 font-['Anek_Latin',sans-serif] tracking-tight mb-1">
               Sign In
             </h1>
             <p className="text-xs text-slate-500">
