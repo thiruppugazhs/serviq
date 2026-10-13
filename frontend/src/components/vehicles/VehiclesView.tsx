@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../api/client';
 import { Vehicle, Driver } from '../../types';
-import { Badge } from '../common/Badge';
-import { Modal } from '../common/Modal';
-import { EmptyState } from '../common/EmptyState';
-import { Header } from '../common/Header';
-import { Truck, Plus, Search, Gauge, User, ShieldAlert, Calendar, Fuel } from 'lucide-react';
+import {
+  Home,
+  Plus,
+  Search,
+  CheckCircle2,
+  AlertTriangle,
+  MoreVertical,
+  X,
+  ShieldAlert,
+  Gauge,
+  User,
+  Calendar,
+} from 'lucide-react';
 
 export const VehiclesView: React.FC = () => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
@@ -16,17 +24,18 @@ export const VehiclesView: React.FC = () => {
   const [isOdoModalOpen, setIsOdoModalOpen] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
   const [newOdometerInput, setNewOdometerInput] = useState<number | string>('');
+  const [activeMenuVehicleId, setActiveMenuVehicleId] = useState<string | null>(null);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Add Vehicle Form state
+  // Add Vehicle Form state (matches required fields)
   const [formData, setFormData] = useState({
     vehicleNumber: '',
-    vehicleType: 'Truck',
+    vehicleType: 'Van',
+    fuelType: 'Diesel',
     manufacturer: '',
     model: '',
     year: new Date().getFullYear(),
-    fuelType: 'Diesel',
     odometer: 0,
     assignedDriverId: '',
     fcBook: '',
@@ -41,8 +50,8 @@ export const VehiclesView: React.FC = () => {
         api.get('/vehicles'),
         api.get('/drivers'),
       ]);
-      if (vehRes.data.success) setVehicles(vehRes.data.vehicles || []);
-      if (drvRes.data.success) setDrivers(drvRes.data.drivers || []);
+      if (vehRes.data?.success) setVehicles(vehRes.data.vehicles || []);
+      if (drvRes.data?.success) setDrivers(drvRes.data.drivers || []);
     } catch (err: any) {
       console.error('Failed to load fleet assets:', err);
     } finally {
@@ -61,16 +70,22 @@ export const VehiclesView: React.FC = () => {
   const handleAddVehicle = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    if (!formData.vehicleNumber.trim() || !formData.manufacturer.trim() || !formData.model.trim()) {
+      setError('Vehicle plate number, manufacturer, and model are required.');
+      return;
+    }
+
     setSubmitLoading(true);
 
     try {
       await api.post('/vehicles', {
-        vehicleNumber: formData.vehicleNumber.trim(),
+        vehicleNumber: formData.vehicleNumber.trim().toUpperCase(),
         vehicleType: formData.vehicleType,
+        fuelType: formData.fuelType,
         manufacturer: formData.manufacturer.trim(),
         model: formData.model.trim(),
         year: Number(formData.year),
-        fuelType: formData.fuelType,
         odometer: Number(formData.odometer) || 0,
         assignedDriverId: formData.assignedDriverId || null,
         assignedDriver: formData.assignedDriverId || null,
@@ -78,14 +93,15 @@ export const VehiclesView: React.FC = () => {
         fcExpiryDate: formData.fcExpiryDate || null,
         status: formData.status,
       });
+
       setIsAddModalOpen(false);
       setFormData({
         vehicleNumber: '',
-        vehicleType: 'Truck',
+        vehicleType: 'Van',
+        fuelType: 'Diesel',
         manufacturer: '',
         model: '',
         year: new Date().getFullYear(),
-        fuelType: 'Diesel',
         odometer: 0,
         assignedDriverId: '',
         fcBook: '',
@@ -131,385 +147,471 @@ export const VehiclesView: React.FC = () => {
 
   return (
     <div className="space-y-4 md:space-y-5 animate-in fade-in duration-200">
-      <Header
-        title="Vehicle Fleet Registry"
-        description="Registered commercial haulers, buses, trucks, and driver assignments."
-        actions={
-          <button
-            onClick={() => {
-              setError(null);
-              setIsAddModalOpen(true);
-            }}
-            className="inline-flex items-center gap-1.5 h-9 px-4 bg-[#2335f2] hover:bg-blue-700 text-white font-medium text-xs rounded-lg transition-colors shadow-sm"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            <span>+ Add Fleet Asset</span>
-          </button>
-        }
-      />
-
-      {/* Search Bar */}
-      <div className="flex items-center gap-4 bg-white border border-slate-200 p-3 rounded-2xl shadow-2xs">
-        <div className="relative flex-1">
-          <Search className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search by license plate (e.g. TN 01 AB 1234), model, or type..."
-            className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl pl-10 pr-4 py-2 text-xs text-slate-900 placeholder-slate-400 outline-none"
-          />
-        </div>
+      {/* Top Breadcrumbs */}
+      <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
+        <Home className="w-3.5 h-3.5 text-slate-400" />
+        <span className="text-slate-300">&gt;</span>
+        <span className="hover:text-slate-700 cursor-pointer">Dashboard</span>
+        <span className="text-slate-300">&gt;</span>
+        <span className="text-slate-900 font-semibold">Vehicles</span>
       </div>
 
-      {loading ? (
-        <div className="p-12 text-center text-slate-400 text-sm">Loading Vehicles...</div>
-      ) : filteredVehicles.length === 0 ? (
-        <EmptyState
-          icon={Truck}
-          title="No Vehicles Registered Yet"
-          description="Build your fleet registry. Enter registration plate numbers, specifications, and allocate drivers."
-          actionText="Add First Vehicle"
-          onAction={() => setIsAddModalOpen(true)}
-        />
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredVehicles.map((vehicle) => {
-            const driver = typeof vehicle.assignedDriver === 'object' ? vehicle.assignedDriver : null;
-            const driverUser = driver && typeof driver.user === 'object' ? driver.user : null;
+      {/* Page Title & Add Button */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-extrabold text-slate-900 font-['Outfit',sans-serif] tracking-tight">
+            Vehicle Management
+          </h1>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Manage your fleet, maintenance logs, and GPS status.
+          </p>
+        </div>
 
-            return (
-              <div
-                key={vehicle._id}
-                className="glass-card p-5 rounded-2xl border border-slate-200 bg-white shadow-2xs flex flex-col justify-between"
+        <button
+          onClick={() => {
+            setError(null);
+            setIsAddModalOpen(true);
+          }}
+          className="inline-flex items-center gap-1.5 h-10 px-5 bg-[#f59e0b] hover:bg-amber-500 text-slate-950 font-bold text-xs rounded-xl transition-all shadow-xs cursor-pointer self-start sm:self-auto"
+        >
+          <Plus className="w-4 h-4 stroke-[2.5]" />
+          <span>Add Vehicle</span>
+        </button>
+      </div>
+
+      {/* Main Table Card */}
+      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs overflow-hidden">
+        {/* Search Bar Row */}
+        <div className="p-4 border-b border-slate-100 flex items-center justify-between gap-3">
+          <div className="relative w-full max-w-xs">
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search vehicles..."
+              className="w-full pl-9 pr-3.5 py-2 text-xs rounded-xl border border-slate-200 bg-white placeholder:text-slate-400 text-slate-800 outline-none focus:border-slate-800 focus:ring-1 focus:ring-slate-800 transition-all"
+            />
+          </div>
+        </div>
+
+        {/* Table Content */}
+        {loading ? (
+          <div className="p-12 text-center text-slate-400 text-xs">Loading vehicles...</div>
+        ) : filteredVehicles.length === 0 ? (
+          <div className="py-12 px-4 text-center">
+            <div className="w-12 h-12 rounded-full bg-amber-50 text-amber-500 flex items-center justify-center mx-auto mb-3">
+              <Plus className="w-6 h-6" />
+            </div>
+            <h3 className="font-bold text-sm text-slate-800">No vehicles registered</h3>
+            <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
+              {search ? 'No vehicles matched your search query.' : 'Add your first commercial fleet vehicle to monitor health, status, and FC.'}
+            </p>
+            {!search && (
+              <button
+                onClick={() => setIsAddModalOpen(true)}
+                className="mt-4 px-4 py-2 bg-[#f59e0b] hover:bg-amber-500 text-slate-950 font-bold text-xs rounded-xl transition-colors cursor-pointer"
               >
+                + Add Vehicle
+              </button>
+            )}
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-slate-100 text-[11px] font-bold text-slate-800 tracking-wider">
+                  <th className="py-3.5 px-6">Vehicle ID</th>
+                  <th className="py-3.5 px-6">Type</th>
+                  <th className="py-3.5 px-6">Health</th>
+                  <th className="py-3.5 px-6">Status</th>
+                  <th className="py-3.5 px-6 text-right w-16"></th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 text-xs">
+                {filteredVehicles.map((vehicle, index) => {
+                  const isMenuOpen = activeMenuVehicleId === vehicle._id;
+                  const isHealthy = vehicle.status !== 'in_shop' && vehicle.status !== 'out_of_service';
+
+                  return (
+                    <tr
+                      key={vehicle._id}
+                      className="hover:bg-slate-50/70 transition-colors group"
+                    >
+                      {/* Vehicle ID (Index + Registration Number underneath) */}
+                      <td className="py-4 px-6">
+                        <span className="font-bold text-slate-900 block text-sm">
+                          {index + 1}
+                        </span>
+                        <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider block mt-0.5">
+                          {vehicle.vehicleNumber}
+                        </span>
+                      </td>
+
+                      {/* Type */}
+                      <td className="py-4 px-6 font-semibold text-slate-800">
+                        {vehicle.vehicleType}
+                      </td>
+
+                      {/* Health */}
+                      <td className="py-4 px-6">
+                        <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600">
+                          {isHealthy ? (
+                            <>
+                              <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                              <span>Healthy</span>
+                            </>
+                          ) : (
+                            <>
+                              <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0" />
+                              <span className="text-amber-600">In Shop</span>
+                            </>
+                          )}
+                        </div>
+                      </td>
+
+                      {/* Status (Soft green pill matching Operational) */}
+                      <td className="py-4 px-6">
+                        <span
+                          className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
+                            vehicle.status === 'in_shop'
+                              ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                              : vehicle.status === 'out_of_service'
+                              ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                              : 'bg-emerald-50 text-emerald-700 border border-emerald-200/80'
+                          }`}
+                        >
+                          {vehicle.status === 'available' || vehicle.status === 'on_trip'
+                            ? 'Operational'
+                            : vehicle.status.replace('_', ' ')}
+                        </span>
+                      </td>
+
+                      {/* Actions ⋮ */}
+                      <td className="py-4 px-6 text-right relative">
+                        <button
+                          onClick={() =>
+                            setActiveMenuVehicleId(isMenuOpen ? null : vehicle._id)
+                          }
+                          className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+                        >
+                          <MoreVertical className="w-4 h-4" />
+                        </button>
+
+                        {/* Actions Dropdown */}
+                        {isMenuOpen && (
+                          <div
+                            onMouseLeave={() => setActiveMenuVehicleId(null)}
+                            className="absolute right-6 top-10 w-44 bg-white border border-slate-200 rounded-xl shadow-lg z-20 py-1.5 text-xs text-left animate-in fade-in zoom-in-95"
+                          >
+                            <button
+                              onClick={() => {
+                                setSelectedVehicle(vehicle);
+                                setNewOdometerInput(vehicle.odometer);
+                                setActiveMenuVehicleId(null);
+                                setIsOdoModalOpen(true);
+                              }}
+                              className="w-full px-3 py-1.5 text-left text-slate-700 hover:bg-slate-50 flex items-center gap-2 cursor-pointer"
+                            >
+                              <Gauge className="w-3.5 h-3.5 text-slate-400" />
+                              <span>Update Odometer</span>
+                            </button>
+                            <div className="px-3 py-1 text-[10px] text-slate-400 border-t border-slate-100">
+                              Odo: {vehicle.odometer.toLocaleString()} km
+                              {vehicle.fcBook ? ` • FC: ${vehicle.fcBook}` : ''}
+                            </div>
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* New Vehicle Modal */}
+      {isAddModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4 overflow-y-auto">
+          <div className="relative w-full max-w-xl bg-white rounded-3xl shadow-2xl p-6 sm:p-7 animate-in fade-in zoom-in-95 my-8">
+            {/* Modal Header */}
+            <div className="flex items-start justify-between pb-4">
+              <div>
+                <h2 className="text-xl font-extrabold text-slate-900 font-['Outfit',sans-serif]">
+                  New Vehicle
+                </h2>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Add a commercial vehicle to your fleet registry.
+                </p>
+              </div>
+
+              <button
+                onClick={() => setIsAddModalOpen(false)}
+                className="w-8 h-8 rounded-full border border-slate-200 hover:bg-slate-100 flex items-center justify-center text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {error && (
+              <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
+                <ShieldAlert className="w-4 h-4 shrink-0" />
+                <span>{error}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleAddVehicle} className="space-y-4 text-xs">
+              {/* Vehicle Plate Number * */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-800 mb-1.5">
+                  Vehicle Plate Number <span className="text-rose-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="vehicleNumber"
+                  required
+                  value={formData.vehicleNumber}
+                  onChange={handleChange}
+                  placeholder="e.g. TN 12 P 3048"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 font-mono uppercase transition-all"
+                />
+              </div>
+
+              {/* Vehicle Type & Fuel Type */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div>
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <div className="text-[11px] font-semibold uppercase tracking-wider text-[#2335f2]">
-                        {vehicle.vehicleType} • {vehicle.fuelType}
-                      </div>
-                      <h3 className="font-extrabold text-base text-slate-900 font-mono tracking-wider mt-0.5">
-                        {vehicle.vehicleNumber}
-                      </h3>
-                      <p className="text-xs text-slate-500 mt-0.5">
-                        {vehicle.manufacturer} {vehicle.model} ({vehicle.year})
-                      </p>
-                    </div>
-                    <Badge status={vehicle.status} />
-                  </div>
-
-                  {/* Odometer readout */}
-                  <div className="mt-4 p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Gauge className="w-4 h-4 text-[#2335f2]" />
-                      <span className="text-xs text-slate-500">Odometer:</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-sm text-slate-900 font-mono">
-                        {vehicle.odometer.toLocaleString()} km
-                      </span>
-                      <button
-                        onClick={() => {
-                          setSelectedVehicle(vehicle);
-                          setNewOdometerInput(vehicle.odometer);
-                          setError(null);
-                          setIsOdoModalOpen(true);
-                        }}
-                        className="text-[10px] text-[#2335f2] hover:text-blue-700 px-2 py-0.5 rounded bg-blue-50 border border-blue-200 font-medium"
-                      >
-                        Update
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Assigned Driver */}
-                  <div className="mt-3 flex items-center gap-2.5 text-xs text-slate-600">
-                    <User className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                    <span>Driver:</span>
-                    <span className="font-semibold text-slate-900">
-                      {driverUser ? `${driverUser.name} (${driver?.driverId})` : 'Unassigned'}
-                    </span>
-                  </div>
-
-                  {/* FC Details */}
-                  {(vehicle.fcBook || vehicle.fcExpiryDate || vehicle.fitnessExpiry) && (
-                    <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-600">
-                      <div className="flex items-center gap-1.5 text-slate-500">
-                        <Calendar className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
-                        <span>FC Book: <strong className="text-slate-800">{vehicle.fcBook || 'Verified'}</strong></span>
-                      </div>
-                      <span className="text-[11px] font-medium text-slate-500">
-                        Expires: {new Date(vehicle.fcExpiryDate || vehicle.fitnessExpiry || '').toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
-                      </span>
-                    </div>
-                  )}
+                  <label className="block text-xs font-semibold text-slate-800 mb-1.5">
+                    Vehicle Type <span className="text-rose-500">*</span>
+                  </label>
+                  <select
+                    name="vehicleType"
+                    value={formData.vehicleType}
+                    onChange={handleChange}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 bg-white transition-all"
+                  >
+                    <option value="Van">Van</option>
+                    <option value="Bus">Bus</option>
+                    <option value="Truck">Truck</option>
+                    <option value="Hauler">Hauler</option>
+                    <option value="Sedan">Sedan</option>
+                    <option value="EV">EV</option>
+                    <option value="SUV">SUV</option>
+                    <option value="Other">Other</option>
+                  </select>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
-                  <span>SERVIQ Fleet Asset</span>
-                  <span className="text-slate-500">Status: {vehicle.status}</span>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-800 mb-1.5">
+                    Fuel Type <span className="text-rose-500">*</span>
+                  </label>
+                  <select
+                    name="fuelType"
+                    value={formData.fuelType}
+                    onChange={handleChange}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 bg-white transition-all"
+                  >
+                    <option value="Diesel">Diesel</option>
+                    <option value="Petrol">Petrol</option>
+                    <option value="CNG">CNG</option>
+                    <option value="Electric">Electric</option>
+                    <option value="Hybrid">Hybrid</option>
+                  </select>
                 </div>
               </div>
-            );
-          })}
+
+              {/* Manufacturer & Model */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-800 mb-1.5">
+                    Manufacturer <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="manufacturer"
+                    required
+                    value={formData.manufacturer}
+                    onChange={handleChange}
+                    placeholder="e.g. Ashok Leyland / Force / Tata"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-all"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-800 mb-1.5">
+                    Model <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="model"
+                    required
+                    value={formData.model}
+                    onChange={handleChange}
+                    placeholder="e.g. Urbania / Boss 1616"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-all"
+                  />
+                </div>
+              </div>
+
+              {/* Year & Current Odometer */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-800 mb-1.5">
+                    Year <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    name="year"
+                    required
+                    value={formData.year}
+                    onChange={handleChange}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 font-mono transition-all"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-800 mb-1.5">
+                    Current Odometer (km)
+                  </label>
+                  <input
+                    type="number"
+                    name="odometer"
+                    value={formData.odometer}
+                    onChange={handleChange}
+                    placeholder="0"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 font-mono transition-all"
+                  />
+                </div>
+              </div>
+
+              {/* Driver Assignment */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-800 mb-1.5">
+                  Driver Assignment
+                </label>
+                <select
+                  name="assignedDriverId"
+                  value={formData.assignedDriverId}
+                  onChange={handleChange}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 bg-white transition-all font-mono"
+                >
+                  <option value="">-- No Driver Assigned --</option>
+                  {drivers.map((d) => {
+                    const u = typeof d.user === 'object' ? d.user : null;
+                    return (
+                      <option key={d._id} value={d._id}>
+                        {u ? u.name : d.driverId} ({d.driverId})
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+
+              {/* Vehicle FC Book & FC Expiry Date */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div>
+                  <label className="block text-xs font-semibold text-slate-800 mb-1.5">
+                    Vehicle FC Book <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="fcBook"
+                    required
+                    value={formData.fcBook}
+                    onChange={handleChange}
+                    placeholder="e.g. FC-BK-99214"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 font-mono transition-all"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-800 mb-1.5">
+                    Vehicle FC Expiry Date <span className="text-rose-500">*</span>
+                  </label>
+                  <input
+                    type="date"
+                    name="fcExpiryDate"
+                    required
+                    value={formData.fcExpiryDate}
+                    onChange={handleChange}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 bg-white transition-all font-mono"
+                  />
+                </div>
+              </div>
+
+              {/* Bottom Buttons */}
+              <div className="flex items-center justify-end gap-3 pt-3">
+                <button
+                  type="button"
+                  onClick={() => setIsAddModalOpen(false)}
+                  className="px-5 py-2.5 rounded-xl border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium text-xs transition-colors cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitLoading}
+                  className="px-6 py-2.5 rounded-xl bg-[#f59e0b] hover:bg-amber-500 disabled:opacity-50 text-slate-950 font-bold text-xs transition-colors shadow-xs cursor-pointer"
+                >
+                  {submitLoading ? 'Registering...' : 'Create Vehicle'}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
 
-      {/* Add Vehicle Modal */}
-      <Modal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        title="Add Fleet Vehicle"
-      >
-        {error && (
-          <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
-            <ShieldAlert className="w-4 h-4 shrink-0" />
-            <span>{error}</span>
-          </div>
-        )}
-
-        <form onSubmit={handleAddVehicle} className="space-y-4 text-xs">
-          <div>
-            <label className="block font-semibold text-slate-700 mb-1">
-              Vehicle Plate Number <span className="text-rose-500">*</span>
-            </label>
-            <input
-              type="text"
-              name="vehicleNumber"
-              required
-              value={formData.vehicleNumber}
-              onChange={handleChange}
-              placeholder="e.g. TN 01 AB 1234"
-              className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none font-mono uppercase"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className="block font-semibold text-slate-700 mb-1">
-                Vehicle Type
-              </label>
-              <select
-                name="vehicleType"
-                value={formData.vehicleType}
-                onChange={handleChange}
-                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
-              >
-                <option value="Truck">Truck</option>
-                <option value="Bus">Bus</option>
-                <option value="Hauler">Hauler</option>
-                <option value="Van">Van</option>
-                <option value="Sedan">Sedan</option>
-                <option value="EV">EV</option>
-                <option value="SUV">SUV</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block font-semibold text-slate-700 mb-1">
-                Fuel Type
-              </label>
-              <select
-                name="fuelType"
-                value={formData.fuelType}
-                onChange={handleChange}
-                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
-              >
-                <option value="Diesel">Diesel</option>
-                <option value="Petrol">Petrol</option>
-                <option value="CNG">CNG</option>
-                <option value="Electric">Electric</option>
-                <option value="Hybrid">Hybrid</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="sm:col-span-1">
-              <label className="block font-semibold text-slate-700 mb-1">
-                Manufacturer <span className="text-rose-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="manufacturer"
-                required
-                value={formData.manufacturer}
-                onChange={handleChange}
-                placeholder="e.g. Ashok Leyland"
-                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
-              />
-            </div>
-
-            <div className="sm:col-span-1">
-              <label className="block font-semibold text-slate-700 mb-1">
-                Model <span className="text-rose-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="model"
-                required
-                value={formData.model}
-                onChange={handleChange}
-                placeholder="e.g. Boss 1616"
-                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
-              />
-            </div>
-
-            <div className="sm:col-span-1">
-              <label className="block font-semibold text-slate-700 mb-1">
-                Year <span className="text-rose-500">*</span>
-              </label>
-              <input
-                type="number"
-                name="year"
-                required
-                value={formData.year}
-                onChange={handleChange}
-                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className="block font-semibold text-slate-700 mb-1">
-                Current Odometer (km)
-              </label>
-              <input
-                type="number"
-                name="odometer"
-                value={formData.odometer}
-                onChange={handleChange}
-                placeholder="0"
-                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
-              />
-            </div>
-
-            <div>
-              <label className="block font-semibold text-slate-700 mb-1">
-                Assign Driver
-              </label>
-              <select
-                name="assignedDriverId"
-                value={formData.assignedDriverId}
-                onChange={handleChange}
-                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
-              >
-                <option value="">-- No Driver Assigned --</option>
-                {drivers.map((d) => {
-                  const u = typeof d.user === 'object' ? d.user : null;
-                  return (
-                    <option key={d._id} value={d._id}>
-                      {u ? u.name : d.driverId} ({d.driverId})
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className="block font-semibold text-slate-700 mb-1">
-                Vehicle FC Book <span className="text-rose-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="fcBook"
-                required
-                value={formData.fcBook}
-                onChange={handleChange}
-                placeholder="e.g. FC-BK-99214 or Certificate No."
-                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none font-mono"
-              />
-            </div>
-
-            <div>
-              <label className="block font-semibold text-slate-700 mb-1">
-                Vehicle FC Expiry Date <span className="text-rose-500">*</span>
-              </label>
-              <input
-                type="date"
-                name="fcExpiryDate"
-                required
-                value={formData.fcExpiryDate}
-                onChange={handleChange}
-                className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none"
-              />
-            </div>
-          </div>
-
-          <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
-            <button
-              type="button"
-              onClick={() => setIsAddModalOpen(false)}
-              className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={submitLoading}
-              className="px-4 py-2 rounded-xl bg-[#2335f2] hover:bg-blue-700 disabled:opacity-50 text-white font-medium transition-colors shadow-md shadow-blue-500/20"
-            >
-              {submitLoading ? 'Registering Asset...' : 'Save Vehicle'}
-            </button>
-          </div>
-        </form>
-      </Modal>
-
       {/* Update Odometer Modal */}
-      <Modal
-        isOpen={isOdoModalOpen}
-        onClose={() => setIsOdoModalOpen(false)}
-        title={`Update Odometer: ${selectedVehicle?.vehicleNumber}`}
-        maxWidth="sm"
-      >
-        {error && (
-          <div className="mb-4 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
-            <ShieldAlert className="w-4 h-4 shrink-0" />
-            <span>{error}</span>
-          </div>
-        )}
+      {isOdoModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+          <div className="relative w-full max-w-sm bg-white rounded-3xl shadow-2xl p-6 animate-in fade-in zoom-in-95">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <h3 className="font-bold text-slate-900 text-sm">
+                Update Odometer: {selectedVehicle?.vehicleNumber}
+              </h3>
+              <button
+                onClick={() => setIsOdoModalOpen(false)}
+                className="w-7 h-7 rounded-full border border-slate-200 hover:bg-slate-100 flex items-center justify-center text-slate-500"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
 
-        <form onSubmit={handleUpdateOdometer} className="space-y-4 text-xs">
-          <div>
-            <label className="block font-semibold text-slate-700 mb-1">
-              New Odometer (km)
-            </label>
-            <input
-              type="number"
-              required
-              min={selectedVehicle?.odometer || 0}
-              value={newOdometerInput}
-              onChange={(e) => setNewOdometerInput(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2.5 text-slate-900 outline-none font-mono text-sm"
-            />
-            <p className="text-[11px] text-slate-500 mt-1">
-              Current reading: {selectedVehicle?.odometer.toLocaleString()} km
-            </p>
-          </div>
+            <form onSubmit={handleUpdateOdometer} className="space-y-4 text-xs pt-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-800 mb-1.5">
+                  Current Mileage (km)
+                </label>
+                <input
+                  type="number"
+                  required
+                  value={newOdometerInput}
+                  onChange={(e) => setNewOdometerInput(e.target.value)}
+                  className="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-slate-900 text-xs font-mono outline-none focus:border-slate-900"
+                />
+              </div>
 
-          <div className="flex justify-end gap-3 pt-2">
-            <button
-              type="button"
-              onClick={() => setIsOdoModalOpen(false)}
-              className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={submitLoading}
-              className="px-4 py-2 rounded-xl bg-[#2335f2] hover:bg-blue-700 text-white font-medium transition-colors shadow-md shadow-blue-500/20"
-            >
-              {submitLoading ? 'Updating...' : 'Save Reading'}
-            </button>
+              <div className="flex justify-end gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setIsOdoModalOpen(false)}
+                  className="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 font-medium"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitLoading}
+                  className="px-5 py-2 rounded-xl bg-[#f59e0b] hover:bg-amber-500 text-slate-950 font-bold shadow-xs"
+                >
+                  Save Odometer
+                </button>
+              </div>
+            </form>
           </div>
-        </form>
-      </Modal>
+        </div>
+      )}
     </div>
   );
 };
