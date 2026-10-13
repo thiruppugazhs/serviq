@@ -76,14 +76,18 @@ export const TopHeader: React.FC = () => {
         {/* Logo Serviq */}
         <NavLink
           to={`${basePath}/dashboard`}
-          className="flex items-center gap-2 shrink-0 group focus:outline-none"
+          className="flex items-center gap-2.5 shrink-0 group focus:outline-none"
         >
-          <div className="w-8 h-8 rounded-lg bg-[#2335f2] text-white flex items-center justify-center font-black text-sm shadow-xs group-hover:scale-105 transition-transform">
-            S
-          </div>
-          <span className="text-base font-extrabold text-slate-900 tracking-tight font-['Anek_Latin',sans-serif] hidden sm:inline-block">
-            SERVIQ
-          </span>
+          <img
+            src="/logo-icon.png"
+            alt="SERVIQ Logo"
+            className="h-8 w-auto object-contain group-hover:scale-105 transition-transform"
+          />
+          <img
+            src="/serviq-name-black.png"
+            alt="SERVIQ"
+            className="h-5 w-auto object-contain hidden sm:inline-block"
+          />
         </NavLink>
 
         {/* Vertical divider */}
