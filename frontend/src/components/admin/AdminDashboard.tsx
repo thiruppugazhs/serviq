@@ -8,8 +8,6 @@ import { TeamCollaboration } from '../dashboard/TeamCollaboration';
 import { Reminders } from '../dashboard/Reminders';
 import { ProjectProgress } from '../dashboard/ProjectProgress';
 import { ProjectList } from '../dashboard/ProjectList';
-import { MobileAppCard } from '../dashboard/MobileAppCard';
-import { TimeTracker } from '../dashboard/TimeTracker';
 import { Link } from 'react-router-dom';
 import { Plus, Download } from 'lucide-react';
 
@@ -89,12 +87,8 @@ export const AdminDashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* Row 3: 3 Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <ProjectList />
-          <MobileAppCard />
-          <TimeTracker />
-        </div>
+        {/* Row 3: Active Fleet Registry Highlights */}
+        <ProjectList />
       </div>
     </div>
   );
