@@ -31,17 +31,16 @@ const STAGES: StageData[] = [
   },
   {
     id: 2,
-    badge: 'AI Service Advisor',
-    badgeIcon: <Sparkles className="w-3.5 h-3.5 fill-current text-[#2335f2]" />,
+    badge: 'SERVICE ADVISOR',
     badgeColor: 'text-[#2335f2]',
     badgeBg: 'bg-blue-50 border-blue-200/80',
-    title: 'Fleet intelligence built into the work',
+    title: 'Fleet expertise built into the work',
     description:
       'Combine your maintenance history, operational data and own expertise to help your team understand issues, prioritize next steps and move routine work forward.',
     ctaText: 'Learn more',
     ctaColor: 'text-[#2335f2] hover:text-blue-800',
     imageSrc: '/vehicle-showcase/truck-stage-2.png',
-    tabLabel: 'AI Service Advisor',
+    tabLabel: 'Service Advisor',
   },
   {
     id: 3,
@@ -188,7 +187,7 @@ export const VehicleShowcaseSection: React.FC = () => {
             >
               <img
                 src="/vehicle-showcase/truck-stage-1.png"
-                alt="SERVIQ Maintenance & Repair Intelligence"
+                alt="SERVIQ Maintenance & Repair"
                 className="w-full h-full object-contain drop-shadow-md select-none"
                 draggable={false}
               />
@@ -201,7 +200,7 @@ export const VehicleShowcaseSection: React.FC = () => {
             >
               <img
                 src="/vehicle-showcase/truck-stage-2.png"
-                alt="SERVIQ AI Service Advisor"
+                alt="SERVIQ Service Advisor"
                 className="w-full h-full object-contain drop-shadow-md select-none"
                 draggable={false}
               />

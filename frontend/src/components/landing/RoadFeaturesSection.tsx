@@ -89,7 +89,7 @@ export const FEATURES_DATA: FeatureItem[] = [
     description:
       'Monitor vehicle readiness, track ongoing issues, and make sure every vehicle is fit for the road.',
     icon: ShieldCheck,
-    badge: 'Health Intelligence',
+    badge: 'Health Monitoring',
     highlights: ['Fleet Readiness', 'Issue Tracking', 'Roadworthy'],
   },
   {
