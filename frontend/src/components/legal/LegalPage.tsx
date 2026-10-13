@@ -394,30 +394,6 @@ export const LegalPage: React.FC<{ policyKey?: string }> = ({ policyKey: propPol
       <section id="legal-content" className="py-20 sm:py-24 bg-white text-slate-800 relative">
         <div className="max-w-4xl mx-auto px-6 sm:px-8">
           
-          {/* Quick Policy Switcher Pills */}
-          <div className="flex flex-wrap items-center gap-2 pb-10 border-b border-slate-200 mb-12 text-xs">
-            <span className="font-bold text-slate-500 uppercase tracking-wider mr-2">All Policies:</span>
-            {[
-              { label: 'Terms of Use', path: '/terms-of-use' },
-              { label: 'Privacy Policy', path: '/privacy-policy' },
-              { label: 'Grievance Policy', path: '/grievance-policy' },
-              { label: 'Merchant Terms', path: '/merchant-terms' },
-              { label: 'Data Protection', path: '/data-protection-standards' },
-            ].map((p) => (
-              <Link
-                key={p.path}
-                to={p.path}
-                className={`px-3.5 py-1.5 rounded-full transition-all font-medium ${
-                  window.location.pathname === p.path
-                    ? 'bg-studio-blue text-white shadow-sm'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                }`}
-              >
-                {p.label}
-              </Link>
-            ))}
-          </div>
-
           {/* Document Content Sections */}
           <div className="space-y-12 leading-relaxed text-sm sm:text-base text-slate-700">
             {policy.sections.map((sec, idx) => (
