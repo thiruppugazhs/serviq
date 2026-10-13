@@ -1,18 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Check,
-  ShieldCheck,
-  Truck,
-  PhoneCall,
-  ArrowRight,
-  Building2,
-  Users2,
-  Cpu,
-  FileCheck2,
-} from 'lucide-react';
+import { Check, ArrowRight } from 'lucide-react';
+import { ContactModal } from '../common/ContactModal';
 
 export const PricingPage: React.FC = () => {
+  const [contactModalOpen, setContactModalOpen] = useState(false);
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -111,9 +104,9 @@ export const PricingPage: React.FC = () => {
 
       {/* Main Container */}
       <main className="flex-1 max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
-        {/* Main Header */}
+        {/* Main Header (SERVIQ Typography) */}
         <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 font-serif tracking-tight leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 font-anek-latin tracking-tight leading-tight">
             Enterprise Fleet Package
           </h1>
 
@@ -129,7 +122,7 @@ export const PricingPage: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
             {ENTERPRISE_FEATURES.map((group, gIdx) => (
               <div key={gIdx} className="space-y-3.5">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 font-mono">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 font-anek-latin">
                   {group.category}
                 </h3>
                 <ul className="space-y-3">
@@ -152,60 +145,20 @@ export const PricingPage: React.FC = () => {
               Engineered for commercial freight carriers, interstate logistics, bus & municipal operators, and regional fleets requiring end-to-end operational governance.
             </p>
 
-            {/* Action Button linking to contact page */}
+            {/* Action Button: Get Cost Estimate */}
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="text-xs text-slate-500 text-center sm:text-left">
                 Ready for tailored pricing? Reach our enterprise fleet team directly.
               </div>
 
-              <Link
-                to="/#contact"
+              <button
+                type="button"
+                onClick={() => setContactModalOpen(true)}
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-10 py-4 rounded-full font-bold text-sm sm:text-base bg-[#f59e0b] hover:bg-[#d97706] active:scale-98 text-slate-950 transition-all shadow-lg hover:shadow-xl hover:shadow-amber-500/20 cursor-pointer"
               >
                 <span>Get Cost Estimate</span>
                 <ArrowRight className="w-4 h-4 stroke-[2.5]" />
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Value Strip */}
-        <div className="mt-14 rounded-3xl bg-white border border-slate-200/90 p-8 sm:p-10 shadow-xs">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
-            <div className="flex flex-col md:flex-row items-center md:items-start gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-blue-100 text-[#2335f2] border border-blue-200 flex items-center justify-center shrink-0">
-                <ShieldCheck className="w-6 h-6 stroke-[2.2]" />
-              </div>
-              <div>
-                <h4 className="font-bold text-slate-900 text-base">No Setup or Ingestion Fees</h4>
-                <p className="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
-                  Every account includes cloud infrastructure setup, RTO compliance templates, and driver onboarding at zero surcharge.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex flex-col md:flex-row items-center md:items-start gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-blue-100 text-[#2335f2] border border-blue-200 flex items-center justify-center shrink-0">
-                <Truck className="w-6 h-6 stroke-[2.2]" />
-              </div>
-              <div>
-                <h4 className="font-bold text-slate-900 text-base">Free Unlimited Driver Apps</h4>
-                <p className="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
-                  Drivers download the React Native mobile app for free on Android. Unlimited drivers with no individual user licensing fees.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex flex-col md:flex-row items-center md:items-start gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-800 border border-amber-200 flex items-center justify-center shrink-0">
-                <PhoneCall className="w-6 h-6 stroke-[2.2]" />
-              </div>
-              <div>
-                <h4 className="font-bold text-slate-900 text-base">Dedicated Account Coordinator</h4>
-                <p className="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
-                  Receive a dedicated fleet operations coordinator to assist with scheduling, workshop negotiations, and custom workflows.
-                </p>
-              </div>
+              </button>
             </div>
           </div>
         </div>
@@ -217,7 +170,7 @@ export const PricingPage: React.FC = () => {
           <div className="flex items-center gap-3">
             <img src="/logo-blue.png" alt="SERVIQ Logo" className="w-8 h-8 object-contain" />
             <div>
-              <span className="font-extrabold text-xl text-slate-900 font-serif block leading-none">
+              <span className="font-extrabold text-xl text-slate-900 font-['Outfit',sans-serif] block leading-none">
                 serviq.
               </span>
               <span className="text-[10px] text-slate-400 font-semibold tracking-wider">
@@ -239,6 +192,13 @@ export const PricingPage: React.FC = () => {
           </div>
         </div>
       </footer>
+
+      {/* Talk To Us Contact Modal */}
+      <ContactModal
+        isOpen={contactModalOpen}
+        onClose={() => setContactModalOpen(false)}
+        defaultNeed="Commercial Fleet Management"
+      />
     </div>
   );
 };
