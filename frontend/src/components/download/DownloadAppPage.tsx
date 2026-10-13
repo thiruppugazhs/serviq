@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Download,
-  QrCode,
-  Smartphone,
   CheckCircle2,
   ShieldCheck,
   Zap,
@@ -205,14 +203,10 @@ export const DownloadAppPage: React.FC = () => {
           PAGE 1 (FULL VIEWPORT): BIG BOLD TITLE & DIRECT DOWNLOAD OPTIONS
       ========================================================================= */}
       <section className="min-h-screen relative flex flex-col justify-between items-center text-center px-4 sm:px-6 pt-24 pb-12 overflow-hidden bg-studio-blue">
-        
-        {/* Subtle pill kicker */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold uppercase tracking-wider text-white/90 animate-in fade-in duration-300">
-          <Smartphone className="w-4 h-4 text-emerald-400" />
-          <span>Driver & Fleet Mobile Companion</span>
-        </div>
+        {/* Top spacer */}
+        <div className="h-6" />
 
-        {/* Center: Big bold title and download cards */}
+        {/* Center: Big bold title and download button */}
         <div className="max-w-4xl mx-auto my-auto py-6">
           <h1
             className="font-anek-latin font-bold text-white text-6xl sm:text-7xl md:text-8xl lg:text-[108px] leading-tight tracking-tight select-none drop-shadow-md animate-in zoom-in-95 duration-300"
@@ -221,13 +215,8 @@ export const DownloadAppPage: React.FC = () => {
             Download Serviq
           </h1>
 
-          <p className="font-neue-haas-medium text-white/90 text-base sm:text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mt-3 sm:mt-4 px-4">
-            Everything your drivers and managers need on the road. Log daily odometer, report roadside breakdowns, and track live maintenance work orders.
-          </p>
-
           {/* Download Action Cards */}
-          <div className="mt-8 sm:mt-10 flex flex-wrap items-center justify-center gap-4 sm:gap-6">
-            
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-4 sm:gap-6">
             {/* Primary Direct APK Download Button */}
             <button
               onClick={handleApkDownload}
@@ -241,18 +230,6 @@ export const DownloadAppPage: React.FC = () => {
                 <div className="text-slate-900 font-bold">Android APK (v2.4.1)</div>
               </div>
             </button>
-
-            {/* QR Code Card */}
-            <div className="inline-flex items-center gap-4 px-6 py-3.5 rounded-2xl bg-white/15 backdrop-blur-xl border border-white/25 shadow-xl hover:bg-white/20 transition-all">
-              <div className="w-12 h-12 bg-white rounded-xl p-1.5 flex items-center justify-center shadow-md">
-                <QrCode className="w-full h-full text-[#2335f2]" />
-              </div>
-              <div className="text-left font-neue-haas-medium text-white leading-tight">
-                <div className="text-xs text-white/70">Scan on Phone</div>
-                <div className="text-sm font-bold">Instant Install</div>
-              </div>
-            </div>
-
           </div>
 
           {/* Download feedback indicator */}
@@ -262,14 +239,6 @@ export const DownloadAppPage: React.FC = () => {
               <span>Download started! Check your browser's download folder.</span>
             </div>
           )}
-
-          {/* Quick Specs */}
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs text-white/75 font-medium">
-            <span>• Android 8.0 & Above</span>
-            <span>• iOS 14.0+ (Coming Soon)</span>
-            <span>• Size: 28.4 MB</span>
-            <span>• Works Offline</span>
-          </div>
         </div>
 
         {/* Animated Scroll Down Indicator */}

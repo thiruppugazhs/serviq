@@ -120,9 +120,6 @@ export const PricingSection: React.FC = () => {
 
             {/* Price Box */}
             <div className="bg-slate-50/90 rounded-2xl p-5 sm:p-6 border border-slate-200/90 text-left lg:text-right shrink-0">
-              <span className="inline-block text-xs font-bold text-emerald-600 uppercase tracking-wider mb-1">
-                Month 1: Free (₹0)
-              </span>
               <div className="flex items-baseline lg:justify-end gap-1.5">
                 <span className="text-4xl sm:text-5xl font-black text-slate-900 font-anek-latin tracking-tight">
                   {billingCycle === 'monthly' ? '₹1,000' : '₹10,000'}
