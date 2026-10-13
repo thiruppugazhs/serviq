@@ -30,6 +30,7 @@ import {
 
 import { HelpFeedbackModal } from '../support/HelpFeedbackModal';
 import { RoadFeaturesSection } from './RoadFeaturesSection';
+import { PricingSection } from './PricingSection';
 
 const WORKFLOW_PILLS = [
   { label: 'Vehicle visibility', icon: Eye },
@@ -361,7 +362,7 @@ export const LandingPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Column: Large Bold Nav Links matching screenshot */}
+          {/* Right Column: Large Bold Nav Links (Home, About Us, Features, Pricing, Enterprise, FAQ, Download App) */}
           <div className="md:w-7/12 lg:w-8/12 flex flex-col space-y-1 sm:space-y-2 md:space-y-3">
             <a
               href="#hero"
@@ -384,13 +385,27 @@ export const LandingPage: React.FC = () => {
             >
               Features
             </a>
-            <Link
-              to="/pricing"
+            <a
+              href="#pricing"
               onClick={() => setMobileMenuOpen(false)}
               className="text-4xl sm:text-5xl md:text-6xl lg:text-[72px] font-bold text-white/70 hover:text-white leading-[1.12] tracking-tight block transition-colors select-none"
             >
               Pricing
-            </Link>
+            </a>
+            <a
+              href="#enterprise"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-[72px] font-bold text-white/70 hover:text-white leading-[1.12] tracking-tight block transition-colors select-none"
+            >
+              Enterprise
+            </a>
+            <a
+              href="#faq"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-[72px] font-bold text-white/70 hover:text-white leading-[1.12] tracking-tight block transition-colors select-none"
+            >
+              FAQ
+            </a>
             <Link
               to="/download"
               onClick={() => setMobileMenuOpen(false)}
@@ -398,29 +413,6 @@ export const LandingPage: React.FC = () => {
             >
               Download App
             </Link>
-            <a
-              href="#faq"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-[72px] font-bold text-white/70 hover:text-white leading-[1.12] tracking-tight block transition-colors select-none"
-            >
-              Enterprise FAQ
-            </a>
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                setHelpModalOpen(true);
-              }}
-              className="text-left text-4xl sm:text-5xl md:text-6xl lg:text-[72px] font-bold text-white/70 hover:text-white leading-[1.12] tracking-tight block transition-colors select-none cursor-pointer"
-            >
-              Help & Feedback
-            </button>
-            <a
-              href="#contact"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-[72px] font-bold text-white/70 hover:text-white leading-[1.12] tracking-tight block transition-colors select-none"
-            >
-              Contact Us
-            </a>
           </div>
 
         </div>
@@ -528,6 +520,11 @@ export const LandingPage: React.FC = () => {
           PAGE 3 (EVEN): ROTATIONAL FEATURES SECTION � WHITE BACKGROUND
       ========================================================================= */}
       <RoadFeaturesSection />
+
+      {/* =========================================================================
+          PAGE 4: TRANSPARENT FLEET PRICING (WHITE BACKGROUND + SERVIQ BRAND COLORS)
+      ========================================================================= */}
+      <PricingSection />
 
 
       {/* =========================================================================
