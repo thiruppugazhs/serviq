@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import api from '../../api/client';
 import { Driver, Vehicle } from '../../types';
-import { EmptyState } from '../common/EmptyState';
 import {
   Home,
   Plus,
@@ -10,10 +9,8 @@ import {
   Phone,
   MoreVertical,
   X,
-  Image as ImageIcon,
   ShieldAlert,
   Bus,
-  CheckCircle2,
 } from 'lucide-react';
 
 export const DriversView: React.FC = () => {
@@ -221,7 +218,9 @@ export const DriversView: React.FC = () => {
             </div>
             <h3 className="font-bold text-sm text-slate-800">No driver profiles found</h3>
             <p className="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
-              {search ? 'No drivers matched your search criteria.' : 'Add your first commercial driver profile with licenses and vehicle assignment.'}
+              {search
+                ? 'No drivers matched your search criteria.'
+                : 'Add your first commercial driver profile with licenses and vehicle assignment.'}
             </p>
             {!search && (
               <button
@@ -249,7 +248,8 @@ export const DriversView: React.FC = () => {
                   const userObj = typeof driver.user === 'object' ? driver.user : null;
                   const driverName = userObj?.name || 'Driver';
                   const driverPhone = userObj?.phone || '';
-                  const assignedVeh = typeof driver.assignedVehicle === 'object' ? driver.assignedVehicle : null;
+                  const assignedVeh =
+                    typeof driver.assignedVehicle === 'object' ? driver.assignedVehicle : null;
                   const isMenuOpen = activeMenuDriverId === driver._id;
 
                   return (
@@ -263,7 +263,11 @@ export const DriversView: React.FC = () => {
                           {/* Driver Icon/Avatar */}
                           <div className="w-9 h-9 rounded-full border border-slate-200 bg-slate-50 flex items-center justify-center shrink-0 overflow-hidden text-slate-700">
                             {driver.profilePhoto ? (
-                              <img src={driver.profilePhoto} alt={driverName} className="w-full h-full object-cover" />
+                              <img
+                                src={driver.profilePhoto}
+                                alt={driverName}
+                                className="w-full h-full object-cover"
+                              />
                             ) : (
                               <svg
                                 className="w-5 h-5 text-slate-700"
@@ -367,15 +371,15 @@ export const DriversView: React.FC = () => {
 
       {/* New Driver Modal matching exact screenshots */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="relative w-full max-w-xl bg-white rounded-3xl shadow-2xl p-6 sm:p-7 animate-in fade-in zoom-in-95 my-8">
+        <div className="fixed inset-0 z-50 bg-black/45 backdrop-blur-[2px] flex items-center justify-center p-4 overflow-y-auto">
+          <div className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl p-6 sm:p-7 max-h-[92vh] overflow-y-auto animate-in fade-in zoom-in-95 my-auto">
             {/* Modal Header */}
             <div className="flex items-start justify-between pb-4">
               <div>
-                <h2 className="text-xl font-extrabold text-slate-900 font-['Outfit',sans-serif]">
+                <h2 className="text-xl font-bold text-slate-900 font-['Outfit',sans-serif]">
                   New Driver
                 </h2>
-                <p className="text-xs text-slate-400 mt-0.5">
+                <p className="text-xs text-slate-500 mt-0.5">
                   Add a driver profile to the school.
                 </p>
               </div>
@@ -398,7 +402,7 @@ export const DriversView: React.FC = () => {
             <form onSubmit={handleAddDriver} className="space-y-4 text-xs">
               {/* Full name * */}
               <div>
-                <label className="block text-xs font-semibold text-slate-800 mb-1.5">
+                <label className="block text-xs font-medium text-slate-800 mb-1.5">
                   Full name <span className="text-rose-500">*</span>
                 </label>
                 <input
@@ -408,13 +412,13 @@ export const DriversView: React.FC = () => {
                   value={formData.fullName}
                   onChange={handleChange}
                   placeholder=""
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-all"
+                  className="w-full h-11 px-4 rounded-xl border border-slate-300 bg-white text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-all"
                 />
               </div>
 
               {/* Mobile * */}
               <div>
-                <label className="block text-xs font-semibold text-slate-800 mb-1.5">
+                <label className="block text-xs font-medium text-slate-800 mb-1.5">
                   Mobile <span className="text-rose-500">*</span>
                 </label>
                 <input
@@ -424,13 +428,13 @@ export const DriversView: React.FC = () => {
                   value={formData.mobile}
                   onChange={handleChange}
                   placeholder=""
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-all"
+                  className="w-full h-11 px-4 rounded-xl border border-slate-300 bg-white text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-all"
                 />
               </div>
 
               {/* Email * */}
               <div>
-                <label className="block text-xs font-semibold text-slate-800 mb-1.5">
+                <label className="block text-xs font-medium text-slate-800 mb-1.5">
                   Email <span className="text-rose-500">*</span>
                 </label>
                 <input
@@ -440,14 +444,14 @@ export const DriversView: React.FC = () => {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder=""
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-all"
+                  className="w-full h-11 px-4 rounded-xl border border-slate-300 bg-white text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-all"
                 />
               </div>
 
               {/* License No. & Assigned Vehicle */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-800 mb-1.5">
+                  <label className="block text-xs font-medium text-slate-800 mb-1.5">
                     License No.
                   </label>
                   <input
@@ -456,19 +460,19 @@ export const DriversView: React.FC = () => {
                     value={formData.licenseNo}
                     onChange={handleChange}
                     placeholder=""
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 font-mono transition-all"
+                    className="w-full h-11 px-4 rounded-xl border border-slate-300 bg-white text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 font-mono transition-all"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-800 mb-1.5">
+                  <label className="block text-xs font-medium text-slate-800 mb-1.5">
                     Assigned Vehicle
                   </label>
                   <select
                     name="assignedVehicleId"
                     value={formData.assignedVehicleId}
                     onChange={handleChange}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 bg-white transition-all font-mono"
+                    className="w-full h-11 px-3.5 rounded-xl border border-slate-300 bg-white text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-all font-mono"
                   >
                     <option value="">Select a vehicle</option>
                     {vehicles.map((v) => (
@@ -483,7 +487,7 @@ export const DriversView: React.FC = () => {
               {/* DOB & Gender */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-800 mb-1.5">
+                  <label className="block text-xs font-medium text-slate-800 mb-1.5">
                     DOB
                   </label>
                   <input
@@ -491,19 +495,20 @@ export const DriversView: React.FC = () => {
                     name="dob"
                     value={formData.dob}
                     onChange={handleChange}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 bg-white transition-all font-mono"
+                    placeholder="dd-mm-yyyy"
+                    className="w-full h-11 px-4 rounded-xl border border-slate-300 bg-white text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-all font-mono"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-800 mb-1.5">
+                  <label className="block text-xs font-medium text-slate-800 mb-1.5">
                     Gender
                   </label>
                   <select
                     name="gender"
                     value={formData.gender}
                     onChange={handleChange}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 bg-white transition-all"
+                    className="w-full h-11 px-3.5 rounded-xl border border-slate-300 bg-white text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-all"
                   >
                     <option value="">Select</option>
                     <option value="Male">Male</option>
@@ -515,7 +520,7 @@ export const DriversView: React.FC = () => {
 
               {/* Driver Photo Drag and Drop area */}
               <div>
-                <label className="block text-xs font-semibold text-slate-800 mb-1.5">
+                <label className="block text-xs font-medium text-slate-800 mb-1.5">
                   Driver photo
                 </label>
                 <div
@@ -563,7 +568,7 @@ export const DriversView: React.FC = () => {
                           <path d="M13 8h6" />
                         </svg>
                       </div>
-                      <p className="text-xs font-semibold text-slate-800">
+                      <p className="text-xs font-medium text-slate-800">
                         Drop an image here or click to select
                       </p>
                       <p className="text-[11px] text-slate-400 mt-0.5">

@@ -334,15 +334,15 @@ export const VehiclesView: React.FC = () => {
 
       {/* New Vehicle Modal */}
       {isAddModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="relative w-full max-w-xl bg-white rounded-3xl shadow-2xl p-6 sm:p-7 animate-in fade-in zoom-in-95 my-8">
+        <div className="fixed inset-0 z-50 bg-black/45 backdrop-blur-[2px] flex items-center justify-center p-4 overflow-y-auto">
+          <div className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl p-6 sm:p-7 max-h-[92vh] overflow-y-auto animate-in fade-in zoom-in-95 my-auto">
             {/* Modal Header */}
             <div className="flex items-start justify-between pb-4">
               <div>
-                <h2 className="text-xl font-extrabold text-slate-900 font-['Outfit',sans-serif]">
+                <h2 className="text-xl font-bold text-slate-900 font-['Outfit',sans-serif]">
                   New Vehicle
                 </h2>
-                <p className="text-xs text-slate-400 mt-0.5">
+                <p className="text-xs text-slate-500 mt-0.5">
                   Add a commercial vehicle to your fleet registry.
                 </p>
               </div>
@@ -375,7 +375,7 @@ export const VehiclesView: React.FC = () => {
                   value={formData.vehicleNumber}
                   onChange={handleChange}
                   placeholder="e.g. TN 12 P 3048"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 font-mono uppercase transition-all"
+                  className="w-full h-11 px-4 rounded-xl border border-slate-300 bg-white text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 font-mono uppercase transition-all"
                 />
               </div>
 
@@ -389,7 +389,7 @@ export const VehiclesView: React.FC = () => {
                     name="vehicleType"
                     value={formData.vehicleType}
                     onChange={handleChange}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 bg-white transition-all"
+                    className="w-full h-11 px-3.5 rounded-xl border border-slate-300 bg-white text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-all"
                   >
                     <option value="Van">Van</option>
                     <option value="Bus">Bus</option>
@@ -410,7 +410,7 @@ export const VehiclesView: React.FC = () => {
                     name="fuelType"
                     value={formData.fuelType}
                     onChange={handleChange}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 bg-white transition-all"
+                    className="w-full h-11 px-3.5 rounded-xl border border-slate-300 bg-white text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-all"
                   >
                     <option value="Diesel">Diesel</option>
                     <option value="Petrol">Petrol</option>
@@ -434,7 +434,7 @@ export const VehiclesView: React.FC = () => {
                     value={formData.manufacturer}
                     onChange={handleChange}
                     placeholder="e.g. Ashok Leyland / Force / Tata"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-all"
+                    className="w-full h-11 px-4 rounded-xl border border-slate-300 bg-white text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-all"
                   />
                 </div>
 
@@ -449,7 +449,7 @@ export const VehiclesView: React.FC = () => {
                     value={formData.model}
                     onChange={handleChange}
                     placeholder="e.g. Urbania / Boss 1616"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-all"
+                    className="w-full h-11 px-4 rounded-xl border border-slate-300 bg-white text-slate-900 text-xs outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-all"
                   />
                 </div>
               </div>
