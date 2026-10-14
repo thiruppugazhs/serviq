@@ -12,7 +12,6 @@ import {
   Receipt,
   FileText,
   BarChart3,
-  Settings,
   HelpCircle,
   LogOut,
   ChevronLeft,
@@ -85,15 +84,6 @@ export const Sidebar: React.FC = () => {
   ];
 
   const generalItems = [
-    ...(isAdmin
-      ? [
-          {
-            name: 'Company Settings',
-            path: '/admin/settings',
-            icon: Settings,
-          },
-        ]
-      : []),
     {
       name: 'My Profile',
       path: `${basePath}/profile`,
