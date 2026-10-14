@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Serviq Driver</string>
+    <string name="title_activity_main">Serviq Driver</string>
+    <string name="package_name">com.serviq.driver</string>
+    <string name="custom_url_scheme">com.serviq.driver</string>
+</resources>

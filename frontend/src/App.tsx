@@ -6,10 +6,8 @@ import { ProtectedRoute } from './components/auth/ProtectedRoute';
 
 // Common
 import { Sidebar } from './components/common/Sidebar';
-
-// Auth
-import { CompanyRegistration } from './components/auth/CompanyRegistration';
-import { Login } from './components/auth/Login';
+import { TopHeader } from './components/common/TopHeader';
+import { DashboardProvider, useDashboard } from './context/DashboardContext';
 
 // Admin
 import { AdminDashboard } from './components/admin/AdminDashboard';
@@ -20,36 +18,40 @@ import { ProfileView } from './components/profile/ProfileView';
 // Fleet Manager
 import { FleetManagerDashboard } from './components/fleetManager/FleetManagerDashboard';
 
-// Shared Fleet Operations
+// Shared Fleet Operations (Admin/Manager)
 import { DriversView } from './components/drivers/DriversView';
 import { DriverProfileView } from './components/drivers/DriverProfileView';
 import { VehiclesView } from './components/vehicles/VehiclesView';
-import { MaintenanceView } from './components/maintenance/MaintenanceView';
+import { MaintenanceView as AdminMaintenanceView } from './components/maintenance/MaintenanceView';
 import { RepairsView } from './components/repairs/RepairsView';
-import { ExpensesView } from './components/expenses/ExpensesView';
+import { ExpensesView as AdminExpensesView } from './components/expenses/ExpensesView';
 import { DocumentsView } from './components/documents/DocumentsView';
 import { ReportsView } from './components/reports/ReportsView';
 
-// Driver Mobile Experience
-import { DriverHome } from './components/driverApp/DriverHome';
-
-// Landing Page & Public Content
-import { LandingPage } from './components/landing/LandingPage';
-import { LegalPage } from './components/legal/LegalPage';
-import { DownloadAppPage } from './components/download/DownloadAppPage';
-import { PricingPage } from './components/pricing/PricingPage';
-import { TopHeader } from './components/common/TopHeader';
-
-import { DashboardProvider, useDashboard } from './context/DashboardContext';
+// Driver App (Primary Mobile-First Fleet Driver Application)
+import { DriverLayout } from './components/driver/DriverLayout';
+import { DriverLogin } from './components/driver/DriverLogin';
+import { DriverHomeView } from './components/driver/DriverHomeView';
+import { NotificationsView } from './components/driver/NotificationsView';
+import { UpdateOdometerView } from './components/driver/UpdateOdometerView';
+import { MaintenanceView } from './components/driver/MaintenanceView';
+import { RequestMaintenanceView } from './components/driver/RequestMaintenanceView';
+import { ServicesView } from './components/driver/ServicesView';
+import { RequestServiceView } from './components/driver/RequestServiceView';
+import { ExpensesView } from './components/driver/ExpensesView';
+import { ExpenseItemDetailView } from './components/driver/ExpenseItemDetailView';
+import { AddExpenseView } from './components/driver/AddExpenseView';
+import { SettingsView } from './components/driver/SettingsView';
+import { EditDriverDetailsView } from './components/driver/EditDriverDetailsView';
+import { EditProfilePhotoView } from './components/driver/EditProfilePhotoView';
+import { TeamChangeView } from './components/driver/TeamChangeView';
 
 const DashboardLayoutContent: React.FC = () => {
   const { isCollapsed } = useDashboard();
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-900 font-['Anek_Latin',sans-serif]">
-      {/* Fixed Header */}
       <TopHeader />
-
       <div className="flex pt-16 min-h-[calc(100vh-4rem)]">
         <Sidebar />
         <main
@@ -72,15 +74,16 @@ const DashboardLayout: React.FC = () => {
   );
 };
 
-
+// Root redirect enforces driver-first entry flow:
+// Opens Login when unauthenticated; opens Home when authenticated.
 const RootRedirect: React.FC = () => {
   const { user, loading } = useAuth();
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center">
-        <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
-        <p className="text-slate-400 text-sm mt-4">Connecting to SERVIQ...</p>
+      <div className="min-h-screen bg-[#f8fafc] flex flex-col items-center justify-center">
+        <div className="w-9 h-9 border-3 border-[#1b72e8] border-t-transparent rounded-full animate-spin" />
+        <p className="text-slate-400 text-xs mt-3 font-medium">Connecting to Serviq Driver...</p>
       </div>
     );
   }
@@ -89,11 +92,25 @@ const RootRedirect: React.FC = () => {
     return <Navigate to="/login" replace />;
   }
 
-  if (user.role === 'admin') return <Navigate to="/admin/dashboard" replace />;
-  if (user.role === 'fleet_manager') return <Navigate to="/manager/dashboard" replace />;
-  if (user.role === 'driver') return <Navigate to="/driver/home" replace />;
+  return <Navigate to="/home" replace />;
+};
 
-  return <Navigate to="/login" replace />;
+const DriverProtectedRoute: React.FC = () => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#f8fafc] flex flex-col items-center justify-center">
+        <div className="w-9 h-9 border-3 border-[#1b72e8] border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <Outlet />;
 };
 
 export const App: React.FC = () => {
@@ -102,29 +119,34 @@ export const App: React.FC = () => {
       <SocketProvider>
         <BrowserRouter>
           <Routes>
-            {/* Public Landing Page */}
-            <Route path="/" element={<LandingPage />} />
+            {/* Root Route: strictly driver-first, no landing page */}
+            <Route path="/" element={<RootRedirect />} />
 
-            {/* Dedicated Pricing Page */}
-            <Route path="/pricing" element={<PricingPage />} />
+            {/* Driver Login Screen with uploaded 3D background */}
+            <Route path="/login" element={<DriverLogin />} />
 
-            {/* Dedicated Download App Page */}
-            <Route path="/download" element={<DownloadAppPage />} />
-            <Route path="/download-app" element={<DownloadAppPage />} />
+            {/* Protected Driver Routes */}
+            <Route element={<DriverProtectedRoute />}>
+              <Route element={<DriverLayout />}>
+                <Route path="/home" element={<DriverHomeView />} />
+                <Route path="/driver/home" element={<Navigate to="/home" replace />} />
+                <Route path="/notifications" element={<NotificationsView />} />
+                <Route path="/odometer/update" element={<UpdateOdometerView />} />
+                <Route path="/maintenance" element={<MaintenanceView />} />
+                <Route path="/maintenance/request" element={<RequestMaintenanceView />} />
+                <Route path="/service" element={<ServicesView />} />
+                <Route path="/service/request" element={<RequestServiceView />} />
+                <Route path="/expense" element={<ExpensesView />} />
+                <Route path="/expense/item/:id" element={<ExpenseItemDetailView />} />
+                <Route path="/expense/add/:id" element={<AddExpenseView />} />
+                <Route path="/settings" element={<SettingsView />} />
+                <Route path="/settings/driver" element={<EditDriverDetailsView />} />
+                <Route path="/settings/profile" element={<EditProfilePhotoView />} />
+                <Route path="/settings/team" element={<TeamChangeView />} />
+              </Route>
+            </Route>
 
-            {/* Legal & Compliance Dedicated Pages */}
-            <Route path="/terms-of-use" element={<LegalPage policyKey="terms-of-use" />} />
-            <Route path="/privacy-policy" element={<LegalPage policyKey="privacy-policy" />} />
-            <Route path="/grievance-policy" element={<LegalPage policyKey="grievance-policy" />} />
-            <Route path="/merchant-terms" element={<LegalPage policyKey="merchant-terms" />} />
-            <Route path="/data-protection-standards" element={<LegalPage policyKey="data-protection-standards" />} />
-            <Route path="/legal/:slug" element={<LegalPage />} />
-
-            {/* Public Auth Routes */}
-            <Route path="/register" element={<CompanyRegistration />} />
-            <Route path="/login" element={<Login />} />
-
-            {/* Organization Admin Protected Routes */}
+            {/* Admin Protected Routes */}
             <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
               <Route path="/admin" element={<DashboardLayout />}>
                 <Route path="dashboard" element={<AdminDashboard />} />
@@ -134,9 +156,9 @@ export const App: React.FC = () => {
                 <Route path="vehicles" element={<VehiclesView />} />
                 <Route path="tracking" element={<Navigate to="../vehicles" replace />} />
                 <Route path="map" element={<Navigate to="../vehicles" replace />} />
-                <Route path="maintenance" element={<MaintenanceView />} />
+                <Route path="maintenance" element={<AdminMaintenanceView />} />
                 <Route path="repairs" element={<RepairsView />} />
-                <Route path="expenses" element={<ExpensesView />} />
+                <Route path="expenses" element={<AdminExpensesView />} />
                 <Route path="documents" element={<DocumentsView />} />
                 <Route path="reports" element={<ReportsView />} />
                 <Route path="settings" element={<CompanySettings />} />
@@ -153,21 +175,16 @@ export const App: React.FC = () => {
                 <Route path="vehicles" element={<VehiclesView />} />
                 <Route path="tracking" element={<Navigate to="../vehicles" replace />} />
                 <Route path="map" element={<Navigate to="../vehicles" replace />} />
-                <Route path="maintenance" element={<MaintenanceView />} />
+                <Route path="maintenance" element={<AdminMaintenanceView />} />
                 <Route path="repairs" element={<RepairsView />} />
-                <Route path="expenses" element={<ExpensesView />} />
+                <Route path="expenses" element={<AdminExpensesView />} />
                 <Route path="documents" element={<DocumentsView />} />
                 <Route path="reports" element={<ReportsView />} />
                 <Route path="profile" element={<ProfileView />} />
               </Route>
             </Route>
 
-            {/* Driver Mobile / APK Protected Route */}
-            <Route element={<ProtectedRoute allowedRoles={['driver', 'admin', 'fleet_manager']} />}>
-              <Route path="/driver/home" element={<DriverHome />} />
-            </Route>
-
-            {/* Catch-all */}
+            {/* Fallback Catch-all: redirects to root */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </BrowserRouter>
