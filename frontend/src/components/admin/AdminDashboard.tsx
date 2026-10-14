@@ -9,7 +9,11 @@ import { Reminders } from '../dashboard/Reminders';
 import { ProjectList } from '../dashboard/ProjectList';
 import { Download } from 'lucide-react';
 
+import { useAuth } from '../../context/AuthContext';
+import { generateFleetReportPDF } from '../../utils/pdfGenerator';
+
 export const AdminDashboard: React.FC = () => {
+  const { user } = useAuth();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -32,14 +36,12 @@ export const AdminDashboard: React.FC = () => {
   }, []);
 
   const handleExport = () => {
-    const reportData = JSON.stringify(stats || { status: 'operational' }, null, 2);
-    const blob = new Blob([reportData], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `serviq-fleet-report-${new Date().toISOString().slice(0, 10)}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
+    const orgName =
+      (typeof user?.organization === 'object' && user?.organization?.name) ||
+      (typeof user?.organization === 'string' && user?.organization) ||
+      'ORCHIDS The International School (SAT)';
+
+    generateFleetReportPDF(stats, orgName);
   };
 
   return (

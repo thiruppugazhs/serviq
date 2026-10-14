@@ -3,7 +3,8 @@ import api from '../../api/client';
 import { DashboardStats } from '../../types';
 import { StatCard } from '../common/StatCard';
 import { Header } from '../common/Header';
-import { BarChart3, Truck, Wrench, AlertTriangle, Receipt, Download, FileSpreadsheet } from 'lucide-react';
+import { BarChart3, Truck, Wrench, AlertTriangle, Receipt, Download, FileSpreadsheet, FileText } from 'lucide-react';
+import { generateFleetReportPDF } from '../../utils/pdfGenerator';
 
 export const ReportsView: React.FC = () => {
   const [stats, setStats] = useState<DashboardStats | null>(null);
@@ -49,19 +50,32 @@ export const ReportsView: React.FC = () => {
     document.body.removeChild(link);
   };
 
+  const handleExportPDF = () => {
+    generateFleetReportPDF(stats);
+  };
+
   return (
     <div className="space-y-4 md:space-y-5 animate-in fade-in duration-200">
       <Header
         title="Reports & Fleet Analytics"
         description="Aggregated audit logs, compliance posture, and operating expenditure summaries."
         actions={
-          <button
-            onClick={handleExportCSV}
-            className="inline-flex items-center gap-1.5 h-9 px-4 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-medium text-xs rounded-lg transition-colors shadow-2xs"
-          >
-            <Download className="w-3.5 h-3.5 text-[#2335f2]" />
-            <span>Export Summary CSV</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleExportPDF}
+              className="inline-flex items-center gap-1.5 h-9 px-4 bg-[#2335f2] hover:bg-blue-700 text-white font-semibold text-xs rounded-lg transition-colors shadow-2xs cursor-pointer"
+            >
+              <FileText className="w-3.5 h-3.5 text-white" />
+              <span>Download PDF Report</span>
+            </button>
+            <button
+              onClick={handleExportCSV}
+              className="inline-flex items-center gap-1.5 h-9 px-3.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-medium text-xs rounded-lg transition-colors shadow-2xs cursor-pointer"
+            >
+              <Download className="w-3.5 h-3.5 text-slate-500" />
+              <span>CSV</span>
+            </button>
+          </div>
         }
       />
 
