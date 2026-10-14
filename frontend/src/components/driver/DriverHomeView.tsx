@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import { driverService, DriverProfile, MaintenanceItem } from '../../services/driverService';
 import {
   Sun,
@@ -19,12 +20,15 @@ import {
 
 export const DriverHomeView: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const [profile, setProfile] = useState<DriverProfile>(driverService.getProfile());
   const [odometer, setOdometer] = useState<number>(driverService.getOdometer());
   const [maintenanceList, setMaintenanceList] = useState<MaintenanceItem[]>([]);
   const [unreadCount, setUnreadCount] = useState<number>(driverService.getUnreadCount());
   const [isProfileExpanded, setIsProfileExpanded] = useState<boolean>(false);
+
+  const driverName = user?.name || profile.name;
 
   useEffect(() => {
     setProfile(driverService.getProfile());
@@ -56,7 +60,7 @@ export const DriverHomeView: React.FC = () => {
           <GreetingIcon className={`w-6 h-6 ${greeting.iconColor} shrink-0`} />
           <div>
             <span className="text-xs text-slate-500 font-medium block leading-none">{greeting.text}</span>
-            <h1 className="text-lg font-bold text-slate-900 leading-tight mt-0.5">{profile.name}</h1>
+            <h1 className="text-lg font-bold text-slate-900 leading-tight mt-0.5">{driverName}</h1>
           </div>
         </div>
 
@@ -88,7 +92,7 @@ export const DriverHomeView: React.FC = () => {
               className="w-11 h-11 rounded-full object-cover border border-slate-100 shadow-2xs"
             />
             <div>
-              <h2 className="text-sm font-bold text-slate-900 leading-tight">{profile.name}</h2>
+              <h2 className="text-sm font-bold text-slate-900 leading-tight">{driverName}</h2>
               <span className="text-xs text-slate-400 font-medium">{profile.role}</span>
             </div>
           </div>

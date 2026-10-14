@@ -7,7 +7,7 @@ export const DriverLayout: React.FC = () => {
   const pathname = location.pathname;
 
   const navItems = [
-    { label: 'Home', path: '/home', icon: Home, active: pathname === '/home' || pathname.startsWith('/odometer') || pathname.startsWith('/notifications') },
+    { label: 'Home', path: '/driver/home', icon: Home, active: pathname === '/driver/home' || pathname === '/home' || pathname.startsWith('/odometer') || pathname.startsWith('/notifications') },
     { label: 'Service', path: '/service', icon: Wrench, active: pathname.startsWith('/service') },
     { label: 'Maintenance', path: '/maintenance', icon: Settings, active: pathname.startsWith('/maintenance') },
     { label: 'Expense', path: '/expense', icon: FileText, active: pathname.startsWith('/expense') },
