@@ -19,6 +19,7 @@ import {
   Camera,
   Image as ImageIcon,
   X,
+  Trash2,
 } from 'lucide-react';
 
 const DOCUMENT_TYPES = [
@@ -156,6 +157,20 @@ export const DocumentsView: React.FC = () => {
       setError(err.response?.data?.message || 'Failed to add document');
     } finally {
       setSubmitLoading(false);
+    }
+  };
+
+  const handleDeleteDocument = async (id: string, docType: string) => {
+    if (!window.confirm(`Are you sure you want to permanently delete document "${docType}"?`)) {
+      return;
+    }
+    try {
+      const res = await api.delete(`/documents/${id}`);
+      if (res.data?.success) {
+        setDocuments((prev) => prev.filter((d) => d._id !== id));
+      }
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Failed to delete document');
     }
   };
 
@@ -339,7 +354,17 @@ export const DocumentsView: React.FC = () => {
                               <span className="font-bold text-xs text-slate-900 bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200">
                                 {doc.documentType}
                               </span>
-                              <Badge status={doc.status} size="sm" />
+                              <div className="flex items-center gap-1.5">
+                                <Badge status={doc.status} size="sm" />
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteDocument(doc._id, doc.documentType)}
+                                  title="Delete document"
+                                  className="p-1 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
                             </div>
 
                             {doc.documentNumber && (

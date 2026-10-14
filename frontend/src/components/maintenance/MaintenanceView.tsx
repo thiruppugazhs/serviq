@@ -17,6 +17,7 @@ import {
   User,
   MapPin,
   Check,
+  Trash2,
 } from 'lucide-react';
 
 export const MaintenanceView: React.FC = () => {
@@ -111,6 +112,22 @@ export const MaintenanceView: React.FC = () => {
       }
     } catch (err: any) {
       alert(err.response?.data?.message || 'Failed to reject maintenance');
+    }
+  };
+
+  const handleDeleteMaintenance = async (id: string) => {
+    if (!window.confirm('Are you sure you want to permanently delete this maintenance record?')) {
+      return;
+    }
+    try {
+      const res = await api.delete(`/maintenance/${id}`);
+      if (res.data?.success) {
+        setMaintenanceList((prev) => prev.filter((m) => m._id !== id));
+        setActionSuccess('Maintenance record deleted successfully.');
+        setTimeout(() => setActionSuccess(null), 3500);
+      }
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Failed to delete maintenance record');
     }
   };
 
@@ -315,7 +332,17 @@ export const MaintenanceView: React.FC = () => {
                         {item.serviceType}
                       </h3>
                     </div>
-                    <Badge status={item.status} />
+                    <div className="flex items-center gap-1.5">
+                      <Badge status={item.status} />
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteMaintenance(item._id)}
+                        title="Delete maintenance record"
+                        className="p-1 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
 
                   {/* Submission Details */}

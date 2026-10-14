@@ -5,7 +5,7 @@ import { Badge } from '../common/Badge';
 import { Modal } from '../common/Modal';
 import { EmptyState } from '../common/EmptyState';
 import { Header } from '../common/Header';
-import { Users2, Plus, Mail, Phone, MapPin, ShieldAlert, KeyRound, Building2 } from 'lucide-react';
+import { Users2, Plus, Mail, Phone, MapPin, ShieldAlert, KeyRound, Building2, Trash2 } from 'lucide-react';
 
 export const FleetManagersView: React.FC = () => {
   const [managers, setManagers] = useState<User[]>([]);
@@ -103,6 +103,20 @@ export const FleetManagersView: React.FC = () => {
     }
   };
 
+  const handleDeleteManager = async (id: string, name: string) => {
+    if (!window.confirm(`Are you sure you want to permanently delete Fleet Manager "${name}"?`)) {
+      return;
+    }
+    try {
+      const res = await api.delete(`/fleet-managers/${id}`);
+      if (res.data?.success) {
+        setManagers((prev) => prev.filter((m) => (m._id || m.id) !== id));
+      }
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Failed to delete Fleet Manager');
+    }
+  };
+
   return (
     <div className="space-y-4 md:space-y-5 animate-in fade-in duration-200">
       <Header
@@ -172,12 +186,20 @@ export const FleetManagersView: React.FC = () => {
                 </div>
               </div>
 
-              <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-end">
+              <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between">
+                <button
+                  type="button"
+                  onClick={() => handleDeleteManager(mgr._id || mgr.id, mgr.name || 'Manager')}
+                  className="text-xs px-2.5 py-1 rounded-lg font-medium transition-colors border border-rose-200 text-rose-600 hover:bg-rose-50 flex items-center gap-1.5 cursor-pointer"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>Delete</span>
+                </button>
                 <button
                   onClick={() => handleToggleStatus(mgr._id || mgr.id)}
                   className={`text-xs px-2.5 py-1 rounded-lg font-medium transition-colors border cursor-pointer ${
                     mgr.status === 'active'
-                      ? 'border-rose-200 text-rose-600 hover:bg-rose-50'
+                      ? 'border-amber-200 text-amber-700 hover:bg-amber-50'
                       : 'border-emerald-200 text-emerald-600 hover:bg-emerald-50'
                   }`}
                 >

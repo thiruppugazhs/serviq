@@ -3,7 +3,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import api from '../../api/client';
 import { Driver, Vehicle } from '../../types';
 import { Badge } from '../common/Badge';
-import { ArrowLeft, Phone, Mail, FileText, Truck, Calendar, ShieldCheck, Edit3 } from 'lucide-react';
+import { ArrowLeft, Phone, Mail, FileText, Truck, Calendar, ShieldCheck, Edit3, Trash2 } from 'lucide-react';
 
 export const DriverProfileView: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -67,6 +67,21 @@ export const DriverProfileView: React.FC = () => {
     }
   };
 
+  const handleDeleteDriver = async () => {
+    const driverName = user?.name || 'Driver';
+    if (!window.confirm(`Are you sure you want to permanently delete driver "${driverName}"?`)) {
+      return;
+    }
+    try {
+      const res = await api.delete(`/drivers/${id}`);
+      if (res.data?.success) {
+        navigate(`${basePath}/drivers`);
+      }
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Failed to delete driver');
+    }
+  };
+
   if (loading) {
     return <div className="p-12 text-center text-slate-400">Loading Driver Profile...</div>;
   }
@@ -117,17 +132,24 @@ export const DriverProfileView: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <Badge status={driver.status} size="md" />
             <button
               onClick={handleToggleStatus}
               className={`text-xs px-3 py-1.5 rounded-xl border transition-colors ${
                 driver.status === 'active'
-                  ? 'border-rose-200 text-rose-600 hover:bg-rose-50'
+                  ? 'border-amber-200 text-amber-700 hover:bg-amber-50'
                   : 'border-emerald-200 text-emerald-600 hover:bg-emerald-50'
               }`}
             >
               {driver.status === 'active' ? 'Deactivate' : 'Activate'}
+            </button>
+            <button
+              onClick={handleDeleteDriver}
+              className="text-xs px-3 py-1.5 rounded-xl border border-rose-200 text-rose-600 hover:bg-rose-50 transition-colors flex items-center gap-1.5 cursor-pointer font-medium"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span>Delete</span>
             </button>
           </div>
         </div>

@@ -92,3 +92,30 @@ exports.getDocuments = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc    Delete Document
+// @route   DELETE /api/documents/:id
+// @access  Private (Admin & Fleet Manager)
+exports.deleteDocument = async (req, res, next) => {
+  try {
+    const document = await Document.findOneAndDelete({
+      _id: req.params.id,
+      organization: req.organizationId,
+    });
+
+    if (!document) {
+      return res.status(404).json({
+        success: false,
+        message: 'Document not found',
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Document deleted successfully',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+

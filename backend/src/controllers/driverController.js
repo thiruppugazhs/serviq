@@ -297,3 +297,43 @@ exports.toggleDriverStatus = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc    Delete Driver record and associated user
+// @route   DELETE /api/drivers/:id
+// @access  Private (Admin & Fleet Manager)
+exports.deleteDriver = async (req, res, next) => {
+  try {
+    const driver = await Driver.findOne({
+      _id: req.params.id,
+      organization: req.organizationId,
+    });
+
+    if (!driver) {
+      return res.status(404).json({
+        success: false,
+        message: 'Driver not found',
+      });
+    }
+
+    // Unassign vehicle if assigned
+    if (driver.assignedVehicle) {
+      await Vehicle.findByIdAndUpdate(driver.assignedVehicle, { assignedDriver: null });
+    }
+
+    // Delete associated User account
+    if (driver.user) {
+      await User.findByIdAndDelete(driver.user);
+    }
+
+    // Delete the Driver record
+    await Driver.findByIdAndDelete(driver._id);
+
+    res.status(200).json({
+      success: true,
+      message: 'Driver record deleted successfully',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+

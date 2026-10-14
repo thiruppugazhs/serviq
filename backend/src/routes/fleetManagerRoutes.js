@@ -6,6 +6,7 @@ const {
   getFleetManagerById,
   updateFleetManager,
   toggleFleetManagerStatus,
+  deleteFleetManager,
 } = require('../controllers/fleetManagerController');
 const { protect } = require('../middleware/auth');
 const { authorize } = require('../middleware/roleAuth');
@@ -20,7 +21,8 @@ router.route('/')
 
 router.route('/:id')
   .get(getFleetManagerById)
-  .put(updateFleetManager);
+  .put(updateFleetManager)
+  .delete(deleteFleetManager);
 
 router.patch('/:id/toggle-status', toggleFleetManagerStatus);
 

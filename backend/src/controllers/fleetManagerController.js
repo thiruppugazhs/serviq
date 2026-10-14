@@ -213,3 +213,31 @@ exports.toggleFleetManagerStatus = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc    Delete a Fleet Manager
+// @route   DELETE /api/fleet-managers/:id
+// @access  Private (Admin only)
+exports.deleteFleetManager = async (req, res, next) => {
+  try {
+    const manager = await User.findOneAndDelete({
+      _id: req.params.id,
+      organization: req.organizationId,
+      role: 'fleet_manager',
+    });
+
+    if (!manager) {
+      return res.status(404).json({
+        success: false,
+        message: 'Fleet Manager not found',
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Fleet Manager deleted successfully',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+

@@ -398,3 +398,30 @@ exports.completeMaintenance = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc    Delete Maintenance record
+// @route   DELETE /api/maintenance/:id
+// @access  Private (Admin & Fleet Manager)
+exports.deleteMaintenance = async (req, res, next) => {
+  try {
+    const record = await Maintenance.findOneAndDelete({
+      _id: req.params.id,
+      organization: req.organizationId,
+    });
+
+    if (!record) {
+      return res.status(404).json({
+        success: false,
+        message: 'Maintenance record not found',
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Maintenance record deleted successfully',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+

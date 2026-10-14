@@ -20,6 +20,7 @@ import {
   Camera,
   X,
   ExternalLink,
+  Trash2,
 } from 'lucide-react';
 
 export const ExpensesView: React.FC = () => {
@@ -148,6 +149,20 @@ export const ExpensesView: React.FC = () => {
       setError(err.response?.data?.message || 'Failed to record expense');
     } finally {
       setSubmitLoading(false);
+    }
+  };
+
+  const handleDeleteExpense = async (id: string) => {
+    if (!window.confirm('Are you sure you want to permanently delete this expense record?')) {
+      return;
+    }
+    try {
+      const res = await api.delete(`/expenses/${id}`);
+      if (res.data?.success) {
+        setExpenses((prev) => prev.filter((e) => e._id !== id));
+      }
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Failed to delete expense record');
     }
   };
 
@@ -379,6 +394,14 @@ export const ExpensesView: React.FC = () => {
                           <span className="font-mono text-base font-bold text-slate-900">
                             ₹{exp.amount.toLocaleString()}
                           </span>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteExpense(exp._id)}
+                            title="Delete expense record"
+                            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
                         </div>
                       </div>
                     ))}

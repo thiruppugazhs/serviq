@@ -11,6 +11,7 @@ import {
   X,
   ShieldAlert,
   Bus,
+  Trash2,
 } from 'lucide-react';
 
 export const DriversView: React.FC = () => {
@@ -153,6 +154,20 @@ export const DriversView: React.FC = () => {
       fetchData();
     } catch (err: any) {
       alert(err.response?.data?.message || 'Failed to update status');
+    }
+  };
+
+  const handleDeleteDriver = async (id: string, name: string) => {
+    if (!window.confirm(`Are you sure you want to permanently delete driver "${name}"?`)) {
+      return;
+    }
+    try {
+      const res = await api.delete(`/drivers/${id}`);
+      if (res.data?.success) {
+        setDrivers((prev) => prev.filter((d) => d._id !== id));
+      }
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Failed to delete driver');
     }
   };
 
@@ -374,6 +389,16 @@ export const DriversView: React.FC = () => {
                               className="w-full px-3.5 py-2 text-left font-medium text-slate-800 hover:bg-slate-50 border-t border-slate-100 flex items-center justify-between cursor-pointer"
                             >
                               <span>{driver.status === 'active' ? 'Mark Standby' : 'Set Active'}</span>
+                            </button>
+                            <button
+                              onClick={() => {
+                                setActiveMenuDriverId(null);
+                                handleDeleteDriver(driver._id, driverName);
+                              }}
+                              className="w-full px-3.5 py-2 text-left font-medium text-rose-600 hover:bg-rose-50 border-t border-slate-100 flex items-center justify-between cursor-pointer"
+                            >
+                              <span>Delete Driver</span>
+                              <Trash2 className="w-3.5 h-3.5" />
                             </button>
                           </div>
                         )}

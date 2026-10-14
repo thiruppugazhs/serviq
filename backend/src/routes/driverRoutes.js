@@ -6,6 +6,7 @@ const {
   getDriverById,
   updateDriver,
   toggleDriverStatus,
+  deleteDriver,
 } = require('../controllers/driverController');
 const { protect } = require('../middleware/auth');
 const { authorize } = require('../middleware/roleAuth');
@@ -19,7 +20,8 @@ router.route('/')
 
 router.route('/:id')
   .get(authorize('admin', 'fleet_manager', 'driver'), getDriverById)
-  .put(authorize('admin', 'fleet_manager'), updateDriver);
+  .put(authorize('admin', 'fleet_manager'), updateDriver)
+  .delete(authorize('admin', 'fleet_manager'), deleteDriver);
 
 router.patch('/:id/toggle-status', authorize('admin', 'fleet_manager'), toggleDriverStatus);
 

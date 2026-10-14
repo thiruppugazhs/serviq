@@ -8,6 +8,7 @@ const {
   createMaintenance,
   getMaintenance,
   completeMaintenance,
+  deleteMaintenance,
 } = require('../controllers/maintenanceController');
 const { protect } = require('../middleware/auth');
 const { authorize } = require('../middleware/roleAuth');
@@ -19,6 +20,7 @@ router.post('/schedule', authorize('admin', 'fleet_manager'), scheduleMaintenanc
 router.patch('/:id/approve', authorize('admin', 'fleet_manager'), approveMaintenance);
 router.patch('/:id/reject', authorize('admin', 'fleet_manager'), rejectMaintenance);
 router.patch('/:id/complete', completeMaintenance);
+router.delete('/:id', authorize('admin', 'fleet_manager'), deleteMaintenance);
 
 router.route('/')
   .post(authorize('admin', 'fleet_manager'), createMaintenance)
