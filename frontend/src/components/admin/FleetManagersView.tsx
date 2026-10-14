@@ -52,14 +52,19 @@ export const FleetManagersView: React.FC = () => {
     setError(null);
 
     if (!formData.employeeId.trim()) {
-      setError('Employee ID is required (it serves as their default login password).');
+      setError('Employee ID is required.');
+      return;
+    }
+
+    if (!formData.phone.trim()) {
+      setError('Mobile / Phone number is required (it serves as their initial login password).');
       return;
     }
 
     setSubmitLoading(true);
 
     try {
-      // Send required fields
+      // Send required fields (phone/mobile number is the initial password)
       await api.post('/fleet-managers', {
         firstName: formData.firstName.trim(),
         lastName: formData.lastName.trim(),
@@ -69,7 +74,7 @@ export const FleetManagersView: React.FC = () => {
         phone: formData.phone.trim(),
         stationAddress: formData.stationAddress.trim(),
         address: formData.stationAddress.trim(),
-        password: formData.employeeId.trim(), // Default password is employee ID
+        password: formData.phone.trim(), // Initial password is their mobile number
       });
 
       setIsModalOpen(false);
@@ -169,7 +174,7 @@ export const FleetManagersView: React.FC = () => {
 
               <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between">
                 <span className="text-[11px] text-slate-400">
-                  Default Pass: Employee ID
+                  Initial Pass: Mobile No.
                 </span>
                 <button
                   onClick={() => handleToggleStatus(mgr._id || mgr.id)}
@@ -262,17 +267,6 @@ export const FleetManagersView: React.FC = () => {
                 placeholder="e.g. FM-104"
                 className="w-full bg-slate-50 border border-slate-200 focus:border-[#2335f2] rounded-xl px-3.5 py-2 text-slate-900 outline-none font-mono"
               />
-            </div>
-          </div>
-
-          {/* Password info banner */}
-          <div className="p-3 bg-blue-50/70 border border-blue-200/80 rounded-xl text-blue-900 text-xs flex items-center gap-2.5">
-            <KeyRound className="w-4 h-4 text-[#2335f2] shrink-0" />
-            <div>
-              <p className="font-semibold text-blue-800">Password Policy</p>
-              <p className="text-[11px] text-blue-700">
-                The Fleet Manager's <strong>Employee ID</strong> ({formData.employeeId || 'e.g. FM-104'}) will automatically be configured as their default login password.
-              </p>
             </div>
           </div>
 

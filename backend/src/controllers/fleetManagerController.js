@@ -35,10 +35,11 @@ exports.createFleetManager = async (req, res, next) => {
       });
     }
 
-    // Default password to Employee ID if not provided
+    // Default initial password to Mobile / Phone number if not provided
+    const contactPhone = (phone || '').trim();
     const password = (customPassword && customPassword.trim().length >= 6)
       ? customPassword.trim()
-      : employeeId.trim();
+      : (contactPhone || employeeId.trim());
 
     const existingUser = await User.findOne({ email: email.toLowerCase().trim() });
     if (existingUser) {
