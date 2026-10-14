@@ -213,7 +213,7 @@ export const MaintenanceView: React.FC = () => {
               className="inline-flex items-center gap-1.5 h-9 px-4 bg-[#2335f2] hover:bg-blue-700 text-white font-medium text-xs rounded-lg transition-colors shadow-sm cursor-pointer"
             >
               <Calendar className="w-3.5 h-3.5" />
-              <span>+ Schedule Maintenance</span>
+              <span>Schedule Maintenance</span>
             </button>
           </div>
         }
