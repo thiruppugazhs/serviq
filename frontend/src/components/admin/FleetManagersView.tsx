@@ -172,10 +172,7 @@ export const FleetManagersView: React.FC = () => {
                 </div>
               </div>
 
-              <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between">
-                <span className="text-[11px] text-slate-400">
-                  Initial Pass: Mobile No.
-                </span>
+              <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-end">
                 <button
                   onClick={() => handleToggleStatus(mgr._id || mgr.id)}
                   className={`text-xs px-2.5 py-1 rounded-lg font-medium transition-colors border cursor-pointer ${
