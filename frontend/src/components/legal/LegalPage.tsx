@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ChevronDown, FileText, ArrowLeft, X, MessageSquare } from 'lucide-react';
+import { ChevronDown, FileText, ArrowLeft, X, MessageSquare, Menu } from 'lucide-react';
 import { HelpFeedbackModal } from '../support/HelpFeedbackModal';
 
 interface PolicyData {
@@ -270,21 +270,17 @@ export const LegalPage: React.FC<{ policyKey?: string }> = ({ policyKey: propPol
             <span>Back to Home</span>
           </Link>
 
+          {/* Right: Hamburger Menu Icon */}
           <button
             onClick={() => setMobileMenuOpen(true)}
-            className="w-10 h-10 flex flex-col justify-center items-end gap-1.5 p-2 focus:outline-none cursor-pointer group"
+            className={`w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center transition-all cursor-pointer focus:outline-none active:scale-95 ${
+              headerTheme === 'white'
+                ? 'bg-slate-100 hover:bg-slate-200 text-slate-900 border border-slate-200'
+                : 'bg-white/20 hover:bg-white/30 text-white border border-white/20 shadow-sm'
+            }`}
             aria-label="Navigation Menu"
           >
-            <span
-              className={`w-6 h-[2px] rounded-full transition-all group-hover:w-7 ${
-                headerTheme === 'white' ? 'bg-slate-900' : 'bg-white'
-              }`}
-            ></span>
-            <span
-              className={`w-6 h-[2px] rounded-full transition-all group-hover:w-7 ${
-                headerTheme === 'white' ? 'bg-slate-900' : 'bg-white'
-              }`}
-            ></span>
+            <Menu className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.2]" />
           </button>
         </div>
       </header>
