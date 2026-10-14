@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Search, Bell, Moon, Sun, Menu, User, Settings, LogOut, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { Search, Bell, Moon, Sun, Menu, User, Settings, LogOut, CheckCircle2, ShieldCheck, AlertTriangle, FileText, Clock } from 'lucide-react';
+import api from '../../api/client';
 import { useAuth } from '../../context/AuthContext';
 import { useDashboard } from '../../context/DashboardContext';
 
@@ -13,6 +14,9 @@ export const TopHeader: React.FC = () => {
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+
   const profileRef = useRef<HTMLDivElement>(null);
   const notifRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -24,6 +28,35 @@ export const TopHeader: React.FC = () => {
     (typeof user?.organization === 'object' && user?.organization?.name) ||
     (typeof user?.organization === 'string' && user?.organization) ||
     'ORCHIDS The International School (SAT)';
+
+  // Fetch real notifications (including 2-week document expiration alerts)
+  const fetchNotifications = async () => {
+    try {
+      const res = await api.get('/notifications');
+      if (res.data?.success) {
+        setNotifications(res.data.notifications || []);
+        setUnreadCount(res.data.unreadCount || 0);
+      }
+    } catch (err) {
+      // Keep silent on background polling
+    }
+  };
+
+  useEffect(() => {
+    fetchNotifications();
+    const interval = setInterval(fetchNotifications, 60000); // Check every minute
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleMarkAllRead = async () => {
+    try {
+      await api.patch('/notifications/read-all');
+      setUnreadCount(0);
+      setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   // Keyboard shortcut ⌘K / Ctrl+K to focus search
   useEffect(() => {
@@ -138,41 +171,109 @@ export const TopHeader: React.FC = () => {
         {/* Notification Bell */}
         <div className="relative" ref={notifRef}>
           <button
-            onClick={() => setNotificationsOpen(!notificationsOpen)}
+            onClick={() => {
+              setNotificationsOpen(!notificationsOpen);
+              if (!notificationsOpen) fetchNotifications();
+            }}
             title="Notifications"
             className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-slate-200 bg-white hover:bg-slate-50 flex items-center justify-center text-slate-700 transition-colors shadow-2xs cursor-pointer shrink-0"
           >
             <Bell className="w-4 h-4 text-slate-700 stroke-[1.8]" />
-            <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-rose-500 rounded-full ring-2 ring-white" />
+            {unreadCount > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 bg-rose-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center ring-2 ring-white">
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
+            )}
           </button>
 
           {/* Notifications Dropdown */}
           {notificationsOpen && (
-            <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-slate-200 py-3 z-50 animate-in fade-in zoom-in-95 duration-150">
+            <div className="absolute right-0 mt-2 w-88 bg-white rounded-2xl shadow-xl border border-slate-200 py-3 z-50 animate-in fade-in zoom-in-95 duration-150">
               <div className="px-4 pb-2 border-b border-slate-100 flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-900">Notifications</span>
-                <span
-                  onClick={() => setNotificationsOpen(false)}
-                  className="text-[10px] text-blue-600 font-semibold cursor-pointer hover:underline"
-                >
-                  Mark all read
-                </span>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-bold text-slate-900">Notifications</span>
+                  {unreadCount > 0 && (
+                    <span className="text-[10px] font-bold bg-rose-50 text-rose-600 px-1.5 py-0.2 rounded-full border border-rose-200">
+                      {unreadCount} new
+                    </span>
+                  )}
+                </div>
+                {unreadCount > 0 && (
+                  <button
+                    onClick={handleMarkAllRead}
+                    className="text-[10px] text-[#2335f2] font-semibold cursor-pointer hover:underline"
+                  >
+                    Mark all read
+                  </button>
+                )}
               </div>
-              <div className="py-2 divide-y divide-slate-50 text-xs max-h-72 overflow-y-auto">
-                <div className="px-4 py-2.5 hover:bg-slate-50 flex items-start gap-2.5 cursor-pointer">
-                  <div className="w-2 h-2 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
-                  <div>
-                    <p className="font-semibold text-slate-800">Fleet Operations Active</p>
-                    <p className="text-[11px] text-slate-500">Live vehicles and driver rosters synced.</p>
+
+              <div className="py-1 divide-y divide-slate-100 text-xs max-h-80 overflow-y-auto">
+                {notifications.length === 0 ? (
+                  <div className="py-8 text-center text-slate-400 text-xs">
+                    <Bell className="w-7 h-7 mx-auto text-slate-300 mb-1.5 stroke-[1.5]" />
+                    <p className="font-semibold text-slate-700">No notifications</p>
+                    <p className="text-[11px] mt-0.5">You're completely up to date.</p>
                   </div>
-                </div>
-                <div className="px-4 py-2.5 hover:bg-slate-50 flex items-start gap-2.5 cursor-pointer">
-                  <div className="w-2 h-2 rounded-full bg-blue-500 mt-1.5 shrink-0" />
-                  <div>
-                    <p className="font-semibold text-slate-800">Account Health: Normal</p>
-                    <p className="text-[11px] text-slate-500">All registered assets compliant with road fitness.</p>
-                  </div>
-                </div>
+                ) : (
+                  notifications.map((notif) => {
+                    const isDoc = notif.type === 'document';
+                    const isExp = notif.title?.toLowerCase().includes('expired');
+
+                    return (
+                      <div
+                        key={notif._id || notif.id}
+                        onClick={() => {
+                          if (notif.link) {
+                            navigate(notif.link);
+                            setNotificationsOpen(false);
+                          }
+                        }}
+                        className={`px-4 py-3 hover:bg-slate-50 transition-colors flex items-start gap-3 cursor-pointer ${
+                          !notif.isRead ? 'bg-blue-50/40' : ''
+                        }`}
+                      >
+                        <div
+                          className={`w-7 h-7 rounded-xl flex items-center justify-center shrink-0 mt-0.5 ${
+                            isExp
+                              ? 'bg-rose-100 text-rose-600'
+                              : isDoc
+                              ? 'bg-amber-100 text-amber-600'
+                              : 'bg-blue-100 text-[#2335f2]'
+                          }`}
+                        >
+                          {isDoc ? (
+                            <FileText className="w-4 h-4" />
+                          ) : (
+                            <Bell className="w-4 h-4" />
+                          )}
+                        </div>
+
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between gap-2">
+                            <p className="font-bold text-xs text-slate-900 truncate">
+                              {notif.title}
+                            </p>
+                            {!notif.isRead && (
+                              <span className="w-2 h-2 rounded-full bg-rose-500 shrink-0" />
+                            )}
+                          </div>
+                          <p className="text-[11px] text-slate-600 line-clamp-2 mt-0.5">
+                            {notif.message}
+                          </p>
+                          <span className="text-[10px] text-slate-400 font-mono mt-1 block">
+                            {new Date(notif.createdAt).toLocaleDateString('en-IN', {
+                              day: '2-digit',
+                              month: 'short',
+                              hour: '2-digit',
+                              minute: '2-digit',
+                            })}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
               </div>
             </div>
           )}

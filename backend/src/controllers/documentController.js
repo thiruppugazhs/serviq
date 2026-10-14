@@ -52,6 +52,10 @@ exports.createDocument = async (req, res, next) => {
       .populate('vehicle', 'vehicleNumber model manufacturer')
       .populate('driver', 'driverId user');
 
+    // Trigger check to immediately evaluate notifications for admin/manager and assigned driver
+    const { checkDocumentExpirations } = require('../services/documentExpirationService');
+    checkDocumentExpirations(req.organizationId).catch((e) => console.error(e));
+
     res.status(201).json({
       success: true,
       message: 'Document registered successfully',

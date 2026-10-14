@@ -21,6 +21,7 @@ const maintenanceRoutes = require('./routes/maintenanceRoutes');
 const expenseRoutes = require('./routes/expenseRoutes');
 const documentRoutes = require('./routes/documentRoutes');
 const reportRoutes = require('./routes/reportRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
 
 // Initialize MongoDB connection
 connectDB();
@@ -132,6 +133,7 @@ app.use('/api/maintenance', maintenanceRoutes);
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/documents', documentRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Error Handler
 app.use(errorHandler);

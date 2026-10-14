@@ -23,6 +23,8 @@ import {
   Check,
   MapPin,
   Calendar,
+  Bell,
+  X,
 } from 'lucide-react';
 
 export const DriverHome: React.FC = () => {
@@ -33,6 +35,11 @@ export const DriverHome: React.FC = () => {
   const [myMaintenance, setMyMaintenance] = useState<Maintenance[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'home' | 'activity' | 'vehicle' | 'profile'>('home');
+
+  // Notifications
+  const [driverNotifications, setDriverNotifications] = useState<any[]>([]);
+  const [unreadNotifCount, setUnreadNotifCount] = useState(0);
+  const [isNotifModalOpen, setIsNotifModalOpen] = useState(false);
 
   // Modals
   const [isMaintenanceModalOpen, setIsMaintenanceModalOpen] = useState(false);
@@ -113,6 +120,17 @@ export const DriverHome: React.FC = () => {
       if (maintRes.data?.success) {
         setMyMaintenance(maintRes.data.maintenance || []);
       }
+
+      // Fetch notifications targeted specifically to this driver (e.g. assigned vehicle documents)
+      try {
+        const notifRes = await api.get('/notifications');
+        if (notifRes.data?.success) {
+          setDriverNotifications(notifRes.data.notifications || []);
+          setUnreadNotifCount(notifRes.data.unreadCount || 0);
+        }
+      } catch (err) {
+        // silent fallback
+      }
     } catch (err) {
       console.error('Failed to load driver assigned data:', err);
     } finally {
@@ -120,8 +138,20 @@ export const DriverHome: React.FC = () => {
     }
   };
 
+  const handleMarkAllDriverNotifRead = async () => {
+    try {
+      await api.patch('/notifications/read-all');
+      setUnreadNotifCount(0);
+      setDriverNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     fetchDriverData();
+    const interval = setInterval(fetchDriverData, 60000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleUpdateOdometer = async (e: React.FormEvent) => {
@@ -269,13 +299,27 @@ export const DriverHome: React.FC = () => {
           </div>
         </div>
 
-        <button
-          onClick={logout}
-          className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors cursor-pointer"
-          title="Sign Out"
-        >
-          <LogOut className="w-4 h-4" />
-        </button>
+        <div className="flex items-center gap-2">
+          {/* Driver Notification Bell */}
+          <button
+            onClick={() => setIsNotifModalOpen(true)}
+            className="relative p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+            title="Assigned Car Notifications"
+          >
+            <Bell className="w-5 h-5" />
+            {unreadNotifCount > 0 && (
+              <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-rose-500 rounded-full ring-2 ring-slate-900" />
+            )}
+          </button>
+
+          <button
+            onClick={logout}
+            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors cursor-pointer"
+            title="Sign Out"
+          >
+            <LogOut className="w-4 h-4" />
+          </button>
+        </div>
       </div>
 
       {/* Main Content Area */}
@@ -302,6 +346,35 @@ export const DriverHome: React.FC = () => {
                 Apply for maintenance or report vehicle repairs with proof.
               </p>
             </div>
+
+            {/* Document Expiration Warning for Assigned Car */}
+            {driverNotifications.filter((n) => n.type === 'document').length > 0 && (
+              <div className="space-y-2">
+                {driverNotifications
+                  .filter((n) => n.type === 'document')
+                  .slice(0, 2)
+                  .map((notif) => {
+                    const isExp = notif.title?.toLowerCase().includes('expired');
+                    return (
+                      <div
+                        key={notif._id || notif.id}
+                        onClick={() => setIsNotifModalOpen(true)}
+                        className={`p-3.5 rounded-2xl border text-xs cursor-pointer transition-all flex items-start gap-2.5 ${
+                          isExp
+                            ? 'bg-rose-500/15 border-rose-500/30 text-rose-200'
+                            : 'bg-amber-500/15 border-amber-500/30 text-amber-200'
+                        }`}
+                      >
+                        <AlertTriangle className={`w-4 h-4 shrink-0 mt-0.5 ${isExp ? 'text-rose-400' : 'text-amber-400'}`} />
+                        <div>
+                          <p className="font-bold text-white text-[11px]">{notif.title}</p>
+                          <p className="text-[10px] opacity-90 mt-0.5">{notif.message}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            )}
 
             {/* Assigned Vehicle Card */}
             {vehicle ? (
@@ -1067,6 +1140,67 @@ export const DriverHome: React.FC = () => {
             </button>
           </div>
         </form>
+      </Modal>
+
+      {/* MODAL 5: Driver Notifications (Assigned Car & Document Alerts) */}
+      <Modal
+        isOpen={isNotifModalOpen}
+        onClose={() => setIsNotifModalOpen(false)}
+        title="Vehicle & Document Alerts"
+      >
+        <div className="space-y-3">
+          <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+            <span className="text-xs text-slate-500">
+              Alerts for your assigned vehicle ({vehicle?.vehicleNumber || 'Assigned Car'})
+            </span>
+            {unreadNotifCount > 0 && (
+              <button
+                onClick={handleMarkAllDriverNotifRead}
+                className="text-[11px] text-[#2335f2] font-semibold hover:underline cursor-pointer"
+              >
+                Mark all read
+              </button>
+            )}
+          </div>
+
+          <div className="space-y-2 max-h-80 overflow-y-auto">
+            {driverNotifications.length === 0 ? (
+              <div className="py-8 text-center text-xs text-slate-400">
+                <Bell className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+                <p className="font-semibold text-slate-700">No active alerts</p>
+                <p className="text-[11px] mt-0.5">All documents for your assigned car are valid.</p>
+              </div>
+            ) : (
+              driverNotifications.map((notif) => {
+                const isExp = notif.title?.toLowerCase().includes('expired');
+                return (
+                  <div
+                    key={notif._id || notif.id}
+                    className={`p-3 rounded-xl border text-xs space-y-1 ${
+                      isExp
+                        ? 'bg-rose-50 border-rose-200 text-rose-900'
+                        : 'bg-amber-50 border-amber-200 text-amber-900'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold flex items-center gap-1.5">
+                        <AlertTriangle className={`w-3.5 h-3.5 ${isExp ? 'text-rose-500' : 'text-amber-500'}`} />
+                        {notif.title}
+                      </span>
+                      <span className="text-[10px] text-slate-500 font-mono">
+                        {new Date(notif.createdAt).toLocaleDateString('en-IN', {
+                          day: '2-digit',
+                          month: 'short',
+                        })}
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-slate-700 leading-relaxed">{notif.message}</p>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </div>
       </Modal>
     </div>
   );
