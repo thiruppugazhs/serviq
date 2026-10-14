@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import api from '../../api/client';
 import { Vehicle, Driver } from '../../types';
 import {
@@ -25,8 +25,20 @@ export const VehiclesView: React.FC = () => {
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
   const [newOdometerInput, setNewOdometerInput] = useState<number | string>('');
   const [activeMenuVehicleId, setActiveMenuVehicleId] = useState<string | null>(null);
+  const menuRef = useRef<HTMLDivElement | null>(null);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Close actions menu when clicking outside
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setActiveMenuVehicleId(null);
+      }
+    };
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
+  }, []);
 
   // Add Vehicle Form state (matches required fields)
   const [formData, setFormData] = useState({
@@ -217,7 +229,7 @@ export const VehiclesView: React.FC = () => {
             )}
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto min-h-[280px] pb-12">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-slate-100 text-[11px] font-bold text-slate-800 tracking-wider">
@@ -232,6 +244,7 @@ export const VehiclesView: React.FC = () => {
                 {filteredVehicles.map((vehicle, index) => {
                   const isMenuOpen = activeMenuVehicleId === vehicle._id;
                   const isHealthy = vehicle.status !== 'in_shop' && vehicle.status !== 'out_of_service';
+                  const openUpwards = filteredVehicles.length > 2 && index >= filteredVehicles.length - 2;
 
                   return (
                     <tr
@@ -301,8 +314,10 @@ export const VehiclesView: React.FC = () => {
                         {/* Actions Dropdown */}
                         {isMenuOpen && (
                           <div
-                            onMouseLeave={() => setActiveMenuVehicleId(null)}
-                            className="absolute right-6 top-10 w-44 bg-white border border-slate-200 rounded-xl shadow-lg z-20 py-1.5 text-xs text-left animate-in fade-in zoom-in-95"
+                            ref={menuRef}
+                            className={`absolute right-6 ${
+                              openUpwards ? 'bottom-full mb-1' : 'top-10'
+                            } w-44 bg-white border border-slate-200/90 rounded-xl shadow-xl z-50 py-1.5 text-xs text-left animate-in fade-in zoom-in-95`}
                           >
                             <button
                               onClick={() => {
@@ -311,12 +326,12 @@ export const VehiclesView: React.FC = () => {
                                 setActiveMenuVehicleId(null);
                                 setIsOdoModalOpen(true);
                               }}
-                              className="w-full px-3 py-1.5 text-left text-slate-700 hover:bg-slate-50 flex items-center gap-2 cursor-pointer"
+                              className="w-full px-3 py-2 text-left text-slate-700 hover:bg-slate-50 flex items-center gap-2 cursor-pointer font-medium"
                             >
                               <Gauge className="w-3.5 h-3.5 text-slate-400" />
                               <span>Update Odometer</span>
                             </button>
-                            <div className="px-3 py-1 text-[10px] text-slate-400 border-t border-slate-100">
+                            <div className="px-3 py-1.5 text-[10px] text-slate-400 border-t border-slate-100">
                               Odo: {vehicle.odometer.toLocaleString()} km
                               {vehicle.fcBook ? ` • FC: ${vehicle.fcBook}` : ''}
                             </div>

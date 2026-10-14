@@ -41,6 +41,18 @@ export const DriversView: React.FC = () => {
   const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const menuRef = useRef<HTMLDivElement | null>(null);
+
+  // Close actions menu when clicking outside
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setActiveMenuDriverId(null);
+      }
+    };
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
+  }, []);
 
   const fetchData = async () => {
     try {
@@ -232,7 +244,7 @@ export const DriversView: React.FC = () => {
             )}
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto min-h-[300px] pb-16">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-slate-100 text-[11px] font-bold text-slate-800 tracking-wider">
@@ -244,13 +256,14 @@ export const DriversView: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-xs">
-                {filteredDrivers.map((driver) => {
+                {filteredDrivers.map((driver, index) => {
                   const userObj = typeof driver.user === 'object' ? driver.user : null;
                   const driverName = userObj?.name || 'Driver';
                   const driverPhone = userObj?.phone || '';
                   const assignedVeh =
                     typeof driver.assignedVehicle === 'object' ? driver.assignedVehicle : null;
                   const isMenuOpen = activeMenuDriverId === driver._id;
+                  const openUpwards = filteredDrivers.length > 2 && index >= filteredDrivers.length - 2;
 
                   return (
                     <tr
@@ -339,23 +352,28 @@ export const DriversView: React.FC = () => {
                         {/* Actions Dropdown Menu */}
                         {isMenuOpen && (
                           <div
-                            onMouseLeave={() => setActiveMenuDriverId(null)}
-                            className="absolute right-6 top-10 w-40 bg-white border border-slate-200 rounded-xl shadow-lg z-20 py-1.5 text-xs text-left animate-in fade-in zoom-in-95"
+                            ref={menuRef}
+                            className={`absolute right-6 ${
+                              openUpwards ? 'bottom-full mb-1' : 'top-10'
+                            } w-44 bg-white border border-slate-200/90 rounded-xl shadow-xl z-50 py-1.5 text-xs text-left animate-in fade-in zoom-in-95`}
                           >
                             <button
                               onClick={() => {
                                 setActiveMenuDriverId(null);
                                 navigate(`${basePath}/drivers/${driver._id}`);
                               }}
-                              className="w-full px-3 py-1.5 text-left text-slate-700 hover:bg-slate-50 cursor-pointer"
+                              className="w-full px-3.5 py-2 text-left font-medium text-slate-800 hover:bg-slate-50 flex items-center justify-between cursor-pointer"
                             >
-                              View Profile
+                              <span>View Profile</span>
                             </button>
                             <button
-                              onClick={() => handleToggleStatus(driver._id)}
-                              className="w-full px-3 py-1.5 text-left text-slate-700 hover:bg-slate-50 cursor-pointer"
+                              onClick={() => {
+                                setActiveMenuDriverId(null);
+                                handleToggleStatus(driver._id);
+                              }}
+                              className="w-full px-3.5 py-2 text-left font-medium text-slate-800 hover:bg-slate-50 border-t border-slate-100 flex items-center justify-between cursor-pointer"
                             >
-                              {driver.status === 'active' ? 'Mark Standby' : 'Set Active'}
+                              <span>{driver.status === 'active' ? 'Mark Standby' : 'Set Active'}</span>
                             </button>
                           </div>
                         )}
