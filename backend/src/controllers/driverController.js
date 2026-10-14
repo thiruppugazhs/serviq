@@ -337,3 +337,108 @@ exports.deleteDriver = async (req, res, next) => {
   }
 };
 
+// @desc    Bulk Import Drivers
+// @route   POST /api/drivers/bulk-import
+// @access  Private (Admin & Fleet Manager)
+exports.bulkImportDrivers = async (req, res, next) => {
+  try {
+    const { drivers } = req.body;
+    if (!drivers || !Array.isArray(drivers) || drivers.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'No driver records provided for bulk import',
+      });
+    }
+
+    const createdDrivers = [];
+    const skippedDrivers = [];
+
+    for (let i = 0; i < drivers.length; i++) {
+      const item = drivers[i];
+      const fullName = (item.fullName || item.name || '').trim();
+      const phone = (item.phone || item.mobile || '').trim();
+      const rawEmail = (item.email || '').trim().toLowerCase();
+      const licenseNo = (item.drivingLicenceNumber || item.licenseNo || item.licenseNumber || 'N/A').trim().toUpperCase();
+      const dob = item.dob || item.dateOfBirth || null;
+      const gender = (item.gender || '').trim();
+      const assignedPlate = (item.assignedVehicleNumber || item.vehicleNumber || '').trim().toUpperCase();
+
+      if (!fullName) {
+        skippedDrivers.push({ item, reason: 'Driver name is required' });
+        continue;
+      }
+
+      // Generate or normalize email
+      const safePhoneDigits = phone.replace(/\D/g, '') || String(Date.now()).slice(-6);
+      const email = rawEmail || `driver.${safePhoneDigits}.${Date.now().toString().slice(-4)}@serviq.fleet`;
+
+      // Check if user with email already exists
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        skippedDrivers.push({ item, reason: `User email ${email} already registered` });
+        continue;
+      }
+
+      // Password defaults to phone or Driver@123
+      const password = phone || 'Driver@123';
+
+      const user = await User.create({
+        name: fullName,
+        firstName: fullName.split(' ')[0],
+        lastName: fullName.split(' ').slice(1).join(' ') || '',
+        email,
+        password,
+        role: 'driver',
+        organization: req.organizationId,
+        phone,
+        status: 'active',
+      });
+
+      const count = await Driver.countDocuments({ organization: req.organizationId });
+      const driverId = `DRV-${String(count + 1 + i).padStart(4, '0')}`;
+
+      // Check if vehicle assignment requested by plate
+      let assignedVehicleId = null;
+      if (assignedPlate) {
+        const foundVeh = await Vehicle.findOne({
+          organization: req.organizationId,
+          vehicleNumber: assignedPlate,
+        });
+        if (foundVeh) {
+          assignedVehicleId = foundVeh._id;
+        }
+      }
+
+      const newDriver = await Driver.create({
+        user: user._id,
+        organization: req.organizationId,
+        driverId,
+        drivingLicenceNumber: licenseNo,
+        dateOfBirth: dob ? new Date(dob) : undefined,
+        gender,
+        assignedVehicle: assignedVehicleId,
+        employmentStatus: 'full_time',
+        status: 'active',
+      });
+
+      if (assignedVehicleId) {
+        await Vehicle.findByIdAndUpdate(assignedVehicleId, { assignedDriver: newDriver._id });
+      }
+
+      createdDrivers.push(newDriver);
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `Successfully imported ${createdDrivers.length} driver(s). ${skippedDrivers.length} skipped.`,
+      importedCount: createdDrivers.length,
+      skippedCount: skippedDrivers.length,
+      drivers: createdDrivers,
+      skipped: skippedDrivers,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+

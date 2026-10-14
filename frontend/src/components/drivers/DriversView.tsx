@@ -12,7 +12,9 @@ import {
   ShieldAlert,
   Bus,
   Trash2,
+  FileSpreadsheet,
 } from 'lucide-react';
+import { BulkImportModal } from '../common/BulkImportModal';
 
 export const DriversView: React.FC = () => {
   const navigate = useNavigate();
@@ -24,6 +26,7 @@ export const DriversView: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [activeMenuDriverId, setActiveMenuDriverId] = useState<string | null>(null);
@@ -207,16 +210,25 @@ export const DriversView: React.FC = () => {
           </p>
         </div>
 
-        <button
-          onClick={() => {
-            setError(null);
-            setIsModalOpen(true);
-          }}
-          className="inline-flex items-center gap-1.5 h-10 px-5 bg-[#f59e0b] hover:bg-amber-500 text-slate-950 font-bold text-xs rounded-xl transition-all shadow-xs cursor-pointer self-start sm:self-auto"
-        >
-          <Plus className="w-4 h-4 stroke-[2.5]" />
-          <span>Add Driver</span>
-        </button>
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          <button
+            onClick={() => setIsBulkModalOpen(true)}
+            className="inline-flex items-center gap-1.5 h-10 px-4 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl transition-all shadow-2xs cursor-pointer"
+          >
+            <FileSpreadsheet className="w-4 h-4 text-[#2335f2]" />
+            <span>Bulk Import</span>
+          </button>
+          <button
+            onClick={() => {
+              setError(null);
+              setIsModalOpen(true);
+            }}
+            className="inline-flex items-center gap-1.5 h-10 px-5 bg-[#f59e0b] hover:bg-amber-500 text-slate-950 font-bold text-xs rounded-xl transition-all shadow-xs cursor-pointer"
+          >
+            <Plus className="w-4 h-4 stroke-[2.5]" />
+            <span>Add Driver</span>
+          </button>
+        </div>
       </div>
 
       {/* Main Table Card */}
@@ -643,6 +655,18 @@ export const DriversView: React.FC = () => {
           </div>
         </div>
       )}
+      {/* Bulk Import Drivers Modal */}
+      <BulkImportModal
+        isOpen={isBulkModalOpen}
+        onClose={() => setIsBulkModalOpen(false)}
+        onSuccess={fetchData}
+        entityName="Drivers"
+        apiEndpoint="/drivers/bulk-import"
+        payloadKey="drivers"
+        sampleFileName="serviq_drivers_sample.csv"
+        requiredColumns={['name', 'phone', 'licenseNo']}
+        sampleCsv={`name,phone,email,licenseNo,dob,gender,assignedVehicleNumber\nRajesh Kumar,+91 98765 43210,rajesh@example.com,TN01 2020 0004567,1990-05-14,Male,TN 01 AB 1234\nSuresh Raina,+91 91234 56789,suresh@example.com,TN02 2019 0009876,1988-11-23,Male,TN 02 CD 5678\nAnand Babu,+91 94444 11223,anand@example.com,TN09 2021 0001234,1995-02-18,Male,`}
+      />
     </div>
   );
 };

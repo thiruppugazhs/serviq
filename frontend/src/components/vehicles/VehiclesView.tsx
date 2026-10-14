@@ -13,7 +13,9 @@ import {
   Gauge,
   User,
   Calendar,
+  FileSpreadsheet,
 } from 'lucide-react';
+import { BulkImportModal } from '../common/BulkImportModal';
 
 export const VehiclesView: React.FC = () => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
@@ -21,6 +23,7 @@ export const VehiclesView: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
   const [isOdoModalOpen, setIsOdoModalOpen] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
   const [newOdometerInput, setNewOdometerInput] = useState<number | string>('');
@@ -179,16 +182,25 @@ export const VehiclesView: React.FC = () => {
           </p>
         </div>
 
-        <button
-          onClick={() => {
-            setError(null);
-            setIsAddModalOpen(true);
-          }}
-          className="inline-flex items-center gap-1.5 h-10 px-5 bg-[#f59e0b] hover:bg-amber-500 text-slate-950 font-bold text-xs rounded-xl transition-all shadow-xs cursor-pointer self-start sm:self-auto"
-        >
-          <Plus className="w-4 h-4 stroke-[2.5]" />
-          <span>Add Vehicle</span>
-        </button>
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          <button
+            onClick={() => setIsBulkModalOpen(true)}
+            className="inline-flex items-center gap-1.5 h-10 px-4 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl transition-all shadow-2xs cursor-pointer"
+          >
+            <FileSpreadsheet className="w-4 h-4 text-[#2335f2]" />
+            <span>Bulk Import</span>
+          </button>
+          <button
+            onClick={() => {
+              setError(null);
+              setIsAddModalOpen(true);
+            }}
+            className="inline-flex items-center gap-1.5 h-10 px-5 bg-[#f59e0b] hover:bg-amber-500 text-slate-950 font-bold text-xs rounded-xl transition-all shadow-xs cursor-pointer"
+          >
+            <Plus className="w-4 h-4 stroke-[2.5]" />
+            <span>Add Vehicle</span>
+          </button>
+        </div>
       </div>
 
       {/* Main Table Card */}
@@ -627,6 +639,18 @@ export const VehiclesView: React.FC = () => {
           </div>
         </div>
       )}
+      {/* Bulk Import Vehicles Modal */}
+      <BulkImportModal
+        isOpen={isBulkModalOpen}
+        onClose={() => setIsBulkModalOpen(false)}
+        onSuccess={fetchData}
+        entityName="Vehicles"
+        apiEndpoint="/vehicles/bulk-import"
+        payloadKey="vehicles"
+        sampleFileName="serviq_vehicles_sample.csv"
+        requiredColumns={['vehicleNumber', 'manufacturer', 'model', 'year', 'vehicleType', 'fuelType']}
+        sampleCsv={`vehicleNumber,vehicleType,manufacturer,model,year,fuelType,odometer,fcBook\nTN 01 AB 1234,Truck,Tata Motors,Prima 4028.S,2023,Diesel,25400,FC-CHE-2023-884\nTN 02 CD 5678,Bus,Ashok Leyland,Viking 222,2022,Diesel,41200,FC-CHE-2022-112\nTN 09 XY 9988,Van,Mahindra,Bolero Maxi Truck,2024,Diesel,12000,FC-CHE-2024-551`}
+      />
     </div>
   );
 };

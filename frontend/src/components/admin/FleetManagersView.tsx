@@ -5,12 +5,14 @@ import { Badge } from '../common/Badge';
 import { Modal } from '../common/Modal';
 import { EmptyState } from '../common/EmptyState';
 import { Header } from '../common/Header';
-import { Users2, Plus, Mail, Phone, MapPin, ShieldAlert, KeyRound, Building2, Trash2 } from 'lucide-react';
+import { Users2, Plus, Mail, Phone, MapPin, ShieldAlert, KeyRound, Building2, Trash2, FileSpreadsheet } from 'lucide-react';
+import { BulkImportModal } from '../common/BulkImportModal';
 
 export const FleetManagersView: React.FC = () => {
   const [managers, setManagers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -123,16 +125,25 @@ export const FleetManagersView: React.FC = () => {
         title="Fleet Managers"
         description="Authorize and manage station fleet managers with automated employee credentials."
         actions={
-          <button
-            onClick={() => {
-              setError(null);
-              setIsModalOpen(true);
-            }}
-            className="inline-flex items-center gap-1.5 h-9 px-4 bg-[#2335f2] hover:bg-blue-700 text-white font-medium text-xs rounded-lg transition-colors shadow-sm cursor-pointer"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            <span>Add Fleet Manager</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setIsBulkModalOpen(true)}
+              className="inline-flex items-center gap-1.5 h-9 px-3.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-medium text-xs rounded-lg transition-colors shadow-2xs cursor-pointer"
+            >
+              <FileSpreadsheet className="w-3.5 h-3.5 text-[#2335f2]" />
+              <span>Bulk Import</span>
+            </button>
+            <button
+              onClick={() => {
+                setError(null);
+                setIsModalOpen(true);
+              }}
+              className="inline-flex items-center gap-1.5 h-9 px-4 bg-[#2335f2] hover:bg-blue-700 text-white font-medium text-xs rounded-lg transition-colors shadow-sm cursor-pointer"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>Add Fleet Manager</span>
+            </button>
+          </div>
         }
       />
 
@@ -339,6 +350,18 @@ export const FleetManagersView: React.FC = () => {
           </div>
         </form>
       </Modal>
+      {/* Bulk Import Fleet Managers Modal */}
+      <BulkImportModal
+        isOpen={isBulkModalOpen}
+        onClose={() => setIsBulkModalOpen(false)}
+        onSuccess={fetchManagers}
+        entityName="Fleet Managers"
+        apiEndpoint="/fleet-managers/bulk-import"
+        payloadKey="managers"
+        sampleFileName="serviq_fleet_managers_sample.csv"
+        requiredColumns={['name', 'email', 'phone', 'employeeId', 'stationAddress']}
+        sampleCsv={`name,email,phone,employeeId,stationAddress\nKavitha Raman,kavitha@domain.com,+91 98401 23456,EMP-FM-01,Central Chennai Depot\nArunachalam S,arun@domain.com,+91 97890 12345,EMP-FM-02,Coimbatore Logistics Park\nPraveen Kumar,praveen@domain.com,+91 94432 78901,EMP-FM-03,Madurai Transit Station`}
+      />
     </div>
   );
 };

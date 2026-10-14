@@ -309,3 +309,75 @@ exports.updateOdometer = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc    Bulk Import Vehicles
+// @route   POST /api/vehicles/bulk-import
+// @access  Private (Admin & Fleet Manager)
+exports.bulkImportVehicles = async (req, res, next) => {
+  try {
+    const { vehicles } = req.body;
+    if (!vehicles || !Array.isArray(vehicles) || vehicles.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'No vehicle records provided for bulk import',
+      });
+    }
+
+    const createdVehicles = [];
+    const skippedVehicles = [];
+
+    for (const item of vehicles) {
+      const plate = (item.vehicleNumber || item.plateNumber || item.registrationNumber || '').trim().toUpperCase();
+      const manufacturer = (item.manufacturer || item.make || '').trim();
+      const model = (item.model || '').trim();
+      const year = Number(item.year) || new Date().getFullYear();
+      const vehicleType = (item.vehicleType || item.type || 'Truck').trim();
+      const fuelType = (item.fuelType || 'Diesel').trim();
+      const odometer = Number(item.odometer) || 0;
+      const fcBook = (item.fcBook || '').trim();
+
+      if (!plate || !manufacturer || !model) {
+        skippedVehicles.push({ item, reason: 'Missing plate number, manufacturer, or model' });
+        continue;
+      }
+
+      // Check if duplicate plate exists in org
+      const existing = await Vehicle.findOne({
+        organization: req.organizationId,
+        vehicleNumber: plate,
+      });
+
+      if (existing) {
+        skippedVehicles.push({ item, reason: `Vehicle plate ${plate} already exists in organization` });
+        continue;
+      }
+
+      const newVeh = await Vehicle.create({
+        organization: req.organizationId,
+        vehicleNumber: plate,
+        vehicleType,
+        manufacturer,
+        model,
+        year,
+        fuelType,
+        odometer,
+        fcBook,
+        status: 'available',
+      });
+
+      createdVehicles.push(newVeh);
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `Successfully imported ${createdVehicles.length} vehicle(s). ${skippedVehicles.length} skipped.`,
+      importedCount: createdVehicles.length,
+      skippedCount: skippedVehicles.length,
+      vehicles: createdVehicles,
+      skipped: skippedVehicles,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+

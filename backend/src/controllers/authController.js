@@ -646,7 +646,13 @@ exports.updateCompanyProfile = async (req, res, next) => {
     if (registrationNumber !== undefined) organization.registrationNumber = registrationNumber.trim();
     if (website !== undefined) organization.website = website.trim();
     if (businessType !== undefined) organization.businessType = businessType.trim();
-    if (logo !== undefined) organization.logo = logo;
+
+    // Support both uploaded image file (jpg, jpeg, png) and direct URL
+    if (req.file) {
+      organization.logo = `/uploads/${req.file.filename}`;
+    } else if (logo !== undefined) {
+      organization.logo = logo;
+    }
 
     await organization.save();
 

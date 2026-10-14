@@ -6,11 +6,14 @@ const {
   getVehicleById,
   updateVehicle,
   updateOdometer,
+  bulkImportVehicles,
 } = require('../controllers/vehicleController');
 const { protect } = require('../middleware/auth');
 const { authorize } = require('../middleware/roleAuth');
 
 router.use(protect);
+
+router.post('/bulk-import', authorize('admin', 'fleet_manager'), bulkImportVehicles);
 
 router.route('/')
   .post(authorize('admin', 'fleet_manager'), createVehicle)

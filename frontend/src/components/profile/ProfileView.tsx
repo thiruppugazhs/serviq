@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../api/client';
 import {
@@ -21,6 +21,7 @@ import {
   Loader2,
   KeyRound,
   BadgeCheck,
+  Upload,
 } from 'lucide-react';
 import { Header } from '../common/Header';
 
@@ -47,6 +48,9 @@ export const ProfileView: React.FC = () => {
   const [companyLoading, setCompanyLoading] = useState(false);
   const [companySuccess, setCompanySuccess] = useState<string | null>(null);
   const [companyError, setCompanyError] = useState<string | null>(null);
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [logoFilePreview, setLogoFilePreview] = useState<string | null>(null);
+  const logoInputRef = useRef<HTMLInputElement | null>(null);
 
   // User Profile state
   const [isEditingUser, setIsEditingUser] = useState(false);
@@ -107,10 +111,27 @@ export const ProfileView: React.FC = () => {
     setCompanyError(null);
 
     try {
-      const res = await api.put('/auth/company-profile', companyForm);
+      const formData = new FormData();
+      formData.append('name', companyForm.name);
+      formData.append('email', companyForm.email);
+      formData.append('phone', companyForm.phone);
+      formData.append('address', companyForm.address);
+      formData.append('registrationNumber', companyForm.registrationNumber);
+      formData.append('website', companyForm.website);
+      formData.append('businessType', companyForm.businessType);
+      formData.append('logo', companyForm.logo);
+      if (logoFile) {
+        formData.append('logoFile', logoFile);
+      }
+
+      const res = await api.put('/auth/company-profile', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
       if (res.data.success) {
         setCompanySuccess('Company profile successfully updated.');
         setIsEditingCompany(false);
+        setLogoFile(null);
+        setLogoFilePreview(null);
         await refreshUser();
         setTimeout(() => setCompanySuccess(null), 4000);
       }
@@ -438,16 +459,89 @@ export const ProfileView: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Logo Image URL (Optional)
+                  <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                    Company Logo (JPG, JPEG, PNG or Image URL)
                   </label>
-                  <input
-                    type="url"
-                    value={companyForm.logo}
-                    onChange={(e) => setCompanyForm({ ...companyForm, logo: e.target.value })}
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-slate-50/50"
-                    placeholder="https://example.com/logo.png"
-                  />
+
+                  {/* Logo Preview and File Picker */}
+                  <div className="flex flex-col sm:flex-row items-center gap-3 p-3 rounded-2xl border border-slate-200/90 bg-slate-50/50">
+                    <div className="w-16 h-16 rounded-xl border border-slate-200 bg-white flex items-center justify-center overflow-hidden shrink-0 shadow-2xs">
+                      {logoFilePreview || companyForm.logo ? (
+                        <img
+                          src={logoFilePreview || companyForm.logo}
+                          alt="Company Logo Preview"
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            (e.target as HTMLElement).style.display = 'none';
+                          }}
+                        />
+                      ) : (
+                        <Building2 className="w-7 h-7 text-slate-300" />
+                      )}
+                    </div>
+
+                    <div className="flex-1 w-full space-y-1.5">
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => logoInputRef.current?.click()}
+                          className="px-3.5 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 font-semibold text-xs flex items-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
+                        >
+                          <Upload className="w-3.5 h-3.5 text-blue-600" />
+                          <span>Choose Logo (JPG, JPEG, PNG)</span>
+                        </button>
+                        {(logoFile || logoFilePreview) && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setLogoFile(null);
+                              setLogoFilePreview(null);
+                              if (logoInputRef.current) logoInputRef.current.value = '';
+                            }}
+                            className="p-1.5 rounded-lg text-rose-500 hover:bg-rose-50 transition-colors"
+                            title="Remove chosen logo file"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        )}
+                      </div>
+                      <input
+                        ref={logoInputRef}
+                        type="file"
+                        accept=".jpg,.jpeg,.png,image/jpeg,image/png"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            setLogoFile(file);
+                            setLogoFilePreview(URL.createObjectURL(file));
+                          }
+                        }}
+                        className="hidden"
+                      />
+                      <p className="text-[11px] text-slate-400">
+                        {logoFile
+                          ? `Selected: ${logoFile.name} (${Math.round(logoFile.size / 1024)} KB)`
+                          : 'Upload an image file (.jpg, .jpeg, .png) or provide a web URL below.'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Fallback Direct URL */}
+                  <div className="mt-2">
+                    <input
+                      type="url"
+                      value={companyForm.logo}
+                      onChange={(e) => {
+                        setCompanyForm({ ...companyForm, logo: e.target.value });
+                        if (logoFile) {
+                          setLogoFile(null);
+                          setLogoFilePreview(null);
+                        }
+                      }}
+                      className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-slate-50/50"
+                      placeholder="Or paste image URL (e.g. https://example.com/logo.png)"
+                    />
+                  </div>
                 </div>
 
                 <div className="pt-2 flex justify-end gap-2.5">

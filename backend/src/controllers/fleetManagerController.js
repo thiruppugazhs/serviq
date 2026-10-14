@@ -241,3 +241,81 @@ exports.deleteFleetManager = async (req, res, next) => {
   }
 };
 
+// @desc    Bulk Import Fleet Managers
+// @route   POST /api/fleet-managers/bulk-import
+// @access  Private (Admin only)
+exports.bulkImportFleetManagers = async (req, res, next) => {
+  try {
+    const { managers } = req.body;
+    if (!managers || !Array.isArray(managers) || managers.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'No fleet manager records provided for bulk import',
+      });
+    }
+
+    const createdManagers = [];
+    const skippedManagers = [];
+
+    for (let i = 0; i < managers.length; i++) {
+      const item = managers[i];
+      const fullName = (item.fullName || item.name || `${item.firstName || ''} ${item.lastName || ''}`).trim();
+      const rawEmail = (item.email || '').trim().toLowerCase();
+      const phone = (item.phone || item.mobile || '').trim();
+      const employeeId = (item.employeeId || item.empId || `MGR-${Date.now().toString().slice(-4)}${i + 1}`).trim();
+      const address = (item.stationAddress || item.address || '').trim();
+
+      if (!fullName || !rawEmail) {
+        skippedManagers.push({ item, reason: 'Name and email are required' });
+        continue;
+      }
+
+      // Check if user already exists
+      const existingUser = await User.findOne({ email: rawEmail });
+      if (existingUser) {
+        skippedManagers.push({ item, reason: `User email ${rawEmail} already registered` });
+        continue;
+      }
+
+      const password = phone || employeeId;
+
+      const newManager = await User.create({
+        name: fullName,
+        firstName: item.firstName ? item.firstName.trim() : fullName.split(' ')[0],
+        lastName: item.lastName ? item.lastName.trim() : (fullName.split(' ').slice(1).join(' ') || ''),
+        email: rawEmail,
+        password,
+        role: 'fleet_manager',
+        organization: req.organizationId,
+        phone,
+        employeeId,
+        address,
+        stationAddress: address,
+        status: 'active',
+      });
+
+      createdManagers.push({
+        id: newManager._id,
+        name: newManager.name,
+        email: newManager.email,
+        phone: newManager.phone,
+        employeeId: newManager.employeeId,
+        address: newManager.address,
+        status: newManager.status,
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `Successfully imported ${createdManagers.length} fleet manager(s). ${skippedManagers.length} skipped.`,
+      importedCount: createdManagers.length,
+      skippedCount: skippedManagers.length,
+      managers: createdManagers,
+      skipped: skippedManagers,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+

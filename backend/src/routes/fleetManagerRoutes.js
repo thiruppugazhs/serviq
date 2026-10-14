@@ -7,6 +7,7 @@ const {
   updateFleetManager,
   toggleFleetManagerStatus,
   deleteFleetManager,
+  bulkImportFleetManagers,
 } = require('../controllers/fleetManagerController');
 const { protect } = require('../middleware/auth');
 const { authorize } = require('../middleware/roleAuth');
@@ -14,6 +15,8 @@ const { authorize } = require('../middleware/roleAuth');
 // All fleet manager management routes require Admin role
 router.use(protect);
 router.use(authorize('admin'));
+
+router.post('/bulk-import', bulkImportFleetManagers);
 
 router.route('/')
   .post(createFleetManager)

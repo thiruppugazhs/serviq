@@ -19,9 +19,11 @@ router.post('/register-company', registerCompany);
 router.post('/login', login);
 router.get('/me', protect, getMe);
 
+const upload = require('../middleware/upload');
+
 // Profile and Company updates
 router.put('/profile', protect, updateUserProfile);
-router.put('/company-profile', protect, updateCompanyProfile);
+router.put('/company-profile', protect, upload.single('logoFile'), updateCompanyProfile);
 
 // Account deletion with OTP verification
 router.post('/send-deletion-otp', protect, sendDeletionOtp);

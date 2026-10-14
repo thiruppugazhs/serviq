@@ -7,12 +7,15 @@ const {
   updateDriver,
   toggleDriverStatus,
   deleteDriver,
+  bulkImportDrivers,
 } = require('../controllers/driverController');
 const { protect } = require('../middleware/auth');
 const { authorize } = require('../middleware/roleAuth');
 const upload = require('../middleware/upload');
 
 router.use(protect);
+
+router.post('/bulk-import', authorize('admin', 'fleet_manager'), bulkImportDrivers);
 
 router.route('/')
   .post(authorize('admin', 'fleet_manager'), upload.single('profilePhoto'), createDriver)
