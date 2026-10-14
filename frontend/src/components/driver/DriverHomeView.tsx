@@ -86,11 +86,20 @@ export const DriverHomeView: React.FC = () => {
           className="flex items-center justify-between cursor-pointer"
         >
           <div className="flex items-center gap-3">
-            <img
-              src={profile.photoUrl}
-              alt={profile.name}
-              className="w-11 h-11 rounded-full object-cover border border-slate-100 shadow-2xs"
-            />
+            <div className="w-11 h-11 rounded-full overflow-hidden border border-slate-100 shadow-2xs bg-blue-50 flex items-center justify-center font-bold text-[#1b72e8] shrink-0">
+              {(user?.profilePhoto || user?.driverProfile?.profilePhoto || profile.photoUrl) ? (
+                <img
+                  src={user?.profilePhoto || user?.driverProfile?.profilePhoto || profile.photoUrl}
+                  alt={driverName}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    (e.target as HTMLElement).style.display = 'none';
+                  }}
+                />
+              ) : (
+                (driverName || 'D').charAt(0).toUpperCase()
+              )}
+            </div>
             <div>
               <h2 className="text-sm font-bold text-slate-900 leading-tight">{driverName}</h2>
               <span className="text-xs text-slate-400 font-medium">{profile.role}</span>

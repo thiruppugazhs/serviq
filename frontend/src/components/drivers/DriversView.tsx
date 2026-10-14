@@ -301,12 +301,15 @@ export const DriversView: React.FC = () => {
                       <td className="py-4 px-6">
                         <div className="flex items-center gap-3">
                           {/* Driver Icon/Avatar */}
-                          <div className="w-9 h-9 rounded-full border border-slate-200 bg-slate-50 flex items-center justify-center shrink-0 overflow-hidden text-slate-700">
-                            {driver.profilePhoto ? (
+                          <div className="w-9 h-9 rounded-full border border-slate-200 bg-slate-50 flex items-center justify-center shrink-0 overflow-hidden text-slate-700 shadow-2xs">
+                            {(driver.profilePhoto || userObj?.profilePhoto) ? (
                               <img
-                                src={driver.profilePhoto}
+                                src={driver.profilePhoto || userObj?.profilePhoto}
                                 alt={driverName}
                                 className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  (e.target as HTMLElement).style.display = 'none';
+                                }}
                               />
                             ) : (
                               <svg

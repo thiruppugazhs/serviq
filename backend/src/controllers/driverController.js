@@ -71,6 +71,8 @@ exports.createDriver = async (req, res, next) => {
       });
     }
 
+    const profilePhotoUrl = req.file ? `/uploads/${req.file.filename}` : (req.body.profilePhoto || '');
+
     // Create User record
     const user = await User.create({
       name: fullName,
@@ -82,6 +84,7 @@ exports.createDriver = async (req, res, next) => {
       organization: req.organizationId,
       phone: contactMobile,
       address: address || '',
+      profilePhoto: profilePhotoUrl,
       status: 'active',
     });
 
@@ -93,7 +96,7 @@ exports.createDriver = async (req, res, next) => {
       user: user._id,
       organization: req.organizationId,
       driverId: resolvedDriverId,
-      profilePhoto: req.file ? `/uploads/${req.file.filename}` : '',
+      profilePhoto: profilePhotoUrl,
       drivingLicenceNumber: resolvedLicenceNo,
       licenceExpiry: resolvedLicenceExpiry,
       dateOfBirth: resolvedDOB,
@@ -113,7 +116,7 @@ exports.createDriver = async (req, res, next) => {
     }
 
     const populatedDriver = await Driver.findById(driver._id)
-      .populate('user', 'name email phone address status')
+      .populate('user', 'name email phone address status profilePhoto')
       .populate('assignedVehicle', 'vehicleNumber vehicleType model manufacturer odometer status');
 
     res.status(201).json({
@@ -132,7 +135,7 @@ exports.createDriver = async (req, res, next) => {
 exports.getDrivers = async (req, res, next) => {
   try {
     const drivers = await Driver.find({ organization: req.organizationId })
-      .populate('user', 'name email phone address status')
+      .populate('user', 'name email phone address status profilePhoto')
       .populate('assignedVehicle', 'vehicleNumber vehicleType model manufacturer status odometer')
       .sort({ createdAt: -1 });
 
@@ -165,7 +168,7 @@ exports.getDriverById = async (req, res, next) => {
     }
 
     const driver = await Driver.findOne(query)
-      .populate('user', 'name email phone address status')
+      .populate('user', 'name email phone address status profilePhoto')
       .populate('assignedVehicle');
 
     if (!driver) {
@@ -220,6 +223,14 @@ exports.updateDriver = async (req, res, next) => {
     if (address !== undefined) userUpdates.address = address;
     if (status) userUpdates.status = status === 'inactive' ? 'inactive' : 'active';
 
+    if (req.file) {
+      driver.profilePhoto = `/uploads/${req.file.filename}`;
+      userUpdates.profilePhoto = driver.profilePhoto;
+    } else if (req.body.profilePhoto !== undefined) {
+      driver.profilePhoto = req.body.profilePhoto;
+      userUpdates.profilePhoto = driver.profilePhoto;
+    }
+
     if (Object.keys(userUpdates).length > 0) {
       await User.findByIdAndUpdate(driver.user, userUpdates);
     }
@@ -251,7 +262,7 @@ exports.updateDriver = async (req, res, next) => {
     await driver.save();
 
     const updatedDriver = await Driver.findById(driver._id)
-      .populate('user', 'name email phone address status')
+      .populate('user', 'name email phone address status profilePhoto')
       .populate('assignedVehicle');
 
     res.status(200).json({

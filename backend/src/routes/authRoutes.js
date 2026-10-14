@@ -22,7 +22,7 @@ router.get('/me', protect, getMe);
 const upload = require('../middleware/upload');
 
 // Profile and Company updates
-router.put('/profile', protect, updateUserProfile);
+router.put('/profile', protect, upload.single('profilePhoto'), updateUserProfile);
 router.put('/company-profile', protect, upload.single('logoFile'), updateCompanyProfile);
 
 // Account deletion with OTP verification

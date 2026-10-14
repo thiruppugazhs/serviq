@@ -60,6 +60,10 @@ const userSchema = new mongoose.Schema(
       enum: ['active', 'inactive'],
       default: 'active',
     },
+    profilePhoto: {
+      type: String,
+      default: '',
+    },
   },
   {
     timestamps: true,

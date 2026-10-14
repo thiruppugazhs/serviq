@@ -23,7 +23,7 @@ router.route('/')
 
 router.route('/:id')
   .get(authorize('admin', 'fleet_manager', 'driver'), getDriverById)
-  .put(authorize('admin', 'fleet_manager'), updateDriver)
+  .put(authorize('admin', 'fleet_manager'), upload.single('profilePhoto'), updateDriver)
   .delete(authorize('admin', 'fleet_manager'), deleteDriver);
 
 router.patch('/:id/toggle-status', authorize('admin', 'fleet_manager'), toggleDriverStatus);

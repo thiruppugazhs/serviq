@@ -22,6 +22,7 @@ import {
   KeyRound,
   BadgeCheck,
   Upload,
+  Camera,
 } from 'lucide-react';
 import { Header } from '../common/Header';
 
@@ -65,6 +66,9 @@ export const ProfileView: React.FC = () => {
   const [userLoading, setUserLoading] = useState(false);
   const [userSuccess, setUserSuccess] = useState<string | null>(null);
   const [userError, setUserError] = useState<string | null>(null);
+  const [userPhotoFile, setUserPhotoFile] = useState<File | null>(null);
+  const [userPhotoPreview, setUserPhotoPreview] = useState<string | null>(null);
+  const userPhotoInputRef = useRef<HTMLInputElement | null>(null);
 
   // Danger Zone Deletion state
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -165,20 +169,36 @@ export const ProfileView: React.FC = () => {
     }
 
     try {
-      const payload: any = {
-        name: userForm.name,
-        phone: userForm.phone,
-        employeeId: userForm.employeeId,
-        address: userForm.address,
-      };
-      if (userForm.newPassword) {
-        payload.password = userForm.newPassword;
+      let res;
+      if (userPhotoFile) {
+        const formData = new FormData();
+        formData.append('name', userForm.name);
+        formData.append('phone', userForm.phone);
+        formData.append('employeeId', userForm.employeeId);
+        formData.append('address', userForm.address);
+        if (userForm.newPassword) {
+          formData.append('password', userForm.newPassword);
+        }
+        formData.append('profilePhoto', userPhotoFile);
+        res = await api.put('/auth/profile', formData);
+      } else {
+        const payload: any = {
+          name: userForm.name,
+          phone: userForm.phone,
+          employeeId: userForm.employeeId,
+          address: userForm.address,
+        };
+        if (userForm.newPassword) {
+          payload.password = userForm.newPassword;
+        }
+        res = await api.put('/auth/profile', payload);
       }
 
-      const res = await api.put('/auth/profile', payload);
       if (res.data.success) {
-        setUserSuccess('Admin profile successfully updated.');
+        setUserSuccess('User profile successfully updated.');
         setIsEditingUser(false);
+        setUserPhotoFile(null);
+        setUserPhotoPreview(null);
         setUserForm((prev) => ({ ...prev, newPassword: '', confirmPassword: '' }));
         await refreshUser();
         setTimeout(() => setUserSuccess(null), 4000);
@@ -671,8 +691,19 @@ export const ProfileView: React.FC = () => {
           <div className="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-8 shadow-2xs relative">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-100">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-black text-2xl shadow-xs shrink-0">
-                  {userForm.name?.charAt(0).toUpperCase() || 'A'}
+                <div className="w-16 h-16 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-black text-2xl shadow-xs shrink-0 overflow-hidden border border-slate-200">
+                  {(userPhotoPreview || user?.profilePhoto) ? (
+                    <img
+                      src={userPhotoPreview || user?.profilePhoto}
+                      alt={userForm.name || user?.name}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        (e.target as HTMLElement).style.display = 'none';
+                      }}
+                    />
+                  ) : (
+                    userForm.name?.charAt(0).toUpperCase() || 'A'
+                  )}
                 </div>
                 <div>
                   <h2 className="text-xl sm:text-2xl font-bold text-slate-900 font-['Anek_Latin',sans-serif]">
@@ -698,7 +729,7 @@ export const ProfileView: React.FC = () => {
                 ) : (
                   <>
                     <Edit3 className="w-4 h-4" />
-                    <span>Edit Admin Details</span>
+                    <span>Edit Profile Details</span>
                   </>
                 )}
               </button>
@@ -721,6 +752,66 @@ export const ProfileView: React.FC = () => {
             {/* Edit Mode vs View Mode */}
             {isEditingUser ? (
               <form onSubmit={handleSaveUser} className="mt-6 space-y-4">
+                {/* Profile Photo Uploader */}
+                <div className="p-4 rounded-2xl bg-slate-50/90 border border-slate-200 flex flex-col sm:flex-row items-center gap-4">
+                  <div className="w-16 h-16 rounded-full bg-white border border-slate-300 flex items-center justify-center overflow-hidden shrink-0 shadow-xs">
+                    {(userPhotoPreview || user?.profilePhoto) ? (
+                      <img
+                        src={userPhotoPreview || user?.profilePhoto}
+                        alt="Profile Preview"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <UserIcon className="w-7 h-7 text-slate-400" />
+                    )}
+                  </div>
+                  <div className="flex-1 text-center sm:text-left">
+                    <label className="block text-xs font-semibold text-slate-800 mb-1">
+                      Profile Picture
+                    </label>
+                    <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                      <button
+                        type="button"
+                        onClick={() => userPhotoInputRef.current?.click()}
+                        className="px-3 py-1.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold inline-flex items-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
+                      >
+                        <Camera className="w-3.5 h-3.5 text-slate-500" />
+                        <span>{userPhotoPreview || user?.profilePhoto ? 'Change Photo' : 'Upload Photo'}</span>
+                      </button>
+                      {(userPhotoPreview || userPhotoFile) && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setUserPhotoFile(null);
+                            setUserPhotoPreview(null);
+                          }}
+                          className="px-2.5 py-1.5 text-rose-600 hover:bg-rose-50 rounded-xl text-xs font-medium flex items-center gap-1 transition-colors"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                          <span>Remove</span>
+                        </button>
+                      )}
+                    </div>
+                    <input
+                      ref={userPhotoInputRef}
+                      type="file"
+                      accept=".jpg,.jpeg,.png,image/jpeg,image/png,image/webp"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          setUserPhotoFile(file);
+                          setUserPhotoPreview(URL.createObjectURL(file));
+                        }
+                      }}
+                      className="hidden"
+                    />
+                    <p className="text-[10px] text-slate-400 mt-1">
+                      {userPhotoFile
+                        ? `Selected: ${userPhotoFile.name} (${Math.round(userPhotoFile.size / 1024)} KB)`
+                        : 'Upload an image file (JPG, JPEG, PNG, or WebP).'}
+                    </p>
+                  </div>
+                </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-semibold text-slate-700 mb-1">

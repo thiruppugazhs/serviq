@@ -12,6 +12,8 @@ const {
 const { protect } = require('../middleware/auth');
 const { authorize } = require('../middleware/roleAuth');
 
+const upload = require('../middleware/upload');
+
 // All fleet manager management routes require Admin role
 router.use(protect);
 router.use(authorize('admin'));
@@ -19,12 +21,12 @@ router.use(authorize('admin'));
 router.post('/bulk-import', bulkImportFleetManagers);
 
 router.route('/')
-  .post(createFleetManager)
+  .post(upload.single('profilePhoto'), createFleetManager)
   .get(getFleetManagers);
 
 router.route('/:id')
   .get(getFleetManagerById)
-  .put(updateFleetManager)
+  .put(upload.single('profilePhoto'), updateFleetManager)
   .delete(deleteFleetManager);
 
 router.patch('/:id/toggle-status', toggleFleetManagerStatus);

@@ -1,44 +1,79 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import api from '../../api/client';
 import { driverService } from '../../services/driverService';
-import { ArrowLeft, Camera, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, Camera, CheckCircle2, ShieldAlert, User as UserIcon } from 'lucide-react';
 
 export const EditProfilePhotoView: React.FC = () => {
   const navigate = useNavigate();
+  const { user, refreshUser } = useAuth();
   const profile = driverService.getProfile();
 
-  const [name, setName] = useState(profile.name);
-  const [photoUrl, setPhotoUrl] = useState(profile.photoUrl);
+  const [name, setName] = useState(user?.name || profile.name);
+  const [photoUrl, setPhotoUrl] = useState<string>(
+    user?.profilePhoto || user?.driverProfile?.profilePhoto || profile.photoUrl || ''
+  );
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (user?.name) setName(user.name);
+    const photo = user?.profilePhoto || user?.driverProfile?.profilePhoto || profile.photoUrl;
+    if (photo) setPhotoUrl(photo);
+  }, [user]);
 
   const handlePhotoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setPhotoUrl(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      setSelectedFile(file);
+      setPhotoUrl(URL.createObjectURL(file));
     }
   };
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
+    setError(null);
 
-    driverService.updateProfile({
-      name: name.trim(),
-      photoUrl,
-    });
+    try {
+      const formData = new FormData();
+      formData.append('name', name.trim());
+      if (selectedFile) {
+        formData.append('profilePhoto', selectedFile);
+      }
 
-    setSuccess(true);
-    setSaving(false);
-    setTimeout(() => {
-      navigate('/settings', { replace: true });
-    }, 600);
+      // Update Driver Profile
+      const res = await api.patch('/driver/profile', formData);
+      const savedPhoto = res.data?.driver?.profilePhoto || res.data?.driver?.user?.profilePhoto;
+
+      // Keep Auth user model synchronized
+      try {
+        await api.put('/auth/profile', formData);
+      } catch (authErr) {
+        // Fallback silently if route error
+      }
+
+      await refreshUser();
+
+      driverService.updateProfile({
+        name: name.trim(),
+        photoUrl: savedPhoto || photoUrl,
+      });
+
+      setSuccess(true);
+      setTimeout(() => {
+        navigate('/settings', { replace: true });
+      }, 700);
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Failed to update profile photo.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -71,20 +106,36 @@ export const EditProfilePhotoView: React.FC = () => {
         </div>
       )}
 
+      {error && (
+        <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 flex items-center gap-2 text-rose-700 text-xs">
+          <ShieldAlert className="w-4 h-4 shrink-0" />
+          <span>{error}</span>
+        </div>
+      )}
+
       {/* Form */}
       <form onSubmit={handleSave} className="space-y-5 pt-2">
         {/* Photo Selection */}
         <div className="flex flex-col items-center justify-center">
           <div className="relative group">
-            <img
-              src={photoUrl}
-              alt={name}
-              className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md"
-            />
+            <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-md bg-blue-50 flex items-center justify-center text-2xl font-bold text-[#1b72e8]">
+              {photoUrl ? (
+                <img
+                  src={photoUrl}
+                  alt={name}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    (e.target as HTMLElement).style.display = 'none';
+                  }}
+                />
+              ) : (
+                (name || 'D').charAt(0).toUpperCase()
+              )}
+            </div>
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="absolute bottom-0 right-0 p-2 rounded-full bg-[#1b72e8] text-white shadow-md hover:bg-[#1558b0] transition active:scale-95"
+              className="absolute bottom-0 right-0 p-2 rounded-full bg-[#1b72e8] text-white shadow-md hover:bg-[#1558b0] transition active:scale-95 cursor-pointer"
               aria-label="Change photo"
             >
               <Camera className="w-4 h-4" />

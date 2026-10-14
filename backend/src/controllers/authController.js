@@ -542,6 +542,7 @@ exports.login = async (req, res, next) => {
         email: user.email,
         role: user.role,
         phone: user.phone,
+        profilePhoto: user.profilePhoto || driverData?.profilePhoto || '',
         organization: user.organization,
         driverProfile: driverData,
       },
@@ -571,6 +572,7 @@ exports.getMe = async (req, res, next) => {
         email: user.email,
         role: user.role,
         phone: user.phone,
+        profilePhoto: user.profilePhoto || driverData?.profilePhoto || '',
         employeeId: user.employeeId,
         address: user.address,
         organization: user.organization,
@@ -582,12 +584,12 @@ exports.getMe = async (req, res, next) => {
   }
 };
 
-// @desc    Update current user profile (admin details)
+// @desc    Update current user profile (admin / manager / driver details)
 // @route   PUT /api/auth/profile
 // @access  Private
 exports.updateUserProfile = async (req, res, next) => {
   try {
-    const { name, phone, employeeId, address, password } = req.body;
+    const { name, phone, employeeId, address, password, profilePhoto } = req.body;
     const user = await User.findById(req.user._id);
 
     if (!user) {
@@ -599,11 +601,25 @@ exports.updateUserProfile = async (req, res, next) => {
     if (employeeId !== undefined) user.employeeId = employeeId.trim();
     if (address !== undefined) user.address = address.trim();
 
+    if (req.file) {
+      user.profilePhoto = `/uploads/${req.file.filename}`;
+    } else if (profilePhoto !== undefined) {
+      user.profilePhoto = profilePhoto;
+    }
+
     if (password && password.trim().length >= 6) {
       user.password = password.trim();
     }
 
     await user.save();
+
+    // If driver, sync with Driver model
+    if (user.role === 'driver') {
+      await Driver.findOneAndUpdate(
+        { user: user._id },
+        { profilePhoto: user.profilePhoto }
+      );
+    }
 
     const updatedUser = await User.findById(user._id).populate('organization');
 
@@ -616,6 +632,7 @@ exports.updateUserProfile = async (req, res, next) => {
         email: updatedUser.email,
         role: updatedUser.role,
         phone: updatedUser.phone,
+        profilePhoto: updatedUser.profilePhoto || '',
         employeeId: updatedUser.employeeId,
         address: updatedUser.address,
         organization: updatedUser.organization,

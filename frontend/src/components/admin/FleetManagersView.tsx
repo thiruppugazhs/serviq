@@ -5,7 +5,7 @@ import { Badge } from '../common/Badge';
 import { Modal } from '../common/Modal';
 import { EmptyState } from '../common/EmptyState';
 import { Header } from '../common/Header';
-import { Users2, Plus, Mail, Phone, MapPin, ShieldAlert, KeyRound, Building2, Trash2, FileSpreadsheet } from 'lucide-react';
+import { Users2, Plus, Mail, Phone, MapPin, ShieldAlert, KeyRound, Building2, Trash2, FileSpreadsheet, Camera, Upload, X } from 'lucide-react';
 import { BulkImportModal } from '../common/BulkImportModal';
 
 export const FleetManagersView: React.FC = () => {
@@ -26,6 +26,8 @@ export const FleetManagersView: React.FC = () => {
     phone: '',
     stationAddress: '',
   });
+  const [profilePhotoFile, setProfilePhotoFile] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
 
   const fetchManagers = async () => {
     try {
@@ -49,6 +51,19 @@ export const FleetManagersView: React.FC = () => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  const handlePhotoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setProfilePhotoFile(file);
+      setPhotoPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleRemovePhoto = () => {
+    setProfilePhotoFile(null);
+    setPhotoPreview(null);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -66,18 +81,21 @@ export const FleetManagersView: React.FC = () => {
     setSubmitLoading(true);
 
     try {
-      // Send required fields (phone/mobile number is the initial password)
-      await api.post('/fleet-managers', {
-        firstName: formData.firstName.trim(),
-        lastName: formData.lastName.trim(),
-        name: `${formData.firstName.trim()} ${formData.lastName.trim()}`.trim(),
-        email: formData.email.trim(),
-        employeeId: formData.employeeId.trim(),
-        phone: formData.phone.trim(),
-        stationAddress: formData.stationAddress.trim(),
-        address: formData.stationAddress.trim(),
-        password: formData.phone.trim(), // Initial password is their mobile number
-      });
+      const data = new FormData();
+      data.append('firstName', formData.firstName.trim());
+      data.append('lastName', formData.lastName.trim());
+      data.append('name', `${formData.firstName.trim()} ${formData.lastName.trim()}`.trim());
+      data.append('email', formData.email.trim());
+      data.append('employeeId', formData.employeeId.trim());
+      data.append('phone', formData.phone.trim());
+      data.append('stationAddress', formData.stationAddress.trim());
+      data.append('address', formData.stationAddress.trim());
+      data.append('password', formData.phone.trim());
+      if (profilePhotoFile) {
+        data.append('profilePhoto', profilePhotoFile);
+      }
+
+      await api.post('/fleet-managers', data);
 
       setIsModalOpen(false);
       setFormData({
@@ -88,6 +106,8 @@ export const FleetManagersView: React.FC = () => {
         phone: '',
         stationAddress: '',
       });
+      setProfilePhotoFile(null);
+      setPhotoPreview(null);
       fetchManagers();
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to create Fleet Manager');
@@ -164,8 +184,19 @@ export const FleetManagersView: React.FC = () => {
               <div>
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center font-bold text-[#2335f2]">
-                      {(mgr.name || 'F').charAt(0).toUpperCase()}
+                    <div className="w-10 h-10 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center font-bold text-[#2335f2] overflow-hidden shrink-0 shadow-2xs">
+                      {mgr.profilePhoto ? (
+                        <img
+                          src={mgr.profilePhoto}
+                          alt={mgr.name}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            (e.target as HTMLElement).style.display = 'none';
+                          }}
+                        />
+                      ) : (
+                        (mgr.name || 'F').charAt(0).toUpperCase()
+                      )}
                     </div>
                     <div>
                       <h3 className="font-bold text-sm text-slate-900">{mgr.name}</h3>
@@ -236,6 +267,45 @@ export const FleetManagersView: React.FC = () => {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
+          {/* Profile Photo Upload */}
+          <div className="flex items-center gap-4 p-3 bg-slate-50 border border-slate-200 rounded-xl">
+            <div className="relative w-16 h-16 rounded-full bg-white border border-slate-300 flex items-center justify-center overflow-hidden shrink-0 shadow-xs">
+              {photoPreview ? (
+                <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" />
+              ) : (
+                <Users2 className="w-7 h-7 text-slate-400" />
+              )}
+            </div>
+            <div className="flex-1">
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
+                Profile Photo (Optional)
+              </label>
+              <div className="flex items-center gap-2">
+                <label className="px-3 py-1.5 bg-white border border-slate-300 hover:border-[#2335f2] text-slate-700 rounded-lg text-xs font-medium cursor-pointer flex items-center gap-1.5 transition-colors shadow-2xs">
+                  <Camera className="w-3.5 h-3.5 text-slate-500" />
+                  <span>{photoPreview ? 'Change Photo' : 'Upload Photo'}</span>
+                  <input
+                    type="file"
+                    accept="image/png,image/jpeg,image/jpg,image/webp"
+                    className="hidden"
+                    onChange={handlePhotoSelect}
+                  />
+                </label>
+                {photoPreview && (
+                  <button
+                    type="button"
+                    onClick={handleRemovePhoto}
+                    className="px-2.5 py-1.5 text-rose-600 hover:bg-rose-50 rounded-lg text-xs font-medium flex items-center gap-1 transition-colors"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                    <span>Remove</span>
+                  </button>
+                )}
+              </div>
+              <p className="text-[10px] text-slate-400 mt-1">JPG, JPEG, PNG, or WebP</p>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="block font-semibold text-slate-700 mb-1">

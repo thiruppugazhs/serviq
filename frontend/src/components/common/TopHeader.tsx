@@ -273,7 +273,18 @@ export const TopHeader: React.FC = () => {
           >
             {/* Circular Avatar with Amber Border */}
             <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-amber-400 bg-amber-50 text-amber-900 flex items-center justify-center font-bold text-xs shrink-0 overflow-hidden shadow-2xs">
-              {initials}
+              {(user?.profilePhoto || user?.driverProfile?.profilePhoto) ? (
+                <img
+                  src={user?.profilePhoto || user?.driverProfile?.profilePhoto}
+                  alt={user?.name || 'User'}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    (e.target as HTMLElement).style.display = 'none';
+                  }}
+                />
+              ) : (
+                initials
+              )}
             </div>
 
             {/* User Name & Company Name Stack */}
@@ -290,12 +301,28 @@ export const TopHeader: React.FC = () => {
           {/* Profile Dropdown */}
           {profileOpen && (
             <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-200 py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
-              <div className="px-4 py-2.5 border-b border-slate-100">
-                <p className="text-xs font-bold text-slate-900">{user?.name || 'Administrator'}</p>
-                <p className="text-[11px] text-slate-500 truncate">{user?.email}</p>
-                <span className="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider bg-blue-50 text-blue-700">
-                  {user?.role?.replace('_', ' ') || 'Admin'}
-                </span>
+              <div className="px-4 py-2.5 border-b border-slate-100 flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-full overflow-hidden border border-slate-200 bg-blue-50 flex items-center justify-center font-bold text-xs text-blue-600 shrink-0">
+                  {(user?.profilePhoto || user?.driverProfile?.profilePhoto) ? (
+                    <img
+                      src={user?.profilePhoto || user?.driverProfile?.profilePhoto}
+                      alt={user?.name || 'User'}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        (e.target as HTMLElement).style.display = 'none';
+                      }}
+                    />
+                  ) : (
+                    initials
+                  )}
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-bold text-slate-900 truncate">{user?.name || 'Administrator'}</p>
+                  <p className="text-[11px] text-slate-500 truncate">{user?.email}</p>
+                  <span className="inline-block mt-0.5 px-1.5 py-0.2 rounded text-[9px] font-semibold uppercase tracking-wider bg-blue-50 text-blue-700">
+                    {user?.role?.replace('_', ' ') || 'Admin'}
+                  </span>
+                </div>
               </div>
 
               <div className="py-1 text-xs">

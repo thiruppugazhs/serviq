@@ -25,6 +25,7 @@ export interface User {
   employeeId?: string;
   address?: string;
   stationAddress?: string;
+  profilePhoto?: string;
   status: 'active' | 'inactive';
   organization: Organization | string;
   driverProfile?: Driver;

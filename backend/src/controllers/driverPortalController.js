@@ -13,7 +13,7 @@ const { getIO } = require('../sockets/socketHandler');
  */
 const getDriverForUser = async (userId, organizationId) => {
   return await Driver.findOne({ user: userId, organization: organizationId })
-    .populate('user', 'name firstName lastName email phone address status')
+    .populate('user', 'name firstName lastName email phone address status profilePhoto')
     .populate('assignedVehicle');
 };
 
@@ -54,12 +54,20 @@ exports.updateDriverProfile = async (req, res, next) => {
       });
     }
 
-    const { phone, address, emergencyContact } = req.body;
+    const { phone, address, emergencyContact, profilePhoto } = req.body;
 
-    // Update User record for phone and address
+    // Update User record for phone, address, and profilePhoto
     const userUpdates = {};
     if (phone !== undefined) userUpdates.phone = phone.trim();
     if (address !== undefined) userUpdates.address = address.trim();
+
+    if (req.file) {
+      driver.profilePhoto = `/uploads/${req.file.filename}`;
+      userUpdates.profilePhoto = driver.profilePhoto;
+    } else if (profilePhoto !== undefined) {
+      driver.profilePhoto = profilePhoto;
+      userUpdates.profilePhoto = driver.profilePhoto;
+    }
 
     if (Object.keys(userUpdates).length > 0) {
       await User.findByIdAndUpdate(req.user._id, userUpdates);
@@ -80,10 +88,6 @@ exports.updateDriverProfile = async (req, res, next) => {
         phone: parsedEmergency.phone || driver.emergencyContact?.phone || '',
         relationship: parsedEmergency.relationship || driver.emergencyContact?.relationship || '',
       };
-    }
-
-    if (req.file) {
-      driver.profilePhoto = `/uploads/${req.file.filename}`;
     }
 
     await driver.save();

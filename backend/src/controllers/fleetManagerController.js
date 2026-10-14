@@ -51,6 +51,13 @@ exports.createFleetManager = async (req, res, next) => {
 
     const resolvedStation = stationAddress || address || '';
 
+    let profilePhotoUrl = '';
+    if (req.file) {
+      profilePhotoUrl = `/uploads/${req.file.filename}`;
+    } else if (req.body.profilePhoto) {
+      profilePhotoUrl = req.body.profilePhoto;
+    }
+
     const fleetManager = await User.create({
       name: fullName,
       firstName: firstName ? firstName.trim() : '',
@@ -64,6 +71,7 @@ exports.createFleetManager = async (req, res, next) => {
       address: resolvedStation,
       stationAddress: resolvedStation,
       status: 'active',
+      profilePhoto: profilePhotoUrl,
     });
 
     res.status(201).json({
@@ -81,6 +89,7 @@ exports.createFleetManager = async (req, res, next) => {
         address: fleetManager.address,
         stationAddress: fleetManager.stationAddress,
         status: fleetManager.status,
+        profilePhoto: fleetManager.profilePhoto || '',
         createdAt: fleetManager.createdAt,
       },
     });
@@ -141,7 +150,7 @@ exports.getFleetManagerById = async (req, res, next) => {
 // @access  Private (Admin only)
 exports.updateFleetManager = async (req, res, next) => {
   try {
-    const { name, phone, employeeId, address, status, password } = req.body;
+    const { name, phone, employeeId, address, status, password, profilePhoto } = req.body;
 
     const manager = await User.findOne({
       _id: req.params.id,
@@ -163,6 +172,12 @@ exports.updateFleetManager = async (req, res, next) => {
     if (status && ['active', 'inactive'].includes(status)) manager.status = status;
     if (password) manager.password = password; // pre-save hook will hash it
 
+    if (req.file) {
+      manager.profilePhoto = `/uploads/${req.file.filename}`;
+    } else if (profilePhoto !== undefined) {
+      manager.profilePhoto = profilePhoto;
+    }
+
     await manager.save();
 
     res.status(200).json({
@@ -170,12 +185,14 @@ exports.updateFleetManager = async (req, res, next) => {
       message: 'Fleet Manager updated successfully',
       fleetManager: {
         id: manager._id,
+        _id: manager._id,
         name: manager.name,
         email: manager.email,
         phone: manager.phone,
         employeeId: manager.employeeId,
         address: manager.address,
         status: manager.status,
+        profilePhoto: manager.profilePhoto || '',
       },
     });
   } catch (error) {
