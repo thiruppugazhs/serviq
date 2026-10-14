@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Search, Bell, Moon, Sun, Menu, User, Settings, LogOut, CheckCircle2, ShieldCheck, AlertTriangle, FileText, Clock } from 'lucide-react';
+import { Search, Bell, Menu, User, Settings, LogOut, CheckCircle2, ShieldCheck, AlertTriangle, FileText, Clock } from 'lucide-react';
 import api from '../../api/client';
 import { useAuth } from '../../context/AuthContext';
 import { useDashboard } from '../../context/DashboardContext';
@@ -12,7 +12,6 @@ export const TopHeader: React.FC = () => {
 
   const [profileOpen, setProfileOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const [notifications, setNotifications] = useState<any[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -154,19 +153,6 @@ export const TopHeader: React.FC = () => {
             ⌘K
           </kbd>
         </div>
-
-        {/* Theme Toggle (Moon Icon) */}
-        <button
-          onClick={() => setIsDarkMode(!isDarkMode)}
-          title="Toggle theme"
-          className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-slate-200 bg-white hover:bg-slate-50 flex items-center justify-center text-slate-700 transition-colors shadow-2xs cursor-pointer shrink-0"
-        >
-          {isDarkMode ? (
-            <Sun className="w-4 h-4 text-amber-500" />
-          ) : (
-            <Moon className="w-4 h-4 text-slate-700 stroke-[1.8]" />
-          )}
-        </button>
 
         {/* Notification Bell */}
         <div className="relative" ref={notifRef}>
