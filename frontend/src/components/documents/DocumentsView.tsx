@@ -371,11 +371,8 @@ export const DocumentsView: React.FC = () => {
                             </div>
                           </div>
 
-                          <div className="mt-4 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs">
-                            <span className="text-[11px] text-slate-400">
-                              SERVIQ Verified
-                            </span>
-                            {doc.fileUrl ? (
+                          {doc.fileUrl && (
+                            <div className="mt-4 pt-2.5 border-t border-slate-100 flex items-center justify-end text-xs">
                               <div className="flex items-center gap-2">
                                 <button
                                   type="button"
@@ -398,10 +395,8 @@ export const DocumentsView: React.FC = () => {
                                   <ExternalLink className="w-3.5 h-3.5" />
                                 </a>
                               </div>
-                            ) : (
-                              <span className="text-[11px] text-slate-400">Record Only</span>
-                            )}
-                          </div>
+                            </div>
+                          )}
                         </div>
                       );
                     })}
