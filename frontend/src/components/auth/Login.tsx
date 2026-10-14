@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Mail, Lock, ShieldAlert, Eye, EyeOff, Loader2, ShieldCheck, Sparkles } from 'lucide-react';
+import { Mail, Lock, ShieldAlert, Eye, EyeOff, Cog, ShieldCheck, Sparkles } from 'lucide-react';
 
 export const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -184,7 +184,7 @@ export const Login: React.FC = () => {
               disabled={loading}
               className="h-10.5 xl:h-11 w-full bg-[#2335f2] text-white font-bold text-xs xl:text-sm rounded-xl hover:bg-[#1a29cc] transition-all flex items-center justify-center gap-2 mt-4 shadow-md shadow-blue-600/20 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
             >
-              {loading && <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />}
+              {loading && <Cog className="w-3.5 h-3.5 animate-spin text-white" />}
               <span>Sign In to SERVIQ</span>
             </button>
 

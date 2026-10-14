@@ -74,6 +74,8 @@ const DashboardLayout: React.FC = () => {
   );
 };
 
+import { GearLoader } from './components/common/GearLoader';
+
 // Root redirect enforces driver-first entry flow:
 // Opens Login when unauthenticated; opens Home when authenticated.
 const RootRedirect: React.FC = () => {
@@ -81,10 +83,12 @@ const RootRedirect: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#f8fafc] flex flex-col items-center justify-center">
-        <div className="w-9 h-9 border-3 border-[#1b72e8] border-t-transparent rounded-full animate-spin" />
-        <p className="text-slate-400 text-xs mt-3 font-medium">Connecting to Serviq Driver...</p>
-      </div>
+      <GearLoader
+        fullScreen
+        theme="light"
+        color="text-[#1b72e8]"
+        text="Connecting to Serviq Driver..."
+      />
     );
   }
 
@@ -100,9 +104,11 @@ const DriverProtectedRoute: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#f8fafc] flex flex-col items-center justify-center">
-        <div className="w-9 h-9 border-3 border-[#1b72e8] border-t-transparent rounded-full animate-spin" />
-      </div>
+      <GearLoader
+        fullScreen
+        theme="light"
+        color="text-[#1b72e8]"
+      />
     );
   }
 

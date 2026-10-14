@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, ChevronDown, CheckCircle2, Loader2 } from 'lucide-react';
+import { X, ChevronDown, CheckCircle2, Cog } from 'lucide-react';
 
 interface ContactFormProps {
   onClose?: () => void;
@@ -230,7 +230,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({
             >
               {isSubmitting ? (
                 <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <Cog className="w-5 h-5 animate-spin" />
                   <span>Submitting...</span>
                 </>
               ) : (

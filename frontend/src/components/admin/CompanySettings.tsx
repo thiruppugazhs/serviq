@@ -10,7 +10,7 @@ import {
   Trash2,
   CheckCircle2,
   XCircle,
-  Loader2,
+  Cog,
   Lock,
 } from 'lucide-react';
 import { Header } from '../common/Header';
@@ -265,7 +265,7 @@ export const CompanySettings: React.FC = () => {
                   >
                     {loading ? (
                       <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <Cog className="w-4 h-4 animate-spin" />
                         Dispatching Code...
                       </>
                     ) : (
@@ -323,7 +323,7 @@ export const CompanySettings: React.FC = () => {
                   >
                     {loading ? (
                       <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <Cog className="w-4 h-4 animate-spin" />
                         Purging Account...
                       </>
                     ) : (

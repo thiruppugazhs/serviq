@@ -18,7 +18,7 @@ import {
   CheckCircle2,
   AlertTriangle,
   Trash2,
-  Loader2,
+  Cog,
   KeyRound,
   BadgeCheck,
   Upload,
@@ -558,7 +558,7 @@ export const ProfileView: React.FC = () => {
                     className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md shadow-blue-500/20 disabled:opacity-50"
                   >
                     {companyLoading ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <Cog className="w-4 h-4 animate-spin" />
                     ) : (
                       <Save className="w-4 h-4" />
                     )}
@@ -861,7 +861,7 @@ export const ProfileView: React.FC = () => {
                     className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md shadow-blue-500/20 disabled:opacity-50"
                   >
                     {userLoading ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <Cog className="w-4 h-4 animate-spin" />
                     ) : (
                       <Save className="w-4 h-4" />
                     )}
@@ -962,7 +962,7 @@ export const ProfileView: React.FC = () => {
                     disabled={deleteLoading}
                     className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold shadow-sm"
                   >
-                    {deleteLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                    {deleteLoading ? <Cog className="w-4 h-4 animate-spin" /> : null}
                     <span>Send Verification Code</span>
                   </button>
                 </div>
@@ -996,7 +996,7 @@ export const ProfileView: React.FC = () => {
                     disabled={deleteLoading}
                     className="inline-flex items-center gap-1.5 px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold shadow-sm"
                   >
-                    {deleteLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                    {deleteLoading ? <Cog className="w-4 h-4 animate-spin" /> : null}
                     <span>Confirm & Permanently Delete</span>
                   </button>
                 </div>

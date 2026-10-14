@@ -7,7 +7,7 @@ import {
   CheckCircle2,
   AlertTriangle,
   X,
-  Loader2,
+  Cog,
   Table,
 } from 'lucide-react';
 
@@ -391,7 +391,7 @@ export const BulkImportModal: React.FC<BulkImportModalProps> = ({
           >
             {loading ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <Cog className="w-4 h-4 animate-spin" />
                 <span>Importing...</span>
               </>
             ) : (

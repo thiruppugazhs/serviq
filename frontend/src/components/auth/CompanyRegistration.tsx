@@ -10,7 +10,7 @@ import {
   EyeOff,
   CheckCircle2,
   ShieldAlert,
-  Loader2,
+  Cog,
   Phone,
   Mail,
   User as UserIcon,
@@ -597,7 +597,7 @@ export const CompanyRegistration: React.FC = () => {
                   disabled={loading}
                   className="h-10.5 xl:h-11 flex-1 bg-[#2335f2] hover:bg-blue-700 text-white font-bold text-xs xl:text-sm rounded-xl transition-all flex items-center justify-center gap-2 shadow-md shadow-blue-500/20 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
                 >
-                  {loading && <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />}
+                  {loading && <Cog className="w-3.5 h-3.5 animate-spin text-white" />}
                   <span>Complete Account Creation</span>
                 </button>
               </div>

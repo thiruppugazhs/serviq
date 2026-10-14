@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, ChevronDown, CheckCircle2, Loader2, Phone, Mail, MapPin } from 'lucide-react';
+import { X, ChevronDown, CheckCircle2, Cog, Phone, Mail, MapPin } from 'lucide-react';
 
 interface HelpFeedbackModalProps {
   isOpen: boolean;
@@ -262,7 +262,7 @@ export const HelpFeedbackModal: React.FC<HelpFeedbackModalProps> = ({
               >
                 {isSubmitting ? (
                   <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <Cog className="w-5 h-5 animate-spin" />
                     <span>Submitting...</span>
                   </>
                 ) : (

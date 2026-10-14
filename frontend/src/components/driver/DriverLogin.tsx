@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { driverService } from '../../services/driverService';
-import { Eye, EyeOff, Lock, Mail, AlertCircle, ShieldCheck } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail, AlertCircle, ShieldCheck, Cog } from 'lucide-react';
 
 export const DriverLogin: React.FC = () => {
   const navigate = useNavigate();
@@ -146,7 +145,7 @@ export const DriverLogin: React.FC = () => {
             >
               {loading ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <Cog className="w-4 h-4 text-white animate-spin" />
                   <span>Signing in...</span>
                 </>
               ) : (

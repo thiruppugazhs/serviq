@@ -3,6 +3,8 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { UserRole } from '../../types';
 
+import { GearLoader } from '../common/GearLoader';
+
 interface ProtectedRouteProps {
   allowedRoles?: UserRole[];
 }
@@ -12,10 +14,12 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) 
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center">
-        <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
-        <p className="text-slate-400 text-sm mt-4">Verifying session...</p>
-      </div>
+      <GearLoader
+        fullScreen
+        theme="dark"
+        color="text-emerald-500"
+        text="Verifying session..."
+      />
     );
   }
 
